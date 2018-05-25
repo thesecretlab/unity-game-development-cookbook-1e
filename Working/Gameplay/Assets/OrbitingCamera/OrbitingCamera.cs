@@ -42,10 +42,14 @@ public class OrbitingCamera : MonoBehaviour
             // Clamp it to our required minimum/maximum
 			distance = Mathf.Clamp(currentDistance, distanceMin, distanceMax);
 		}
-
-  
     }
 
+	// Every frame, after all Update() functions are called, update the camera
+    // position and rotation
+    //
+    // We do this in LateUpdate so that if the object we're tracking has its 
+	// position changed in the Update method, the camera will be correctly
+	// positioned, because LateUpdate is always run afterwards.
     void LateUpdate()
     {
         if (target)
@@ -86,8 +90,7 @@ public class OrbitingCamera : MonoBehaviour
 			transform.position = position;
 
             // Update the rotation so we're looking at the target
-            transform.rotation = rotation;
-            
+            transform.rotation = rotation;            
         }
     }
 
