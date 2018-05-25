@@ -1,0 +1,4 @@
+. Add a game object to the scene
+. Add a camera to the scene
+
+// snip: orbiting_camera
