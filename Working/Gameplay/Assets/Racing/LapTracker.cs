@@ -70,11 +70,15 @@ public class LapTracker : MonoBehaviour {
 	{
 		// What's the nearest checkpoint?
 		var nearestCheckpoint = NearestCheckpoint();
+
+        if (nearestCheckpoint == null) {
+            // No checkpoints! Bail out.
+            return;
+        }
         
 		if (nearestCheckpoint.index == lastSeenCheckpoint.index) {
 			// nothing to do; the nearest checkpoint has not changed
-		}
-		else if (nearestCheckpoint.index > lastSeenCheckpoint.index) {
+		} else if (nearestCheckpoint.index > lastSeenCheckpoint.index) {
 
 			var distance = nearestCheckpoint.index - lastSeenCheckpoint.index;
             
