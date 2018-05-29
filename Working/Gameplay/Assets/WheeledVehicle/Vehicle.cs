@@ -19,6 +19,7 @@ public class Wheel {
 	public bool hasBrakes;
 }
 
+// Controls the power, braking and steering applied to wheels.
 public class Vehicle : MonoBehaviour {
 
     // The list of wheels on this vehicle
@@ -50,6 +51,10 @@ public class Vehicle : MonoBehaviour {
 		} else {
 			// If the vertical axis is negative, cut the engine and step on the
             // brakes.
+
+            // We use Mathf.Abs here to ensure that we use the positive value
+            // of 'vertical' (because applying negative braking torque would
+            // lead to weirdness.)
 			motorTorqueToApply = 0;
 			brakeTorqueToApply = Mathf.Abs(vertical) * brakeTorque;
 		}
@@ -61,7 +66,9 @@ public class Vehicle : MonoBehaviour {
 
         // Using a for loop, rather than a foreach loop, because foreach loops
         // allocate temporary memory, which is turned into garbage at the end of
-        // the frame. We want to minimise garbage, 
+        // the frame. We want to minimise garbage, because the more garbage that
+        // gets generated, the more often the garbage collector has to run, which
+        // causes performance problems.
 		for (int wheelNumber = 0; wheelNumber < wheels.Length; wheelNumber++) {
 
             var wheel = wheels[wheelNumber];
@@ -76,7 +83,7 @@ public class Vehicle : MonoBehaviour {
 				wheel.collider.steerAngle = currentSteeringAngle;
 			}
 
-            // If a wheel has brakes, it updates it brake torque
+            // If a wheel has brakes, it updates its brake torque
 			if (wheel.hasBrakes) {
 				wheel.collider.brakeTorque = brakeTorqueToApply;
 			}
