@@ -176,6 +176,10 @@ We can now create a quest.
     . For this one, set its name to "Don't click on the blue block".
     . Set its Initial Status to "Complete".
 
+When you're done, the Inspector should look something like <<quests-objective-list>>.
+
+img: quests-objective-list
+
 We'll now set up the code that manages the quest.
 
 Create a new C# script called QuestManager, and add the following code to it:
@@ -363,7 +367,6 @@ public class QuestManager : MonoBehaviour {
 
 
 }
-// ENDquest_manager
 ----
 
 . Create a new empty game object, and add a +QuestManager+ component to it.
@@ -568,9 +571,185 @@ public class TriggerObjectiveOnClick : MonoBehaviour, IPointerClickHandler {
 
 . Add a +TriggerObjectiveOnClick+ component to each of the cubes. For each one, drag in the Quest asset into its Quest field, and select the appropriate status that the objective should be set to (that is, set the blue cube to Failed, and the rest to Complete.)
 
+<<quests-objective-trigger>> shows an example of one of the cube's +TriggerObjectiveOnClick+ after it's been configured.
+
+img: quests-objective-trigger
+
 . Play the game. The state of the quest is shown on the screen, and changes as you click on different cubes.
 
 ==== Discussion
+
+=== Managing hitpoints
+// card: https://trello.com/c/gt2ookt5
+
+==== Problem
+
+You want objects to take damage when another kind of object hits them. When they take enough damage, they're destroyed.
+
+==== Solution
+
+Create a script that can receive a signal that it has taken damage, and has an amount of 'hit points' that can be diminished.
+
+. Create a new C# script called "DamageReceiver", and add the following code to it:
+
+// snip: damage_receiver
+[source,swift]
+----
+// Snippet: 4-damage_receiver.txt
+
+public class DamageReceiver : MonoBehaviour {
+
+    UnityEngine.Events.UnityEvent onDeath;
+
+    [SerializeField] int hitPoints = 5;
+
+    int currentHitPoints;
+
+    private void Awake()
+    {
+        currentHitPoints = hitPoints;
+    }
+
+    public void TakeDamage(int damageAmount)
+    {
+        currentHitPoints -= damageAmount;
+
+        if (currentHitPoints <= 0) {
+            if (onDeath != null) {
+                onDeath.Invoke();
+            }
+
+            Destroy(gameObject);
+        }
+    }
+}
+----
+
+Next, create a script that detects if it has collided with another; if that other object has a +DamageReceiver+ on it, it is told it has taken damage.
+
+. Create a new C# script called "DamageGiver", and add the following code to it:
+
+// snip: damage_giver
+[source,swift]
+----
+// Snippet: 5-damage_giver.txt
+
+public class DamageGiver : MonoBehaviour {
+
+    [SerializeField] int damageAmount = 1;
+
+    // Called when the object collides with another
+    private void OnCollisionEnter(Collision collision)
+    {
+        // Does the object we hit have a damage receiver?
+
+        var otherDamageReceiver = collision
+            .gameObject.GetComponent<DamageReceiver>();
+
+        if (otherDamageReceiver != null) {
+
+            // Tell it to take damage.
+            otherDamageReceiver.TakeDamage(damageAmount);
+        }
+
+        // Destroy this projectile
+        Destroy(gameObject);
+
+    }
+}
+----
+
+To test this, we'll create a script that creates and emits projectiles.
+
+. Create a new C# script called "ProjectileShooter", and add the following code to it:
+
+// snip: projectile_shooter
+[source,swift]
+----
+// Snippet: 6-projectile_shooter.txt
+
+public class ProjectileShooter : MonoBehaviour {
+
+    // The projectile to instantiate copies of
+    [SerializeField] GameObject projectilePrefab = null;
+
+    // The amount of time to wait before creating another projectile
+    [SerializeField] float timeBetweenShots = 1;
+
+    // The speed that new projectiles should be moving at
+    [SerializeField] float projectileSpeed = 10;
+
+    // On start, begin shooting projectiles
+	void Start () {
+        // Start creating projectiles
+        StartCoroutine(ShootProjectiles());
+	}
+
+    // Loop forever, creating a projectile every 'timeBetweenShots' seconds
+    IEnumerator ShootProjectiles() {
+        while (true) {
+            ShootNewProjectile();
+
+            yield return new WaitForSeconds(timeBetweenShots);
+        }
+    }
+
+    // Creates a new projectile and starts it moving
+    void ShootNewProjectile() {
+
+        // Spawn the new object with the emitter's position and rotation
+        var projectile = Instantiate(
+            projectilePrefab,
+            transform.position,
+            transform.rotation
+        );
+
+        // Get the rigidbody on the new projectile
+        var rigidbody = projectile.GetComponent<Rigidbody>();
+
+        if (rigidbody == null) {
+            Debug.LogError("Projectile prefab has no rigidbody!");
+            return;
+        }
+
+        // Make it move away from the emitter's forward direction at 
+        // 'projectileSpeed' units per second
+        rigidbody.velocity = transform.forward * projectileSpeed;
+
+        // Get both the projectile's collider, and the emitter's collider
+        var collider = projectile.GetComponent<Collider>();
+        var myCollider = this.GetComponent<Collider>();
+
+        // If both of them are valid, tell the physics system to ignore 
+        // collisions between them (to prevent projectiles from colliding with
+        // their source)
+        if (collider != null && myCollider != null) {
+            Physics.IgnoreCollision(collider, myCollider);
+        }
+
+    }
+}
+----
+
+Finally, we'll set up some objects that demonstrate the system in action.
+
+. Create a cube, name it "Damage Receiver", and attach the +DamageReceiver+ script to it.
+
+. Create a sphere, and name it "Projectile".
+    . Attach a Rigidbody to it. Disable gravity on the Rigidbody.
+    . Attach a +DamageGiver+ component to it.
+    . Drag the sphere from the Hierarchy into the Project tab. This will create a prefab.
+    . Delete the original sphere from the scene.
+
+. Create a cylinder, and name it "Shooter".
+    . Attach a +ProjectileShooter+ script to it.
+        . Drag the "Projectile" prefab into its Projectile Prefab field.
+    . Position and orient the cylinder so that its forward direction - that is, its blue arrow - is aimed at the damage receiver.
+
+. Start the game. The shooter will fire spheres at the target; after enough hit it, it will be removed from the scene.
+
+==== Discussion
+
 
 
 
@@ -588,7 +767,7 @@ You want to create a collection of menu pages, in which only one menu is visible
 // snip: menu
 [source,swift]
 ----
-// Snippet: 4-menu.txt
+// Snippet: 7-menu.txt
 
 // Contains UnityEvent, which this script uses
 using UnityEngine.Events; 
@@ -609,7 +788,7 @@ public class Menu : MonoBehaviour {
 // snip: menu_manager
 [source,swift]
 ----
-// Snippet: 5-menu_manager.txt
+// Snippet: 8-menu_manager.txt
 
 public class MenuManager : MonoBehaviour {
 
@@ -765,7 +944,7 @@ img: vehicle-wheel-placement
 // snip: vehicle
 [source,swift]
 ----
-// Snippet: 6-vehicle.txt
+// Snippet: 9-vehicle.txt
 
 // Configures a single wheel's control parameters.
 [System.Serializable]
@@ -783,6 +962,7 @@ public class Wheel {
 	public bool hasBrakes;
 }
 
+// Controls the power, braking and steering applied to wheels.
 public class Vehicle : MonoBehaviour {
 
     // The list of wheels on this vehicle
@@ -814,6 +994,10 @@ public class Vehicle : MonoBehaviour {
 		} else {
 			// If the vertical axis is negative, cut the engine and step on the
             // brakes.
+
+            // We use Mathf.Abs here to ensure that we use the positive value
+            // of 'vertical' (because applying negative braking torque would
+            // lead to weirdness.)
 			motorTorqueToApply = 0;
 			brakeTorqueToApply = Mathf.Abs(vertical) * brakeTorque;
 		}
@@ -825,7 +1009,9 @@ public class Vehicle : MonoBehaviour {
 
         // Using a for loop, rather than a foreach loop, because foreach loops
         // allocate temporary memory, which is turned into garbage at the end of
-        // the frame. We want to minimise garbage, 
+        // the frame. We want to minimise garbage, because the more garbage that
+        // gets generated, the more often the garbage collector has to run, which
+        // causes performance problems.
 		for (int wheelNumber = 0; wheelNumber < wheels.Length; wheelNumber++) {
 
             var wheel = wheels[wheelNumber];
@@ -840,7 +1026,7 @@ public class Vehicle : MonoBehaviour {
 				wheel.collider.steerAngle = currentSteeringAngle;
 			}
 
-            // If a wheel has brakes, it updates it brake torque
+            // If a wheel has brakes, it updates its brake torque
 			if (wheel.hasBrakes) {
 				wheel.collider.brakeTorque = brakeTorqueToApply;
 			}
@@ -885,7 +1071,7 @@ Your car tips over because it's rotating around its center of mass, which is too
 // snip: adjust_center_of_mass
 [source,swift]
 ----
-// Snippet: 7-adjust_center_of_mass.txt
+// Snippet: 10-adjust_center_of_mass.txt
 
 [RequireComponent(typeof(Rigidbody))]
 public class AdjustCenterOfMass : MonoBehaviour {
@@ -924,6 +1110,79 @@ Discuss how it's less realistic but makes for better gameplay
 
 (in real life a car's center of mass is low beacuse of heavy objects like the transmission and engine being under the floor)
 
+
+=== Creating speed boosts
+// card: https://trello.com/c/Z744jhZo
+
+==== Problem
+
+You want to create objects on your race track that give a temporary speed boost to vehicles that drive over them.
+
+==== Solution
+
+First, create the visible component of the speed boost. In this example, we'll go for a simple, cartoonish look.
+
+. Create a new Material, and call it Speed Boost.
+    . Set its Albedo colour to red.
+
+. Open the GameObject menu, and choose 3D Object -> Plane. 
+    . Position and scale the object appropriately on your track. 
+    . Name the object "Speed Boost".
+    . Drag the Speed Boost material onto it.
+    . Remove the Mesh Collider from the object.
+    . Add a Box Collider.
+        . Turn on Is Trigger.
+        . Adjust the size and position so that it creates a volume big enough for a car (for example, <<racing-speed-boost>>)
+
+img: racing-speed-boost
+
+
+. Create a new C# script called SpeedBoost, and add the following code to it:
+
+// snip: speed_boost
+[source,swift]
+----
+// Snippet: 11-speed_boost.txt
+
+public class SpeedBoost : MonoBehaviour {
+
+    // The amount of time the boost should apply
+    [SerializeField] float boostDuration = 1;
+
+    // The amount of force to apply in the forward direction
+    [SerializeField] float boostForce = 50;
+
+    // Called when a rigidbody enters the trigger
+    private void OnTriggerEnter(Collider other)
+    {
+        // Ensure this collider has a rigidbody, either on itself
+        // or on a parent object
+        var body = other.GetComponentInParent<Rigidbody>();
+
+        if (body == null) {
+            return;
+        }
+
+        // Attach a ConstantForce component to it
+        var boost = body.gameObject.AddComponent<ConstantForce>();
+
+        // Make the ConstantForce boost the object forward by the specified
+        // amount
+        boost.relativeForce = Vector3.forward * boostForce;
+
+        // Remove this ConstantForce after boostDuration seconds
+        Destroy(boost, boostDuration);
+    }
+}
+----
+
+. Attach a +SpeedBoost+ component to the speed boost object.
+
+. Test the game. When a vehicle enters the boost area, it will be boosted forward for a short duration.
+
+==== Discussion
+
+
 === Creating a camera that orbits around its target
 // card: https://trello.com/c/3PrteZ6M
 
@@ -942,7 +1201,7 @@ You want to create a camera that rotates around a target's position at a fixed d
 // snip: orbiting_camera
 [source,swift]
 ----
-// Snippet: 8-orbiting_camera.txt
+// Snippet: 12-orbiting_camera.txt
 
 public class OrbitingCamera : MonoBehaviour
 {
@@ -1099,7 +1358,7 @@ Add the following variable to the orbiting camera class:
 // snip: orbiting_camera_clip_variables
 [source,swift]
 ----
-// Snippet: 9-orbiting_camera_clip_variables.txt
+// Snippet: 13-orbiting_camera_clip_variables.txt
 
     // When true, the camera will adjust its distance when there's a collider 
 	// between it and the target
@@ -1111,7 +1370,7 @@ Next, add the following code to the class' +LateUpdate+ method:
 // snip: orbiting_camera_clip_code context:5
 [source,swift]
 ----
-// Snippet: 10-orbiting_camera_clip_code_context:5.txt
+// Snippet: 14-orbiting_camera_clip_code_context:5.txt
 
 			if (clipCamera) {
 
@@ -1165,7 +1424,7 @@ img: lap-tracking-track
 // snip: checkpoint
 [source,swift]
 ----
-// Snippet: 11-checkpoint.txt
+// Snippet: 15-checkpoint.txt
 
 #if UNITY_EDITOR
 // Include the UnityEditor namespace when this class is being used in the Editor.
@@ -1316,7 +1575,7 @@ img: lap-tracking-circuit-end
 // snip: lap_tracker
 [source,swift]
 ----
-// Snippet: 12-lap_tracker.txt
+// Snippet: 16-lap_tracker.txt
 
 // Used to help figure out the start of the circuit with fewer lines of code.
 using System.Linq;
@@ -1386,10 +1645,14 @@ public class LapTracker : MonoBehaviour {
 		// What's the nearest checkpoint?
 		var nearestCheckpoint = NearestCheckpoint();
 
+        if (nearestCheckpoint == null) {
+            // No checkpoints! Bail out.
+            return;
+        }
+
 		if (nearestCheckpoint.index == lastSeenCheckpoint.index) {
 			// nothing to do; the nearest checkpoint has not changed
-		}
-		else if (nearestCheckpoint.index > lastSeenCheckpoint.index) {
+		} else if (nearestCheckpoint.index > lastSeenCheckpoint.index) {
 
 			var distance = nearestCheckpoint.index - lastSeenCheckpoint.index;
 
