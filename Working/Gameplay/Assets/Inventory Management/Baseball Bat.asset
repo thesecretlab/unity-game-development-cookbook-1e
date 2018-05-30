@@ -9,7 +9,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d56c9fb10911d47a998221cc49f91815, type: 3}
-  m_Name: Coin
+  m_Name: Baseball Bat
   m_EditorClassIdentifier: 
   icon: {fileID: 2800000, guid: 34df60783c3e946538c76ca48c861ac1, type: 3}
   maxCarryable: 0
