@@ -751,7 +751,135 @@ Finally, we'll set up some objects that demonstrate the system in action.
 ==== Discussion
 
 
+=== Creating a top-down camera
+// card: https://trello.com/c/MJK2nm9w
 
+==== Problem
+
+You want to create a camera system that looks down at the world. You want to be able to move the camera around, and you want to limit the range that it can move around in.
+
+==== Solution
+
+Top-down cameras usually look best when they're looking down at an angle, not when they're aiming straight down the Y axis. However, we want the camera to move around only on the X and Z directions, parallel to the ground. 
+
+. Create an empty game object, and call it Camera Rig.
+. Move the Main Camera into the Camera Rig.
+. Set the local position of the Main Camera to (0,0,0), so that it's at the same location as the Camera Rig.
+. Rotate the camera (not the camera rig!) around the X axis so that it's looking down at the world.
+
+Next, we'll add the code that moves the camera.
+
+. Create a new C# script called TopDownCamera.cs, and add the following code to it:
+
+// snip: top_down_camera
+[source,swift]
+----
+// Snippet: 7-top_down_camera.txt
+
+// Allows for limited top-down movement of a camera.
+public class TopDownCameraMovement : MonoBehaviour {
+
+    // The speed that the camera will move, in units per second
+    [SerializeField] float movementSpeed = 20;
+
+    // The lower-left position of the camera, on its current X-Z plane.
+    [SerializeField] Vector2 minimumLimit = -Vector3.one;
+
+    // The upper-right position of the camera, on its current X-Z plane.
+    [SerializeField] Vector2 maximumLimit = Vector3.one;
+
+    // Every frame, update the camera's position
+    void Update()
+    {
+        // Get how much the user wants to move the camera
+        var horizontal = Input.GetAxis("Horizontal");
+        var vertical = Input.GetAxis("Vertical");
+
+        // Compute how much movement we want to apply this frame, in world-space.
+        var offset = new Vector3(horizontal, 0, vertical) 
+            * Time.deltaTime * movementSpeed;
+
+        // Figure out what our new position would be.
+        var newPosition = transform.position + offset;
+
+        // Is this new position within our permitted bounds?
+        if (bounds.Contains(newPosition)) {
+            // Then move to it.
+            transform.position = newPosition;
+        } else {
+            // Otherwise, figure out the closest point to the boundary, and
+            // move there instead.
+            transform.position = bounds.ClosestPoint(newPosition);
+        }
+    }
+
+    // Computes the bounding box that the camera is allowed to be in.
+    Bounds bounds {
+        get {
+
+            // We'll create a bounding box that's zero units high,
+            // and positioned at the current height of the camera.
+            var cameraHeight = transform.position.y;
+
+            // Figure out the position of the corners of the boxes in world-space
+            Vector3 minLimit = new Vector3(minimumLimit.x, cameraHeight, minimumLimit.y);
+            Vector3 maxLimit = new Vector3(maximumLimit.x, cameraHeight, maximumLimit.y);
+
+            // Create a new Bounds using these values and return it
+            var newBounds = new Bounds();
+            newBounds.min = minLimit;
+            newBounds.max = maxLimit;
+
+            return newBounds;
+        }
+    }
+
+    // Draw the bounding box.
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = Color.red;
+
+        Gizmos.DrawWireCube(bounds.center, bounds.size);
+    }
+}
+----
+
+. Attach a TopDownCamera script to the Camera Rig.
+. A red rectangle will appear on the same level as the camera (see <<top-down-camera-positioning>>). Adjust the minimum and maximum points in the Inspector so that they cover the area that you want the camera to move around in.
+
+img: top-down-camera-positioning
+
+. Play the game. The camera will move when you press the arrow keys, and won't leave the red rectangle. If the camera is outside the rectangle before the game starts, it will move inside it.
+
+==== Discussion
+
+=== Dragging a box to select objects
+// card: https://trello.com/c/9T9fgHyS
+
+==== Problem
+
+You want to be able to click and drag the mouse to create a visible rectangle on screen. When you release the mouse, you want to know which objects were inside that rectangle.
+
+==== Solution
+
+First, we'll create the canvas that draws the box, and the box object itself.
+
+Next, we'll create a script that can be told about when it's selected. 
+
+. Create a new C# script called BoxSelectable, and add the following code to it:
+
+// snip: box_selectable
+[source,swift]
+----
+// Snippet: 8-box_selectable.txt
+
+----
+
+Next, we'll create the script 
+
+==== Discussion
+
+Discuss viewport space here.
 
 === Creating a menu structure
 // card: https://trello.com/c/f9ChPe5k
@@ -767,7 +895,7 @@ You want to create a collection of menu pages, in which only one menu is visible
 // snip: menu
 [source,swift]
 ----
-// Snippet: 7-menu.txt
+// Snippet: 9-menu.txt
 
 // Contains UnityEvent, which this script uses
 using UnityEngine.Events; 
@@ -788,7 +916,7 @@ public class Menu : MonoBehaviour {
 // snip: menu_manager
 [source,swift]
 ----
-// Snippet: 8-menu_manager.txt
+// Snippet: 10-menu_manager.txt
 
 public class MenuManager : MonoBehaviour {
 
@@ -944,7 +1072,7 @@ img: vehicle-wheel-placement
 // snip: vehicle
 [source,swift]
 ----
-// Snippet: 9-vehicle.txt
+// Snippet: 11-vehicle.txt
 
 // Configures a single wheel's control parameters.
 [System.Serializable]
@@ -1071,7 +1199,7 @@ Your car tips over because it's rotating around its center of mass, which is too
 // snip: adjust_center_of_mass
 [source,swift]
 ----
-// Snippet: 10-adjust_center_of_mass.txt
+// Snippet: 12-adjust_center_of_mass.txt
 
 [RequireComponent(typeof(Rigidbody))]
 public class AdjustCenterOfMass : MonoBehaviour {
@@ -1142,7 +1270,7 @@ img: racing-speed-boost
 // snip: speed_boost
 [source,swift]
 ----
-// Snippet: 11-speed_boost.txt
+// Snippet: 13-speed_boost.txt
 
 public class SpeedBoost : MonoBehaviour {
 
@@ -1201,7 +1329,7 @@ You want to create a camera that rotates around a target's position at a fixed d
 // snip: orbiting_camera
 [source,swift]
 ----
-// Snippet: 12-orbiting_camera.txt
+// Snippet: 14-orbiting_camera.txt
 
 public class OrbitingCamera : MonoBehaviour
 {
@@ -1358,7 +1486,7 @@ Add the following variable to the orbiting camera class:
 // snip: orbiting_camera_clip_variables
 [source,swift]
 ----
-// Snippet: 13-orbiting_camera_clip_variables.txt
+// Snippet: 15-orbiting_camera_clip_variables.txt
 
     // When true, the camera will adjust its distance when there's a collider 
 	// between it and the target
@@ -1370,7 +1498,7 @@ Next, add the following code to the class' +LateUpdate+ method:
 // snip: orbiting_camera_clip_code context:5
 [source,swift]
 ----
-// Snippet: 14-orbiting_camera_clip_code_context:5.txt
+// Snippet: 16-orbiting_camera_clip_code_context:5.txt
 
 			if (clipCamera) {
 
@@ -1424,7 +1552,7 @@ img: lap-tracking-track
 // snip: checkpoint
 [source,swift]
 ----
-// Snippet: 15-checkpoint.txt
+// Snippet: 17-checkpoint.txt
 
 #if UNITY_EDITOR
 // Include the UnityEditor namespace when this class is being used in the Editor.
@@ -1575,7 +1703,7 @@ img: lap-tracking-circuit-end
 // snip: lap_tracker
 [source,swift]
 ----
-// Snippet: 16-lap_tracker.txt
+// Snippet: 18-lap_tracker.txt
 
 // Used to help figure out the start of the circuit with fewer lines of code.
 using System.Linq;
@@ -1774,3 +1902,4 @@ public class LapTracker : MonoBehaviour {
 . Play the game. When you drive the circuit in the right direction, the lap counter will go up when you cross the finish line. If you drive in the wrong direction, or take too much of a shortcut, the Wrong Way indicator will appear.
 
 ==== Discussion
+
