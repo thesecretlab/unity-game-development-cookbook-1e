@@ -888,6 +888,21 @@ Next, we'll create a script that can be told about when it's selected.
 . Create a new C# script called BoxSelectable, and add the following code to it:
 
 // snip: box_selectable
+[source,swift]
+----
+// Snippet: 8-box_selectable.txt
+
+// Handles the input and display of a selection box.
+public class BoxSelectable: MonoBehaviour {
+
+    public void Selected() {
+
+        Debug.LogFormat("{0} was selected!", gameObject.name);
+
+    }
+
+}
+----
 
 . Create some objects - it doesn't matter what they are, cubes will do - and place them somewhere that the camera can see them.
     . Add a +BoxSelectable+ script to each of them.
@@ -897,6 +912,144 @@ Next, we'll create the script that updates the position and size of the selectio
 . Create a new C# script called BoxSelection, and add the following code to it:
 
 // snip: box_selection
+[source,swift]
+----
+// Snippet: 9-box_selection.txt
+
+// Handles the input and display of a selection box.
+public class BoxSelection : MonoBehaviour
+{
+
+    // Draggable inspector reference to the Image GameObject's RectTransform.
+    public RectTransform selectionBox;
+
+    // This variable will store the location of wherever we first click before dragging.
+    private Vector2 initialClickPosition = Vector2.zero;
+
+    // The rectangle that the box has dragged, in screen space.
+    public Rect SelectionRect { get; private set; }
+
+    // If true, the user is actively dragging a box
+    public bool IsSelecting { get; private set; }
+
+    // Configure the visible box
+    private void Start()
+    {
+        // Setting the anchors to be positioned at zero-zero means that
+        // the box's size won't change as its parent changes size
+        selectionBox.anchorMin = Vector2.zero;
+        selectionBox.anchorMax = Vector2.zero;
+
+        // Setting the pivot point to zero means that the box will pivot around
+        // its lower-left corner
+        selectionBox.pivot = Vector2.zero;
+
+        // Hide the box at the start
+        selectionBox.gameObject.SetActive(false);
+    }
+
+    void Update()
+    {
+        // When we start dragging, record the position of the mouse, and start
+        // showing the box
+        if (Input.GetMouseButtonDown(0))
+        {
+            // Get the initial click position of the mouse. No need to convert to GUI space
+            // since we are using the lower left as anchor and pivot.
+            initialClickPosition = new Vector2(Input.mousePosition.x, Input.mousePosition.y);
+
+            // Show the box
+            selectionBox.gameObject.SetActive(true);
+        }
+
+        // While we are dragging, update the position and size of the box based
+        // on the mouse position
+        if (Input.GetMouseButton(0))
+        {
+            // Store the current mouse position in screen space.
+            Vector2 currentMousePosition = new Vector2(Input.mousePosition.x, Input.mousePosition.y);
+
+            // Figure out the lower-left corner, and the upper-right corner
+            var xMin = Mathf.Min(currentMousePosition.x, initialClickPosition.x);
+            var xMax = Mathf.Max(currentMousePosition.x, initialClickPosition.x);
+            var yMin = Mathf.Min(currentMousePosition.y, initialClickPosition.y);
+            var yMax = Mathf.Max(currentMousePosition.y, initialClickPosition.y);
+
+            // Build a rectangle from these corners
+            var screenSpaceRect = Rect.MinMaxRect(xMin, yMin, xMax, yMax);
+
+            // The anchor of the box has been configured to be its lower-left
+            // corner, so by setting its anchoredPosition, we set its lower-left
+            // corner.
+            selectionBox.anchoredPosition = screenSpaceRect.position;
+
+            // The size delta is how far the box extends from its anchor.
+            // Because the anchor's minimum and maximum are the same point,
+            // changing its size delta directly changes its final size.
+            selectionBox.sizeDelta = screenSpaceRect.size;
+
+            // Update our selection box
+            SelectionRect = screenSpaceRect;
+
+        }
+
+        // When we release the mouse button, hide the box, and record that we're
+        // no longer selecting
+        if (Input.GetMouseButtonUp(0))
+        {
+            SelectionComplete();
+
+            // Hide the box
+            selectionBox.gameObject.SetActive(false);
+
+            // We're no longer selecting
+            IsSelecting = false;
+        }
+    }
+
+    // Called when the user finishes dragging a selection box.
+    void SelectionComplete()
+    {
+
+        // Get the component attached to this scene
+        Camera mainCamera = GetComponent<Camera>();
+
+        // Get the bottom-left and top-right corners of the screen-space
+        // selection view, and convert them to viewport space
+        var min = mainCamera.ScreenToViewportPoint(
+            new Vector3(SelectionRect.xMin, SelectionRect.yMin));
+        var max = mainCamera.ScreenToViewportPoint(
+            new Vector3(SelectionRect.xMax, SelectionRect.yMax));
+
+        // We want to create a bounding box in viewport space. We have the X and
+        // Y coordinates of the bottom-left and top-right corners; now we'll 
+        // include the Z coordinates.
+        min.z = mainCamera.nearClipPlane;
+        max.z = mainCamera.farClipPlane;
+
+        // Construct our bounding box
+        var viewportBounds = new Bounds();
+        viewportBounds.SetMinMax(min, max);
+
+        // Check each object that has a Selectable component
+        foreach (var selectable in FindObjectsOfType<BoxSelectable>()) {
+
+            // Figure out where this object is in viewport space
+            var viewportPoint = mainCamera.WorldToViewportPoint(selectable.transform.position);
+
+            // Is that point within our viewport bounding box? If it is, they're
+            // selected.
+            var selected = viewportBounds.Contains(viewportPoint);
+
+            if (selected) {
+                // Let them know.            
+                selectable.Selected();
+            }
+        }
+
+    }
+}
+----
 
 . Attach a +BoxSelection+ component to the main camera.
     . Drag the "Selection Box" onto the Selection Box field.
@@ -923,7 +1076,7 @@ You want to create a collection of menu pages, in which only one menu is visible
 // snip: menu
 [source,swift]
 ----
-// Snippet: 8-menu.txt
+// Snippet: 10-menu.txt
 
 // Contains UnityEvent, which this script uses
 using UnityEngine.Events; 
@@ -944,7 +1097,7 @@ public class Menu : MonoBehaviour {
 // snip: menu_manager
 [source,swift]
 ----
-// Snippet: 9-menu_manager.txt
+// Snippet: 11-menu_manager.txt
 
 public class MenuManager : MonoBehaviour {
 
@@ -1100,7 +1253,7 @@ img: vehicle-wheel-placement
 // snip: vehicle
 [source,swift]
 ----
-// Snippet: 10-vehicle.txt
+// Snippet: 12-vehicle.txt
 
 // Configures a single wheel's control parameters.
 [System.Serializable]
@@ -1227,7 +1380,7 @@ Your car tips over because it's rotating around its center of mass, which is too
 // snip: adjust_center_of_mass
 [source,swift]
 ----
-// Snippet: 11-adjust_center_of_mass.txt
+// Snippet: 13-adjust_center_of_mass.txt
 
 [RequireComponent(typeof(Rigidbody))]
 public class AdjustCenterOfMass : MonoBehaviour {
@@ -1298,7 +1451,7 @@ img: racing-speed-boost
 // snip: speed_boost
 [source,swift]
 ----
-// Snippet: 12-speed_boost.txt
+// Snippet: 14-speed_boost.txt
 
 public class SpeedBoost : MonoBehaviour {
 
@@ -1357,7 +1510,7 @@ You want to create a camera that rotates around a target's position at a fixed d
 // snip: orbiting_camera
 [source,swift]
 ----
-// Snippet: 13-orbiting_camera.txt
+// Snippet: 15-orbiting_camera.txt
 
 public class OrbitingCamera : MonoBehaviour
 {
@@ -1514,7 +1667,7 @@ Add the following variable to the orbiting camera class:
 // snip: orbiting_camera_clip_variables
 [source,swift]
 ----
-// Snippet: 14-orbiting_camera_clip_variables.txt
+// Snippet: 16-orbiting_camera_clip_variables.txt
 
     // When true, the camera will adjust its distance when there's a collider 
 	// between it and the target
@@ -1526,7 +1679,7 @@ Next, add the following code to the class' +LateUpdate+ method:
 // snip: orbiting_camera_clip_code context:5
 [source,swift]
 ----
-// Snippet: 15-orbiting_camera_clip_code_context:5.txt
+// Snippet: 17-orbiting_camera_clip_code_context:5.txt
 
 			if (clipCamera) {
 
@@ -1580,7 +1733,7 @@ img: lap-tracking-track
 // snip: checkpoint
 [source,swift]
 ----
-// Snippet: 16-checkpoint.txt
+// Snippet: 18-checkpoint.txt
 
 #if UNITY_EDITOR
 // Include the UnityEditor namespace when this class is being used in the Editor.
@@ -1731,7 +1884,7 @@ img: lap-tracking-circuit-end
 // snip: lap_tracker
 [source,swift]
 ----
-// Snippet: 17-lap_tracker.txt
+// Snippet: 19-lap_tracker.txt
 
 // Used to help figure out the start of the circuit with fewer lines of code.
 using System.Linq;
