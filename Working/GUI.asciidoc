@@ -1,0 +1,379 @@
+== GUIs
+
+=== Working with UI controls
+// card: https://trello.com/c/C6aVwKBn
+
+===== Problem
+
+You want to build a user interface for the player to work with.
+
+===== Solution
+
+. Open the GameObject menu, and choose UI -> Canvas.
+. Open the GameObject menu again, and choose UI -> Text. A Text object will be added to the Canvas.
+. Select the Rectangle tool, and drag the Text to resize and re-position it.
+. Select the Text object, and modify the Text's properties to change its text.
+
+
+. Create a new C# script called ButtonClicked.cs, and add the following code to it:
+
+// snip: button_clicked
+[source,swift]
+----
+// Snippet: 0-button_clicked.txt
+
+public class ButtonClicked : MonoBehaviour {
+
+    // This will appear in the list of methods
+    public void ButtonWasClicked() {
+        Debug.Log("The button was clicked!");
+    }
+
+    // This will appear in the list of methods, and let you specify a parameter
+    public void ButtonWasClickedWithParameter(string parameter) {
+        string message = 
+            string.Format("The button was clicked: {0}", parameter);
+
+        Debug.Log(message);
+    }
+
+    // This won't appear in the list of methods, because it's private
+    // (even though we didn't specify its protection level, because all class
+    // methods are private by default in C#)
+    void PrivateButtonWasClicked() {
+        Debug.Log("This won't run as the direct result of a button click!");
+    }
+
+}
+----
+
+. Attach a +ButtonClicked+ component to the Canvas, or to any other game object - for the purposes of this example, it doesn't matter which.
+
+. Open the GameObject menu one more time, and choose UI -> Button.
+. Select the Button, and click the `+` button under the button's On Click component.
+. Drag the object you attached the +ButtonClicked+ component to, into the new object field that appears.
+
+    . In the function drop-down that now appears, choose ButtonClicked->ButtonWasClicked.
+
+. Run the game. When you click the button, text will appear in the console.
+
+. Stop the game, and click the `+` button again. Drag the same object in, and choose ButtonClicked->ButtonWasClickedWithParameter. Note how this method lets you specify a string to send when the button was clicked.
+
+. Note also that the PrivateButtonWasClicked method never appears in the list of methods you can choose.
+
+===== Discussion
+
+
+Discuss how objects on the canvas have a Rect Transform, which defines their position as a rectangle within the context of the canvas.
+
+Discuss how anchors work, and how they control how positioning and sizing work.
+
+Discuss how the different anchor presets work.
+
+Discuss the canvas modes (overlay, camera, world-space), and their differences.
+
+Discuss the canvas scaler, its different modes, and what they're useful for.
+
+Discuss how unity events work (the On Click handler on the button etc), including visibility, parameters, and how they work with properties.
+
+=== Theming controls
+// card: https://trello.com/c/OOrMFakO
+
+===== Problem
+
+You want to use your own artwork for your controls, rather the built-in Unity artwork. You want that art to be able to scale as the controls change size, without stretching.
+
+===== Solution
+
+. Start by importing the textures you want to use.
+    . Ensure that the textures are configured to be imported as "Sprite / UI".
+
+For this example, we'll customise a panel, using art from the open source UI asset kit by Kenney, available at http://kenney.nl/assets/ui-pack.
+
+. Open the GameObject menu, and choose UI -> Panel.
+    . Select the Panel game object, and change its Source Image to the +blue_panel+ image.
+
+. Resize the panel, and you'll see that the image stretches (<<panel-stretch>>)
+
+img: panel-stretch
+
+To fix this, we need to set up the sprite so that only certain regions get stretched. In this texture, everything except the corners can be scaled without looking bad, so we'll set it up accordingly.
+
+. Select the blue_panel texture.
+. Click the Sprite Editor button.
+. The Sprite Editor will appear. Drag the green dot that appears at the top of the screen down, until the green line is underneath the rounded corners of the image. You can also manually type in the change, by setting the border's +T+ value to 5.
+. Repeat this process for the other three edges. When you're done, the sprite editor window should look like <<sprite-editor>>.
+
+img: sprite-editor
+
+. Click Apply, and close the Sprite Editor.
+. Select the Panel object.
+. Change the Image component's Image Type from Simple to Sliced.
+. The stretched appearance will go away, because only the middle areas of the sprite are allowed to stretch, and the shape of the corners will be preserved (<<panel-stretch-fixed>>)
+
+img: panel-stretch-fixed
+
+===== Discussion
+
+
+
+=== Animating the UI
+// card: https://trello.com/c/4wzH30ML
+
+===== Problem
+
+
+===== Solution
+
+
+===== Discussion
+
+
+
+=== Creating a list of items
+// card: https://trello.com/c/K9ijXDmM
+
+===== Problem
+
+
+===== Solution
+
+First, we'll create the container for the list.
+
+. Create a scroll view by opening the GameObject menu and choosing UI->Scroll View.
+. Select the Content object in the Scroll View. 
+    . Add a Vertical Layout Group to it. 
+        . Turn on the Width checkbox in Child Controls Size. This will make the objects inside the Content object expand their width to fill their parent, while still having control over their own height.
+    . Add a Content Size Fitter component to it.
+        . Set the Vertical Fit setting to Preferred Size. This will make the Content object adjust its height to be the total height of its children.
+
+Next, we'll create our prototype list object.
+
+. Create a Panel. Name it "List Item".
+    . Drag the List Item onto the Content object in the Scroll View. It will resize to the width of the Content.
+. Create a new Text object by opening the GameObject menu and choosing UI->Text.
+    . Make it a child of the List Item.
+    . Set its minimum anchor to (0,0), and its maximum anchor to (1,1). This will make it define its size relative to the width and height of its parent.
+    . Set its Left, Top, Bottom and Right to 5. This will inset the Text by 5 pixels on all edges.
+
+Next, we'll add some code that lets each list item manage its content.
+
+. Create a new C# script called ListItem.cs. Add the following code to it:
+
+// snip: list_item
+[source,swift]
+----
+// Snippet: 1-list_item.txt
+
+public class ListItem : MonoBehaviour {
+
+    // The Text object that displays our label
+    [SerializeField] UnityEngine.UI.Text labelText;
+
+    // Expose a string; setting or getting this will set or get the text of
+    // the label.
+	public string Label
+    {
+        get
+        {
+            return labelText.text;
+        }
+        set
+        {
+            labelText.text = value;
+        }
+    }
+
+}
+----
+
+. Add a ListItem script to the List Item.
+    . Drag the Text into the Label Text field.
+
+. Drag the List Item object from the hierarchy into the Project tab. This will create a prefab.
+. Delete the List Item from the scene.
+
+Finally, we'll add code that populates the list with instances of the List Item.
+
+. Create a new C# script called List.cs. Add the following code to it:
+
+// snip: list
+[source,swift]
+----
+// Snippet: 2-list.txt
+
+public class List : MonoBehaviour {
+
+    // The number of items to create
+    [SerializeField] int itemCount = 5;
+
+    // Each list item will be of this type
+    [SerializeField] ListItem itemPrefab;
+
+    // The object that new items should be inserted into
+    [SerializeField] RectTransform itemContainer;
+
+	void Start () {
+
+        // Create as many items as we need to
+        for (int i = 0; i < itemCount; i++) {
+
+            // Create a new item
+            var newItem = Instantiate(itemPrefab);
+
+            // Place it in the container; tell it to not keep its current
+            // position or scale, so it will be laid out correctly by the UI
+            // system
+            newItem.transform.SetParent(itemContainer, worldPositionStays: false);
+
+            // Give it a label
+            newItem.Label = string.Format("Item {0}", i);
+        }
+
+	}
+
+
+}
+----
+
+. Add a List component to the scroll view. 
+    . Drag the List Item prefab into its List Item Prefab slot.
+    . Drag the Content object into its List Container slot.
+
+. Run the game. The list will now contain a scrollable collection of items.
+
+===== Discussion
+
+Discuss what scroll views do, how they work, what they're composed of (content area, clip area, scroll views)
+
+Discuss how layout groups work.
+
+
+
+=== Fading out text (like a list of notifications)
+// card: https://trello.com/c/ta4DtcYY
+
+===== Problem
+
+
+===== Solution
+
+
+===== Discussion
+
+
+
+=== Creating on-screen position indicators
+// card: https://trello.com/c/TL3qYhNS
+
+===== Problem
+
+
+
+
+===== Solution
+
+
+===== Discussion
+
+
+
+=== Working with the immediate mode GUI system
+// card: https://trello.com/c/rbYw2Iir
+
+===== Problem
+
+You want to learn how to use the Unity editor's GUI system.
+
+===== Solution
+
+
+===== Discussion
+
+
+
+=== Custom editors
+// card: https://trello.com/c/MeMTnS06
+
+===== Problem
+
+You want to customise the Inspector for a component.
+
+===== Solution
+
+
+===== Discussion
+
+
+
+=== Attribute drawers
+// card: https://trello.com/c/iSoIDoTN
+
+===== Problem
+
+You want to customise how the Inspector draws a type of variable when a certain attribute is attached to it. For example, the +Header+ attribute causes Unity to draw a label above a variable in the Inspector.
+
+
+===== Solution
+
+
+===== Discussion
+
+
+
+=== Scripted importers
+// card: https://trello.com/c/nhi9erP9
+
+===== Problem
+
+You want to write code that lets Unity import a new type of files.
+
+===== Solution
+
+
+===== Discussion
+
+
+
+=== Property drawers
+// card: https://trello.com/c/GyeyJX18
+
+===== Problem
+
+You want to customise how the Inspector draws variables of a certain type. For example, you've got a custom class, and you want to customise how it appears.
+
+===== Solution
+
+
+===== Discussion
+
+Discuss how normally Unity draws the child properties of a class
+
+Discuss how you need to do all of it yourself if you override it
+
+=== Asset post processing
+// card: https://trello.com/c/44Ubj2DP
+
+===== Problem
+
+You want to customise how Unity imports certain files. 
+
+===== Solution
+
+
+===== Discussion
+
+
+
+=== Wizards
+// card: https://trello.com/c/FI6nVBmY
+
+===== Problem
+
+You want to create and display a window in the Unity Editor that lets the user provide some values, and runs code when the user clicks a button.
+
+===== Solution
+
+
+===== Discussion
+
