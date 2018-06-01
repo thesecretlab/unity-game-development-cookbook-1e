@@ -40,6 +40,7 @@ GameObject:
   - component: {fileID: 114045187564684142}
   - component: {fileID: 114405012387787504}
   - component: {fileID: 225901386354593544}
+  - component: {fileID: 114538298257016198}
   m_Layer: 5
   m_Name: Fading List Item
   m_TagString: Untagged
@@ -86,6 +87,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   labelText: {fileID: 114803288527127860}
+--- !u!114 &114538298257016198
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1923195418245016}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fa51d5a85147648c5aac12d1bf4c831e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  delayBeforeFading: 2
+  fadeTime: 0.25
 --- !u!114 &114803288527127860
 MonoBehaviour:
   m_ObjectHideFlags: 1
