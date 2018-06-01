@@ -122,12 +122,35 @@ img: panel-stretch-fixed
 
 ===== Problem
 
+You want to animate parts of the user interface.
 
 ===== Solution
 
+We'll make a button spin when it's clicked.
+
+. Open the GameObject menu, and choose UI -> Button.
+
+. Create a new C# script called SpinButton.cs, and add the following code to it:
+
+// snip: spin_button
+
+. Attach a +SpinButton+ component to it.
+
+. Click the `+` button in the On Click field.
+    . Drag the button itself into the field.
+    . In the popup menu, choose SpinButton->Spin.
+
+. Run the game. When you click the button, it will spin around.
+
+You can also adjust the curve to control the pacing of the animation, as well as its duration.
 
 ===== Discussion
 
+Discuss animation curves. Discuss what 'evaluating' the curve means. Discuss the benefits of doing it this way, instead of incrementing the rotation every frame.
+
+Discuss how objects in the canvas can be positioned and rotated just like other objects
+
+Discuss how you can also animate their properties just like other objects.
 
 
 === Creating a list of items
@@ -135,6 +158,7 @@ img: panel-stretch-fixed
 
 ===== Problem
 
+You want to create a scrolling list of UI items.
 
 ===== Solution
 
@@ -255,11 +279,33 @@ Discuss how layout groups work.
 
 ===== Problem
 
+You want to manage a list of items that fade out some time after being removed.
 
 ===== Solution
 
+. Start with the List example from the previous recipe.
+. Duplicate the List Item prefab, and name the new prefab "Fading List Item".
+. Select the Fading List Item prefab, and add a Canvas Group component. This will allow you to fade the entire object.
+
+. Configure the List object to use the new Fading List Item.
+
+. Add a new Button to the scene. 
+    . Set its Text to read "Add Item".
+    . Add a new entry in its On Click list. 
+    . Drag the List object into its object field, and select the List -> CreateNewListItem method. 
+    . Type "New List Item" into the text field.
+
+. Create a new C# Script called FadeAfterDelay.cs, with the following code:
+
+// snip: fade_after_delay
+
+. Attach a +FadeAfterDelay+ component to the Fading List Item.
+
+. Run the program. When you click the button, a new list item will appear; after a moment, it will fade out.
+
 
 ===== Discussion
+
 
 
 
@@ -275,21 +321,6 @@ Discuss how layout groups work.
 
 
 ===== Discussion
-
-
-
-=== Working with the immediate mode GUI system
-// card: https://trello.com/c/rbYw2Iir
-
-===== Problem
-
-You want to learn how to use the Unity editor's GUI system.
-
-===== Solution
-
-
-===== Discussion
-
 
 
 === Custom editors

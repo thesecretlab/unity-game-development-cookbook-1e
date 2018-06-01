@@ -17,22 +17,29 @@ public class List : MonoBehaviour {
 	void Start () {
 
         // Create as many items as we need to
-        for (int i = 0; i < itemCount; i++) {
+        for (int i = 0; i < itemCount; i++)
+        {
+            var label = string.Format("Item {0}", i);
 
             // Create a new item
-            var newItem = Instantiate(itemPrefab);
+            CreateNewListItem(label);
 
-            // Place it in the container; tell it to not keep its current
-            // position or scale, so it will be laid out correctly by the UI
-            // system
-            newItem.transform.SetParent(itemContainer, worldPositionStays: false);
-
-            // Give it a label
-            newItem.Label = string.Format("Item {0}", i);
         }
-		
-	}
-	
-	
+
+    }
+
+    public void CreateNewListItem(string label)
+    {
+        var newItem = Instantiate(itemPrefab);
+
+        // Place it in the container; tell it to not keep its current
+        // position or scale, so it will be laid out correctly by the UI
+        // system
+        newItem.transform.SetParent(itemContainer, worldPositionStays: false);
+
+        // Give it a label
+        newItem.Label = label;
+    }
+
 }
 // END list
