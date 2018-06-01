@@ -133,6 +133,61 @@ We'll make a button spin when it's clicked.
 . Create a new C# script called SpinButton.cs, and add the following code to it:
 
 // snip: spin_button
+[source,swift]
+----
+// Snippet: 1-spin_button.txt
+
+public class SpinButton : MonoBehaviour {
+
+    // The amount of time needed to perform a full spin
+    [SerializeField] float spinTime = 0.5f;
+
+    // Controls the pacing of the animation.
+    [SerializeField] AnimationCurve curve = AnimationCurve.EaseInOut(0, 0, 1, 1);
+
+    public void Spin() {
+
+        // Start a spin.
+        StartCoroutine(StartSpinning());
+
+    }
+
+    // A coroutine that updates the rotation every frame, until it runs out of
+    // time.
+    private IEnumerator StartSpinning()
+    {
+        // Don't do any spinning if spin time is zero or less (
+        if (spinTime <= 0) {
+            yield break;
+        }
+
+        // Keep track of how long we've been spinning for.
+        float elapsed = 0f;
+
+        while (elapsed < spinTime) {
+            elapsed += Time.deltaTime;
+
+            // Calculate how far along the animation we are, measured between 
+            // 0 and 1.
+            var t = elapsed / spinTime;
+
+            // Use this value to figure out how many degrees we should be 
+            // rotated at on this frame.
+            var angle = curve.Evaluate(t) * 360f;
+
+            // Calculate the rotation by rotating this many angles around
+            // the X axis.
+            transform.localRotation = Quaternion.AngleAxis(angle, Vector3.right);
+
+            // Wait a new frame.
+            yield return null;
+        }
+
+        // The animation is now complete. Reset the rotation to normal.
+        transform.localRotation = Quaternion.identity;
+    }
+}
+----
 
 . Attach a +SpinButton+ component to it.
 
@@ -187,7 +242,7 @@ Next, we'll add some code that lets each list item manage its content.
 // snip: list_item
 [source,swift]
 ----
-// Snippet: 1-list_item.txt
+// Snippet: 2-list_item.txt
 
 public class ListItem : MonoBehaviour {
 
@@ -224,7 +279,7 @@ Finally, we'll add code that populates the list with instances of the List Item.
 // snip: list
 [source,swift]
 ----
-// Snippet: 2-list.txt
+// Snippet: 3-list.txt
 
 public class List : MonoBehaviour {
 
@@ -240,22 +295,29 @@ public class List : MonoBehaviour {
 	void Start () {
 
         // Create as many items as we need to
-        for (int i = 0; i < itemCount; i++) {
+        for (int i = 0; i < itemCount; i++)
+        {
+            var label = string.Format("Item {0}", i);
 
             // Create a new item
-            var newItem = Instantiate(itemPrefab);
+            CreateNewListItem(label);
 
-            // Place it in the container; tell it to not keep its current
-            // position or scale, so it will be laid out correctly by the UI
-            // system
-            newItem.transform.SetParent(itemContainer, worldPositionStays: false);
-
-            // Give it a label
-            newItem.Label = string.Format("Item {0}", i);
         }
 
-	}
+    }
 
+    public void CreateNewListItem(string label)
+    {
+        var newItem = Instantiate(itemPrefab);
+
+        // Place it in the container; tell it to not keep its current
+        // position or scale, so it will be laid out correctly by the UI
+        // system
+        newItem.transform.SetParent(itemContainer, worldPositionStays: false);
+
+        // Give it a label
+        newItem.Label = label;
+    }
 
 }
 ----
@@ -274,7 +336,7 @@ Discuss how layout groups work.
 
 
 
-=== Fading out text (like a list of notifications)
+=== Fading out a list
 // card: https://trello.com/c/ta4DtcYY
 
 ===== Problem
@@ -298,6 +360,66 @@ You want to manage a list of items that fade out some time after being removed.
 . Create a new C# Script called FadeAfterDelay.cs, with the following code:
 
 // snip: fade_after_delay
+[source,swift]
+----
+// Snippet: 4-fade_after_delay.txt
+
+public class FadeAfterDelay : MonoBehaviour {
+
+    // The number of seconds before a fade starts
+    [SerializeField] float delayBeforeFading = 2f;
+
+    // The amount of time to take while fading out
+    [SerializeField] float fadeTime = 0.25f;
+
+    // Notice the return type - this Start method is a coroutine!
+    IEnumerator Start () {
+
+        // Wait the required amount of time
+        yield return new WaitForSeconds(delayBeforeFading);
+
+        // We need a canvas group in order to fade
+        CanvasGroup canvasGroup = GetComponent<CanvasGroup>();
+
+        if (canvasGroup == null) {
+            Debug.LogWarning("Cannot fade - no canvas group attached!");
+            yield break;
+        }
+
+        // Fade time must be more than zero in order for a fade to be 
+        // animated
+        if (fadeTime <= 0) {
+            yield break;
+        }
+
+        // Keep track of how much time we've spent fading
+        var fadeTimeElapsed = 0f;
+
+        // Perform the fade every frame
+        while (fadeTimeElapsed < fadeTime) {
+
+            fadeTimeElapsed += Time.deltaTime;
+
+            // Calculate the fraction of the fade time (between 0 and 1)
+            var t = fadeTimeElapsed / fadeTime;
+
+            // Calculate our alpha; it starts at 1, and goes to 0
+            var alpha = 1f - t;
+
+            // Apply the fade
+            canvasGroup.alpha = alpha;
+
+            // Wait for the next frame
+            yield return null;
+        }
+
+        // Remove this game object from the scene
+        Destroy(gameObject);
+	}
+
+
+}
+----
 
 . Attach a +FadeAfterDelay+ component to the Fading List Item.
 
@@ -315,10 +437,11 @@ You want to manage a list of items that fade out some time after being removed.
 ===== Problem
 
 
-
+You want to display icons that highlight the position of objects on screen.
 
 ===== Solution
 
+// TODO
 
 ===== Discussion
 
@@ -332,10 +455,163 @@ You want to customise the Inspector for a component.
 
 ===== Solution
 
+We'll create a script that, when paired with a custom editor, allows you to quickly build a brick wall. When you add a Wall component, you'll specify the width and height of the wall, as well as a prefab to use for the brick. A button will in the inspector; when you click it, it will create bricks as child objects.
+
+First, we'll create the brick prefab.
+
+. Create a new Cube. Name it "Brick".
+. Set its scale to (2, 1, 1).
+. Drag it from the Hierarchy tab into the Project tab. This will create a new prefab.
+. Delete the original Brick from the scene.
+
+Next, we'll write the code for the wall. This file will contain two classes: one for the Wall component, and one for the custom editor.
+
+. Create a new C# script called Wall.cs. Add the following code to it:
+
+// snip: wall
+[source,swift]
+----
+// Snippet: 5-wall.txt
+
+#if UNITY_EDITOR
+// Bring in the UnityEditor namespace, if this file is being compiled for
+// the editor. (Code between the #if and #endif won't be included in the final 
+// game; it will only be available in the editor.)
+using UnityEditor;
+#endif
+
+// A wall.
+public class Wall : MonoBehaviour
+{
+    [SerializeField] public int rows = 5;
+    [SerializeField] public int columns = 5;
+
+    [SerializeField] public Renderer brickPrefab;
+}
+
+
+#if UNITY_EDITOR
+// The Editor object that will manage the Inspector for Wall components.
+[CustomEditor(typeof(Wall))]
+public class WallEditor : Editor {
+
+    // Called by Unity to display the contents of the Inspector for this object.
+    public override void OnInspectorGUI()
+    {
+        // Make sure that we have the latest data stored in the 
+        serializedObject.Update();
+
+        EditorGUILayout.PropertyField(serializedObject.FindProperty("rows"));
+        EditorGUILayout.PropertyField(serializedObject.FindProperty("columns"));
+
+        EditorGUILayout.PropertyField(serializedObject.FindProperty("brickPrefab"));
+
+        serializedObject.ApplyModifiedProperties();
+
+        if (GUILayout.Button("Create Wall")) {
+            CreateWall();
+        }
+    }
+
+    void CreateWall() {
+        // Register the state of this object before we make changes to its contents
+        Undo.RegisterFullObjectHierarchyUndo(target, "Create Wall");
+
+        var wall = target as Wall;
+
+        if (wall == null) {
+            return;
+        }
+
+        // Temporarily store all current children
+        GameObject[] allChildren = new GameObject[wall.transform.childCount];
+
+        int i = 0;
+
+        // We can't call DestroyImmediate on the objects in a list that we're 
+        // iterating over, because doing that would change the size of the list
+        // as we're iterating over it. Instead, we copy references to them into 
+        // an array of fixed size, and then destroy that.
+
+        // Find all child objects, and temporarily put them in the array
+        foreach (Transform child in wall.transform)
+        {
+            allChildren[i] = child.gameObject;
+            i += 1;
+        }
+
+        // We can now iterate over that array and destroy them
+        foreach (GameObject child in allChildren)
+        {
+            // Destroy the object, and also record it as an undo-able action
+            DestroyImmediate(child.gameObject);
+        }
+
+        // We can now replace them with new objects
+        var brickSize = wall.brickPrefab.GetComponent<Renderer>().bounds.size;
+
+        for (int row = 0; row < wall.rows; row++) {
+
+            // Figure out where the row should be
+            var rowPosition = Vector3.zero;
+            rowPosition.y += brickSize.y * row;
+
+            for (int column = 0; column < wall.columns; column++)
+            {
+                // Figure out where the brick should be
+                var columnPosition = rowPosition;
+                columnPosition.x += brickSize.x * column;
+
+                // Every second row is offset a bit
+                if (row % 2 == 0) {
+                    columnPosition.x += brickSize.x / 2f;
+                }
+
+                // PrefabUtility.InstantiatePrefab is like Instantiate, but it
+                // remembers that it was a prefab, and maintains the connection.
+                // (We have to cast it to GameObject because there's no generic
+                // version of InstantiatePrefab - the compiler won't figure 
+                // out the type automatically based on the type that was 
+                // passed in.
+
+                var brick = PrefabUtility
+                    .InstantiatePrefab(wall.brickPrefab.gameObject) as GameObject;
+
+                // Give it a name appropriate to its position
+                brick.name = string.Format("{0} ({1},{2})",
+                                           wall.brickPrefab.name, column, row);
+
+                // Place it in the scene
+                brick.transform.SetParent(wall.transform, false);
+
+                // Update its position, relative to its parent
+                brick.transform.localPosition = columnPosition;
+
+                // Don't rotate it, relative to its parent
+                brick.transform.localRotation = Quaternion.identity;
+
+            }
+        }
+    }
+
+}
+#endif 
+----
+
+. Create a new empty game object, called "Wall". Add a +Wall+ component to it.
+
+. Drag the Brick prefab into the Brick Prefab slot.
+
+. Click the Create Wall button. A wall of bricks will appear.
 
 ===== Discussion
 
-
+Discuss how editors draw their contents.
+Discuss GUILayout.
+Discuss EditorGUILayout.
+Discuss PropertyField.
+Discuss GUILayout.Button, as well as some other methods in GUILayout and EditorGUILayout that produce fields.
+Discuss how PrefabUtility.InstantiatePrefab differs from Instantiate (it maintains the prefab connection, Instantiate doesn't)
 
 === Attribute drawers
 // card: https://trello.com/c/iSoIDoTN
@@ -347,6 +623,7 @@ You want to customise how the Inspector draws a type of variable when a certain 
 
 ===== Solution
 
+helpbox attribute
 
 ===== Discussion
 
