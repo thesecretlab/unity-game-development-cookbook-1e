@@ -120,8 +120,7 @@ public class MultiValuePropertyDrawer : PropertyDrawer {
         // The height of a MultiValue property is the height of both of its two
         // child properties, plus the spacing between them.
 
-        // Unity draws two pixels in between each line
-        int lineSpacing = 2;
+        float lineSpacing = EditorGUIUtility.standardVerticalSpacing;
 
         // Get the child properties 
         var indexProperty = property.FindPropertyRelative("_selectedIndex");
