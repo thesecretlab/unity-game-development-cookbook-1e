@@ -613,34 +613,6 @@ Discuss PropertyField.
 Discuss GUILayout.Button, as well as some other methods in GUILayout and EditorGUILayout that produce fields.
 Discuss how PrefabUtility.InstantiatePrefab differs from Instantiate (it maintains the prefab connection, Instantiate doesn't)
 
-=== Attribute drawers
-// card: https://trello.com/c/iSoIDoTN
-
-===== Problem
-
-You want to customise how the Inspector draws a type of variable when a certain attribute is attached to it. For example, the +Header+ attribute causes Unity to draw a label above a variable in the Inspector.
-
-
-===== Solution
-
-helpbox attribute
-
-===== Discussion
-
-
-
-=== Scripted importers
-// card: https://trello.com/c/nhi9erP9
-
-===== Problem
-
-You want to write code that lets Unity import a new type of files.
-
-===== Solution
-
-
-===== Discussion
-
 
 
 === Property drawers
@@ -652,6 +624,182 @@ You want to customise how the Inspector draws variables of a certain type. For e
 
 ===== Solution
 
+We'll demonstrate how to do this by defining a new type, called "MultiValue". This will contain a list of strings, of which one can be chosen in the Inspector.
+
+. Create a new C# script called MultiValue. Add the following code to it:
+
+// snip: multivalue
+[source,swift]
+----
+// Snippet: 6-multivalue.txt
+
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
+
+[System.Serializable]
+public class MultiValue {
+
+    // The index of the currently selected value.
+    [SerializeField] int _selectedIndex = 0;
+
+    // The list of available options
+    [SerializeField] string[] options;
+
+    // Manages the selected index, and keeps it from going out of bounds.
+    public int SelectedIndex {
+        get {
+            return _selectedIndex;
+        }
+        set {
+            value = Mathf.Clamp(value, 0, options.Length);
+        }
+    }
+
+    // Creates a new chooser, using the specified values.
+    public MultiValue(params string[] values) {
+        this.options = values;
+    }
+
+    // Returns the text of the currently selected value.
+    public string SelectedValue {
+        get {
+            if (options.Length > 0) {
+                return options[_selectedIndex];
+            } else {
+                return null;
+            }
+        }
+    }
+}
+----
+
+. Create a new empty game object, and call it "Demo".
+
+. Create a new C# script called MultiValueDemo. Add the following code to it.
+
+// snip: multivaluedemo
+[source,swift]
+----
+// Snippet: 7-multivaluedemo.txt
+
+// A simple component to demo the MultiValueChooser property drawer.
+public class MultiValueDemo : MonoBehaviour {
+
+    [SerializeField] 
+    MultiValue multiValue = new MultiValue("One", "Two", "Three");
+}
+----
+
+Note how the +MultiValue+ property looks like <<property-drawer-original>>.
+
+img: property-drawer-original
+
+Next, add the following code to the end of MultiValue.cs.
+
+// snip: multivalue_editor
+[source,swift]
+----
+// Snippet: 8-multivalue_editor.txt
+
+#if UNITY_EDITOR
+// Overrides how Unity will draw a MultiValueproperty.
+[CustomPropertyDrawer(typeof(MultiValue))]
+public class MultiValuePropertyDrawer : PropertyDrawer {
+
+    // Called by Unity when it needs to draw a MultiValue property in the
+    // Inspector.
+    public override void OnGUI(Rect position, SerializedProperty property,
+                               GUIContent label)
+    {
+        // Ensure that the controls found in the GUI class behave properly. This
+        // also tells Unity that any edit to any field in here should be recorded
+        // for the purposes of Undoing them.
+        EditorGUI.BeginProperty(position, label, property);
+
+        // Get a reference to the variables that store the info we need
+        var indexProperty = property.FindPropertyRelative("_selectedIndex");
+        var valuesProperty = property.FindPropertyRelative("options");
+
+        // Calculate the rectangle to draw the first line in. This will hold
+        // our Toolbar (our list of buttons).
+        var firstLinePosition = position;
+        firstLinePosition.height = EditorGUI.GetPropertyHeight(indexProperty);
+
+        // Use this to calculate the rectangle to draw the second property in.
+        // (This will vary, depending on whether the user has elected to expand
+        // the list in the Inspector or not.)
+        var secondLinePosition = firstLinePosition;
+        secondLinePosition.y += 2 + firstLinePosition.height;
+        secondLinePosition.height = EditorGUI.GetPropertyHeight(valuesProperty);
+
+        // Display the label in front of the toolbar, and get back a new rectangle
+        // to draw the toolbar in.
+        firstLinePosition = EditorGUI.PrefixLabel(
+            firstLinePosition, new GUIContent(property.displayName));
+
+        // Get every string inside the "options" property, as an array
+        string[] labels = new string[valuesProperty.arraySize];
+
+        for (int i = 0; i < labels.Length; i++) {
+            labels[i] = valuesProperty.GetArrayElementAtIndex(i).stringValue;
+        }
+
+        // Because Toolbar is not in the EditorGUI class, it won't automatically
+        // report to the editor that it was updated in a way that the editor
+        // can track for the purposes of the Undo system. So, we use 
+        // BeginChangeCheck before drawing the toolbar, and call EndChangeCheck.
+        // If EndChangeCheck returns true, the user made a change.
+        EditorGUI.BeginChangeCheck();
+        var index = indexProperty.intValue;
+        var newValue = GUI.Toolbar(firstLinePosition, index, labels);
+        if (EditorGUI.EndChangeCheck()) {
+            // The toolbar was changed.
+            indexProperty.intValue = newValue;
+        }
+
+        // Draw the 'options' list as a regular list. This will also draw things
+        // like the expand arrow, the items in the list, and the number of items
+        // in the list.
+        EditorGUI.indentLevel += 1;
+        EditorGUI.PropertyField(secondLinePosition, valuesProperty, true);
+        EditorGUI.indentLevel -= 1;
+
+        // We're done editing this property.
+        EditorGUI.EndProperty();
+    }
+
+    // Called by Unity to determine the height of the MultiValue property.
+    public override float GetPropertyHeight(SerializedProperty property, 
+                                            GUIContent label)
+    {
+
+        // The height of a MultiValue property is the height of both of its two
+        // child properties, plus the spacing between them.
+
+        float lineSpacing = EditorGUIUtility.standardVerticalSpacing;
+
+        // Get the child properties 
+        var indexProperty = property.FindPropertyRelative("_selectedIndex");
+        var valuesProperty = property.FindPropertyRelative("options");
+
+        // Calculate the height of this property by getting the height of both
+        // properties (including the strings inside the options, if it's been
+        // expanded), plus the line spacing
+        float indexHeight = EditorGUI.GetPropertyHeight(indexProperty);
+        float optionsHeight = EditorGUI.GetPropertyHeight(valuesProperty, true);
+
+        return indexHeight + lineSpacing + optionsHeight;
+    }
+
+}
+
+#endif 
+----
+
+When you return to Unity, the Inspector will look like <<property-drawer-custom>>. You can select a string from the bar at the top of the property, and modify the available strings as well. If you add more properties to the +MultiValueDemo+ class, they will be displayed as per normal.
+
+img: property-drawer-custom
 
 ===== Discussion
 
@@ -659,7 +807,142 @@ Discuss how normally Unity draws the child properties of a class
 
 Discuss how you need to do all of it yourself if you override it
 
-=== Asset post processing
+Discuss how PropertyDrawers can't use EditorGUILayout, but must use EditorGUI instead, which means you need to specify the rectangles yourself
+
+=== Attribute drawers
+// card: https://trello.com/c/iSoIDoTN
+
+===== Problem
+
+You want to customise how the Inspector draws a type of variable when a certain attribute is attached to it. For example, the +Header+ attribute causes Unity to draw a label above a variable in the Inspector.
+
+
+===== Solution
+
+We'll add an attribute that lets you draw a help box above variables, like so:
+
+// snip: helpbox_demo
+[source,swift]
+----
+// Snippet: 9-helpbox_demo.txt
+
+public class HelpBoxDemo : MonoBehaviour {
+
+    [HelpBox(text = "Here's a help box above the variable!")]
+    [SerializeField] int integer;
+
+}
+----
+
+This code produces the following Inspector: <<property-attribute>>
+
+img: property-attribute
+
+To create the +HelpBox+ attribute, create a new C# script called HelpBox.cs, and add the following code to it:
+
+// snip: helpbox_attribute
+[source,swift]
+----
+// Snippet: 10-helpbox_attribute.txt
+
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
+
+// A HelpBoxAttribute attribute can be placed above a variable to make it display a 
+// help box above it in the inspector.
+
+// Note how we define the HelpBoxAttribute class _outside_ the #if UNITY_EDITOR
+// areas. This because code that refers to the HelpBox will be compiled outside
+// of the editor context (that is, with UNITY_EDITOR not defined), and it will 
+// fail to compile if the class doesn't exist.
+
+public class HelpBoxAttribute : PropertyAttribute
+{
+    // The text that will appear in the help box.
+    public string text;
+}
+
+#if UNITY_EDITOR
+// The code that draws the help box, as well as the original property.
+[CustomPropertyDrawer(typeof(HelpBoxAttribute))]
+public class HelpBoxAttributePropertyDrawer : PropertyDrawer {
+    public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
+    {
+
+        // Let's start by calculating the rectangle in which we'll draw the 
+        // help box.
+
+        // 'position' is the rectangle that we've been given to draw everything
+        // to do with this property. It's calculated by taking the width of the
+        // Inspector tab, and the height returned by GetPropertyHeight.
+
+        // The help box will be at the top of the property, so we just take the
+        // original position, and reduce the height.
+        var helpBoxPosition = position;
+        helpBoxPosition.height = HelpBoxHeight;
+
+        // Next, we figure out the rectangle we need to draw the property in.
+
+        // We'll start with the entire available area...
+        var propertyPosition = position;
+
+        // Shift it down by the help box's height, plus line spacing
+        propertyPosition.y += EditorGUIUtility.standardVerticalSpacing + 
+            helpBoxPosition.height;
+
+        // And update its height to be however tall the property wants to be,
+        // including any child properties.
+        propertyPosition.height = EditorGUI.GetPropertyHeight(property, includeChildren: true);
+
+        // Get the text from the HelpBoxAttribute.
+        HelpBoxAttribute helpBox = (attribute as HelpBoxAttribute);
+        string text = helpBox.text;
+
+        // Draw the help box itself.
+        EditorGUI.HelpBox(helpBoxPosition, text, MessageType.Info);
+
+        // Draw the original property underneath.
+        EditorGUI.PropertyField(propertyPosition, property, includeChildren: true);
+
+
+    }
+
+    public override float GetPropertyHeight(SerializedProperty property, GUIContent label)
+    {
+        // Calculate the height of the help box, given the editor width (the text might wrap over multiple lines)
+
+        float lineSpacing = EditorGUIUtility.standardVerticalSpacing;
+        float propertyHeight = EditorGUI.GetPropertyHeight(property, includeChildren: true);
+
+        return HelpBoxHeight + lineSpacing + propertyHeight;
+
+    }
+
+    // Calculates the height of the help box.
+    private float HelpBoxHeight
+    {
+        get
+        {
+            var width = EditorGUIUtility.currentViewWidth;
+            var helpBoxAttribute = attribute as HelpBoxAttribute;
+            var content = new GUIContent(helpBoxAttribute.text);
+            float helpBoxHeight = EditorStyles.helpBox.CalcHeight(content, width);
+
+            // Add a single line's height to ensure that text doesn't get 
+            // clipped
+            return helpBoxHeight + EditorGUIUtility.singleLineHeight;
+        }
+    }
+}
+#endif 
+----
+
+===== Discussion
+
+note how you can call the HelpBoxAttribute just "HelpBox" in your code - it works just fine
+
+=== Asset processing
 // card: https://trello.com/c/44Ubj2DP
 
 ===== Problem
@@ -668,9 +951,64 @@ You want to customise how Unity imports certain files.
 
 ===== Solution
 
+Let's set up an asset post-processor that automatically sets up any texture whose filename ends in "_n", "_nrm" or "_normal" as a normal map.
+
+. Create a new C# script called NormalMapTextureImporter.cs, and add the following code:
+
+// snip: asset_preprocessor
+[source,swift]
+----
+// Snippet: 11-asset_preprocessor.txt
+
+----
+
+. Take a texture that contains a normal map - if you don't have one, a useful generator of normal map textures can be found at https://cpetry.github.io/NormalMap-Online/ - and rename it so that its name ends with "_n".
+
+. Import this texture into your project. The pr
 
 ===== Discussion
 
+Discuss common naming patterns in texture filenames (_d = diffuse, _e = emissive, _n = normal, etc)
+
+Discuss the difference between pre-processing methods (like OnPreprocessTexture) and post-processing methods (ike OnPostProcessTexture).
+
+=== Scripted importers
+// card: https://trello.com/c/nhi9erP9
+
+===== Problem
+
+You want to write code that lets Unity import a new type of file.
+
+===== Solution
+
+In this example, we'll make a custom importer that allows Unity to recognize text files whose file names end in ".cube", which contain JSON data that describes the size and colour of a cube.
+
+Let's begin by creating an asset that we'll then write an importer for.
+
+. Open your favourite text editor, and create a new empty file. (If you don't have a favourite editor, open Visual Studio, and choose New -> File. Make a new empty file.)
+
+. Put the following code in the file:
+
+// snip-file: Test.cube
+
+. Save the file as "Test.cube", in your Unity project's Assets folder.
+
+. Go to Unity. Note that while your Test.cube file is visible in the Assets folder, it's not usable in your project, because Unity doesn't know what to do with ".cube" files.
+
+. Create a new C# script, and enter the following code:
+
+// snip: cube_importer
+[source,swift]
+----
+// Snippet: 12-cube_importer.txt
+
+----
+
+. Return to Unity. Your Test.cube file will now be imported. It now contains three assets usable by Unity: a mesh, a material, and a game object that uses the mesh and material. You can drag the file into the scene, just like any other model.
+
+===== Discussion
+
+Discuss what this technique lets you do - define your own custom formats, add support for files that Unity doesn't have by default.
 
 
 === Wizards
@@ -682,6 +1020,86 @@ You want to create and display a window in the Unity Editor that lets the user p
 
 ===== Solution
 
+Let's create a wizard that creates a cube, and also creates a new material that uses a specified colour, all in a single click of a button.
+
+. Create a new C# scipt called CreateCubeWizard.cs, and add the following code to it:
+
+// snip: cube_wizard
+[source,swift]
+----
+// Snippet: 13-cube_wizard.txt
+
+#if UNITY_EDITOR
+// This entire class only exists in the Editor. It doesn't need to be included
+// in built games.
+using UnityEditor;
+
+// Create a wizard that generates a new cube, as well as a colour.
+public class CreateCubeWizard : ScriptableWizard {
+
+    // Create a new entry in the GameObject menu, called "Cube with Color".
+    // When it's selected, a CreateCubeWizard will appear. Note that this method
+    // must be both public and static for MenuItem to work.
+    [MenuItem("GameObject/Cube with Color")]
+    public static void CreateWizard() {
+
+        // Create and display the wizard.
+        DisplayWizard<CreateCubeWizard>("Create Cube");
+    }
+
+    // Stores temporary information about the cube that the user wants to make.
+    // These variables are drawn in the window, just like variables in a
+    // MonoBehaviour component are.
+    [SerializeField] Vector3 size = Vector3.zero;
+    [SerializeField] Color color = Color.white;
+
+    // Run when the Create button is clicked.
+    private void OnWizardCreate()
+    {
+
+        // Create a cube
+        var newCube = GameObject.CreatePrimitive(PrimitiveType.Cube);
+
+        // Scale it
+        newCube.transform.localScale = size;
+
+        // Create a new material, using the Standard shader (which is the 
+        // default)
+        var tintedMaterial = new Material(Shader.Find("Standard"));
+
+        // Give it a colour
+        tintedMaterial.color = color;
+
+        // Materials need to be saved to disk. To do this, we need to figure out
+        // where we can save the file. GenerateUniqueAssetPath will give
+        // us a path that's guaranteed to not already have a file present.
+        var desiredPath = AssetDatabase.GenerateUniqueAssetPath("Assets/Tinted.mat");
+
+        // Create and save the new asset.
+        AssetDatabase.CreateAsset(tintedMaterial, desiredPath);
+        AssetDatabase.SaveAssets();
+
+        // Visually "ping" the asset, as though we'd selected it in the Editor.
+        // This will show the user that a new file has been created, and where 
+        // to find it.
+        EditorGUIUtility.PingObject(tintedMaterial);
+
+        // Finally, make the new cube use this new material.
+        newCube.GetComponent<MeshRenderer>().material = tintedMaterial;
+
+    }
+}
+#endif
+----
+
+. Open the GameObject menu, and note that you'll see a new menu entry: "Cube with Color". Click it.
+
+. Enter your cube size and color, and click create.
+
+. A new cube will be added to the scene, a new material will be created with the colour, and the cube will be set up to use the new material.
 
 ===== Discussion
 
+Discuss what wizards can do, and what they're useful for.
+
+Discuss the broader UnityEditor API, and what you can do with it (lots of opportunity for automation.)
