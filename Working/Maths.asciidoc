@@ -1,0 +1,202 @@
+== Math
+
+=== Understanding Vectors
+// card: https://trello.com/c/K8vCgHZD
+
+////
+* Vector2
+* Vector3
+* Common vectors (up, down, left, right, back, forward)
+* Vector magnitude and what it is
+* Vector addition and subtraction
+* Measuring the distance between two points
+* Quickly comparing the distance between two points using sqrMagnitude
+* Scaling vectors
+* Dot product and what it's useful for (measures the difference between the direction that two vectors point in)
+* Cross product and what it's useful for (produces a vector that's orthogonal to both the inputs)
+* Vector projection and what it's useful for
+* MoveTowards is useful for making a vector move over time without overshooting
+* Reflect is useful for bouncing a vector off a plane defined by a normal
+* Lerp lets you interpolate between two vectors
+* LerpUnclamped does the same, but doesn't clamp
+////
+
+===== Problem
+
+You want to work with vectors, which are a fundamental type of value in 3D graphics that can represent locations in space and directions.
+
+===== Solution
+
+// snip: vector2
+
+// snip: vector3
+
+// snip: local_directions
+
+// snip: vector_add_subtract
+
+// snip: vector_magnitude
+
+// snip: vector_scaling
+
+// snip: dot_product
+
+// snip: cross_product
+
+// snip: move_towards
+
+// snip: vector_reflect
+
+// snip: vector_lerp
+
+
+===== Discussion
+
+
+
+=== Understanding matrices
+// card: https://trello.com/c/eWBNupad
+
+////
+* What a matrix is composed of
+* Applying a matrix to a vector
+ * MultiplyPoint, MultiplyVector (rotation only), MultiplyPoint3x4 (faster, no projection transforms) 
+* Creating a matrix that scales a vector
+* Creating a matrix that translates (moves) a vector
+* Creating a matrix that rotates a vector
+* Creating a translation-rotation-scaling matrix using Matrix4x4.TRS
+* Combining matrices together
+
+////
+
+===== Problem
+
+
+===== Solution
+
+
+===== Discussion
+
+
+
+=== Understanding Quaternions
+// card: https://trello.com/c/pQXNT5Rv
+
+////
+* What quaternions are
+* Why quaternions are used (rotations; better than matrices because they have fewer components, and because they have fewer components, they need fewer operations to work with them, which means they're faster, and because they can be interpolated easily)
+* Defining quaternions
+* The difference between quaternions and euler angles
+* What gimbal locking is and why quaternions solve the problem
+* Rotating a point with a quaternion
+* Spherical interpolation (slerp) - what it does (smoothly moves from one orientation to another) and why it's better than linear rotation (changes angle at the same speed at all times)
+
+////
+
+===== Problem
+
+
+===== Solution
+
+
+===== Discussion
+
+
+
+=== Working with Angles
+// card: https://trello.com/c/sbK5cXEi
+
+////
+* Converting from degrees to radians and back
+* Calculating the degrees between two vectors using dot product
+////
+
+===== Problem
+
+
+===== Solution
+
+
+===== Discussion
+
+
+
+=== Finding the distance to a target
+// card: https://trello.com/c/yE48E4MK
+
+===== Problem
+
+
+===== Solution
+
+
+===== Discussion
+
+
+
+=== Finding the angle to a target
+// card: https://trello.com/c/K1EQLOzW
+
+===== Problem
+
+
+===== Solution
+
+
+===== Discussion
+
+
+
+=== Detecting when an enemy is in range
+// card: https://trello.com/c/9xJOkwKd
+
+===== Problem
+
+
+===== Solution
+
+
+===== Discussion
+
+
+
+=== Curves
+// card: https://trello.com/c/XaFYBNnx
+
+////
+* Bezier curves
+////
+
+===== Problem
+
+
+===== Solution
+
+
+===== Discussion
+
+
+
+=== Creating tweening animations
+// card: https://trello.com/c/pwZLm9dG
+
+===== Problem
+
+
+===== Solution
+
+
+===== Discussion
+
+
+
+=== Using AnimationCurves to control interpolations
+// card: https://trello.com/c/pbYFNZrC
+
+===== Problem
+
+
+===== Solution
+
+
+===== Discussion
