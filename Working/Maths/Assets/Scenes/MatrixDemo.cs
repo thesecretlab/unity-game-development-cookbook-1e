@@ -168,8 +168,9 @@ public class MatrixDemo : MonoBehaviour {
             Debug.Log(result);
             // = (6, 1, 5)
 
-            // Note that the order of multiplication matters! Matrix multiplication
-            // is not "commutative", while multiplying regular numbers is.
+            // Note that, like quaternions, the order of multiplication matters! 
+            // Matrix multiplication is not "commutative", while multiplying 
+            // regular numbers is.
 
             // For example, 2 * 5 == 5 * 2 == 10.
             // But, translation * rotation != rotation * translation.
