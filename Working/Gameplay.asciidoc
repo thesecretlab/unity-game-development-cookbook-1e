@@ -27,10 +27,8 @@ Next, we'll set up the type of object that stores information about a quest.
 . Create a new C# script called Quest, and add the following code to it:
 
 // snip: quest
-[source,swift]
+[source,csharp]
 ----
-// Snippet: 0-quest.txt
-
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
@@ -185,10 +183,8 @@ We'll now set up the code that manages the quest.
 Create a new C# script called QuestManager, and add the following code to it:
 
 // snip: quest_manager
-[source,swift]
+[source,csharp]
 ----
-// Snippet: 1-quest_manager.txt
-
 // Represents the player's current progress through a quest.
 public class QuestStatus {
 
@@ -378,10 +374,8 @@ Next, we'll set up a class that represents a change to an objective's status tha
 . Create a new C# script called ObjectiveTrigger, and add the following code to it:
 
 // snip: objective_trigger
-[source,swift]
+[source,csharp]
 ----
-// Snippet: 2-objective_trigger.txt
-
 #if UNITY_EDITOR
 using UnityEditor;
 using System.Linq;
@@ -544,10 +538,8 @@ Finally, we'll set up the cubes so that they complete or fail objectives when th
 . Create a new C# script called TriggerObjectiveOnClick, and add the following code to it:
 
 // snip: trigger_objective_on_click
-[source,swift]
+[source,csharp]
 ----
-// Snippet: 3-trigger_objective_on_click.txt
-
 
 using UnityEngine.EventSystems;
 
@@ -608,10 +600,8 @@ Create a script that can receive a signal that it has taken damage, and has an a
 . Create a new C# script called "DamageReceiver", and add the following code to it:
 
 // snip: damage_receiver
-[source,swift]
+[source,csharp]
 ----
-// Snippet: 4-damage_receiver.txt
-
 public class DamageReceiver : MonoBehaviour {
 
     UnityEngine.Events.UnityEvent onDeath;
@@ -645,10 +635,8 @@ Next, create a script that detects if it has collided with another; if that othe
 . Create a new C# script called "DamageGiver", and add the following code to it:
 
 // snip: damage_giver
-[source,swift]
+[source,csharp]
 ----
-// Snippet: 5-damage_giver.txt
-
 public class DamageGiver : MonoBehaviour {
 
     [SerializeField] int damageAmount = 1;
@@ -679,10 +667,8 @@ To test this, we'll create a script that creates and emits projectiles.
 . Create a new C# script called "ProjectileShooter", and add the following code to it:
 
 // snip: projectile_shooter
-[source,swift]
+[source,csharp]
 ----
-// Snippet: 6-projectile_shooter.txt
-
 public class ProjectileShooter : MonoBehaviour {
 
     // The projectile to instantiate copies of
@@ -787,10 +773,8 @@ Next, we'll add the code that moves the camera.
 . Create a new C# script called TopDownCamera.cs, and add the following code to it:
 
 // snip: top_down_camera
-[source,swift]
+[source,csharp]
 ----
-// Snippet: 7-top_down_camera.txt
-
 // Allows for limited top-down movement of a camera.
 public class TopDownCameraMovement : MonoBehaviour {
 
@@ -888,10 +872,8 @@ Next, we'll create a script that can be told about when it's selected.
 . Create a new C# script called BoxSelectable, and add the following code to it:
 
 // snip: box_selectable
-[source,swift]
+[source,csharp]
 ----
-// Snippet: 8-box_selectable.txt
-
 // Handles the input and display of a selection box.
 public class BoxSelectable: MonoBehaviour {
 
@@ -912,10 +894,8 @@ Next, we'll create the script that updates the position and size of the selectio
 . Create a new C# script called BoxSelection, and add the following code to it:
 
 // snip: box_selection
-[source,swift]
+[source,csharp]
 ----
-// Snippet: 9-box_selection.txt
-
 // Handles the input and display of a selection box.
 public class BoxSelection : MonoBehaviour
 {
@@ -1074,10 +1054,8 @@ You want to create a collection of menu pages, in which only one menu is visible
 . Create a new script called +Menu+:
 
 // snip: menu
-[source,swift]
+[source,csharp]
 ----
-// Snippet: 10-menu.txt
-
 // Contains UnityEvent, which this script uses
 using UnityEngine.Events; 
 
@@ -1095,10 +1073,8 @@ public class Menu : MonoBehaviour {
 . Create a new script called +MenuManager+:
 
 // snip: menu_manager
-[source,swift]
+[source,csharp]
 ----
-// Snippet: 11-menu_manager.txt
-
 public class MenuManager : MonoBehaviour {
 
 	[SerializeField] List<Menu> menus = new List<Menu>();
@@ -1251,10 +1227,8 @@ img: vehicle-wheel-placement
 . Create a new script, and call it Vehicle. Add the following code to it:
 
 // snip: vehicle
-[source,swift]
+[source,csharp]
 ----
-// Snippet: 12-vehicle.txt
-
 // Configures a single wheel's control parameters.
 [System.Serializable]
 public class Wheel {
@@ -1378,10 +1352,8 @@ Your car tips over because it's rotating around its center of mass, which is too
 . Create a new C# script called +AdjustCenterOfMass+, with the following code:
 
 // snip: adjust_center_of_mass
-[source,swift]
+[source,csharp]
 ----
-// Snippet: 13-adjust_center_of_mass.txt
-
 [RequireComponent(typeof(Rigidbody))]
 public class AdjustCenterOfMass : MonoBehaviour {
 
@@ -1449,10 +1421,8 @@ img: racing-speed-boost
 . Create a new C# script called SpeedBoost, and add the following code to it:
 
 // snip: speed_boost
-[source,swift]
+[source,csharp]
 ----
-// Snippet: 14-speed_boost.txt
-
 public class SpeedBoost : MonoBehaviour {
 
     // The amount of time the boost should apply
@@ -1508,10 +1478,8 @@ You want to create a camera that rotates around a target's position at a fixed d
 . Replace its code with the following:
 
 // snip: orbiting_camera
-[source,swift]
+[source,csharp]
 ----
-// Snippet: 15-orbiting_camera.txt
-
 public class OrbitingCamera : MonoBehaviour
 {
 
@@ -1665,10 +1633,8 @@ You want to detect when there's an object between the camera and the target, and
 Add the following variable to the orbiting camera class:
 
 // snip: orbiting_camera_clip_variables
-[source,swift]
+[source,csharp]
 ----
-// Snippet: 16-orbiting_camera_clip_variables.txt
-
     // When true, the camera will adjust its distance when there's a collider 
 	// between it and the target
 	[SerializeField] bool clipCamera;
@@ -1677,10 +1643,8 @@ Add the following variable to the orbiting camera class:
 Next, add the following code to the class' +LateUpdate+ method:
 
 // snip: orbiting_camera_clip_code context:5
-[source,swift]
+[source,csharp]
 ----
-// Snippet: 17-orbiting_camera_clip_code_context:5.txt
-
 			if (clipCamera) {
 
                 // We'll cast out a ray from the target to the position we just
@@ -1731,10 +1695,8 @@ img: lap-tracking-track
 . Create a new C# script called Checkpoint, and add the following code to it. Note that it contains two classes - one of them is special editor-only code that adds buttons to the Inspector to help build the track.
 
 // snip: checkpoint
-[source,swift]
+[source,csharp]
 ----
-// Snippet: 18-checkpoint.txt
-
 #if UNITY_EDITOR
 // Include the UnityEditor namespace when this class is being used in the Editor.
 using UnityEditor;
@@ -1882,10 +1844,8 @@ img: lap-tracking-circuit-end
 . Create a new C# script called LapTracker, and add the following code to it.
 
 // snip: lap_tracker
-[source,swift]
+[source,csharp]
 ----
-// Snippet: 19-lap_tracker.txt
-
 // Used to help figure out the start of the circuit with fewer lines of code.
 using System.Linq;
 

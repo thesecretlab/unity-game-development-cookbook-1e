@@ -1,0 +1,316 @@
+== Graphics
+
+=== Using sprites in a scene
+// card: https://trello.com/c/3JeqpTSu
+
+===== Problem
+
+You want to create a scene that uses sprites, which are textures that appear on the screen.
+
+===== Solution
+
+. Add a texture to your project.
+. Select the texture, and 
+
+// TODO: still working on this
+
+===== Discussion
+
+Mention that sprites are technically in 3D space, and what can mean for your scene layouts (stuff like how sprites can go behind other sprites, and how you can set up the camera to use perspective vs ortographic)
+
+=== Customising sprite physics shapes
+// card: https://trello.com/c/PAchcMaX
+
+===== Problem
+
+
+
+===== Solution
+
+
+===== Discussion
+
+
+
+=== Creating a custom tile map brush
+// card: https://trello.com/c/DkXZhkVu
+
+===== Problem
+
+
+===== Solution
+
+
+===== Discussion
+
+
+
+=== Sprite sort layers
+// card: https://trello.com/c/C1mtzFhd
+
+===== Problem
+
+
+===== Solution
+
+
+===== Discussion
+
+
+
+=== Working with tilemaps
+// card: https://trello.com/c/KNOi8LYo
+
+===== Problem
+
+
+===== Solution
+
+
+===== Discussion
+
+
+
+=== Using lighting with sprites
+// card: https://trello.com/c/7Pyrym63
+
+===== Problem
+
+
+===== Solution
+
+
+===== Discussion
+
+
+=== Understanding how lighting works in Unity
+// card: https://trello.com/c/rz2WDrlL
+
+===== Problem
+
+
+===== Solution
+
+
+===== Discussion
+
+
+
+=== Understanding the rendering pipeline
+// card: https://trello.com/c/NKz4kUbC
+
+===== Problem
+
+
+===== Solution
+
+
+===== Discussion
+
+
+
+=== Understanding the relationship between materials, shaders and meshes
+// card: https://trello.com/c/OfTz1QtP
+
+===== Problem
+
+
+===== Solution
+
+
+===== Discussion
+
+
+
+=== Creating a flat colour shader
+// card: https://trello.com/c/cYTlzO4j
+
+===== Problem
+
+
+===== Solution
+
+
+===== Discussion
+
+
+
+=== Creating a surface shader
+// card: https://trello.com/c/o70tsMjW
+
+===== Problem
+
+
+===== Solution
+
+
+===== Discussion
+
+
+
+=== Distortion effects
+// card: https://trello.com/c/hpkxkB2a
+
+===== Problem
+
+
+===== Solution
+
+
+===== Discussion
+
+
+
+=== Refraction (glass effect)
+// card: https://trello.com/c/1SB0dh80
+
+===== Problem
+
+
+===== Solution
+
+
+===== Discussion
+
+
+
+=== Glow effect
+// card: https://trello.com/c/To0BK6H5
+
+===== Problem
+
+
+===== Solution
+
+
+===== Discussion
+
+
+
+=== Post-processing stack
+// card: https://trello.com/c/KzlvAO5A
+
+===== Problem
+
+
+===== Solution
+
+
+===== Discussion
+
+
+
+=== Seeing through walls
+// card: https://trello.com/c/eavH8y9O
+
+===== Problem
+
+
+===== Solution
+
+
+===== Discussion
+
+
+
+=== Screen space banding (hologram scanlines effect)
+// card: https://trello.com/c/RmJbZzW7
+
+===== Problem
+
+
+===== Solution
+
+
+===== Discussion
+
+
+
+=== Sampling textures in shaders
+// card: https://trello.com/c/t9N0TVq3
+
+===== Problem
+
+
+===== Solution
+
+
+===== Discussion
+
+
+
+=== Using the stencil buffer
+// card: https://trello.com/c/9zF6uabT
+
+===== Problem
+
+
+===== Solution
+
+
+===== Discussion
+
+
+
+=== Normal mapping
+// card: https://trello.com/c/vjLOgpvE
+
+===== Problem
+
+
+===== Solution
+
+
+===== Discussion
+
+
+
+=== Screen effects (colour grading, bloom, blur)
+// card: https://trello.com/c/QTJ2HyaY
+
+===== Problem
+
+
+===== Solution
+
+
+===== Discussion
+
+
+
+=== Creating an animated shader
+// card: https://trello.com/c/ZS8UtBAu
+
+===== Problem
+
+
+===== Solution
+
+
+===== Discussion
+
+
+
+=== Using realtime and baked lighting
+// card: https://trello.com/c/k7S841XZ
+
+===== Problem
+
+
+===== Solution
+
+
+===== Discussion
+
+
+
+=== Working with light probes
+// card: https://trello.com/c/RHmGk445
+
+===== Problem
+
+
+===== Solution
+
+
+===== Discussion
