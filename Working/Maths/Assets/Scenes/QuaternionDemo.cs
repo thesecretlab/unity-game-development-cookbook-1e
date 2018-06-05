@@ -46,11 +46,11 @@ public class QuaternionDemo : MonoBehaviour {
             var halfwayRotated = Quaternion.Slerp(identity, rotationX, 0.5f);
 
             // Quaternions can be combined together. For example, to rotate
-            // something around the X axis and then around the Y axis, you
-            // multiply them:
+            // something around the Y axis and then around the X axis, you
+            // multiply them (they're applied in reverse order):
 
-            var combinedRotation = Quaternion.Euler(90, 0, 0) *
-                                             Quaternion.Euler(0, 90, 0);
+            var combinedRotation = Quaternion.Euler(90, 0, 0) * // rotate around X
+                                   Quaternion.Euler(0, 90, 0); // rotate around Y
 
             // Note that this combination is not "commutative" - the order of
             // multiplication matters.

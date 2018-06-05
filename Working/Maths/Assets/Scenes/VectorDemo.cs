@@ -97,6 +97,23 @@ public class VectorDemo : MonoBehaviour {
             // To get this, use the sqrMagnitude property.
 
             var distanceSquared = (point2 - point1).sqrMagnitude; // = 9
+
+            // Lots of operations work best on vectors that have a magnitude of 1.
+            // A vector with magnitude of 1 is also called a "unit" vector, because
+            // its magnitude is a single unit (that is, one.)
+
+            // You can take a vector and produce a new one that has the same 
+            // direction but with magnitude of 1 by dividing it by its own 
+            // magnitude. 
+            // This is called "normalizing" it.
+
+            var bigVector = new Vector3(4, 7, 9); // magnitude = 12.08
+            var unitVector = bigVector / bigVector.magnitude; // magnitude = 1
+
+            // This is a common operation, so you can directly access a 
+            // normalized version of a vector by using the 'normalized' property:
+            var unitVector2 = bigVector.normalized;
+
             // END vector_magnitude
         }
 
