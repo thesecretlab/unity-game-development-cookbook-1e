@@ -2,18 +2,41 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+// Implements character controller movement.
 public class Movement : MonoBehaviour {
 
+    // The speed at which we can move, in units per second.
     [SerializeField] float moveSpeed = 8;
+
+    // The height of a jump, in units.
     [SerializeField] float jumpHeight = 2;
+
+    // The rate at which our vertical speed will be reduced, in units per
+    // second. 
     [SerializeField] float gravity = 20;
 
+    // The degree to which we can control our movement while in mid-air.
     [Range(0, 10), SerializeField] float airControl = 5;
 
+    // Our current movement direction. If we're on the ground, we have 
+    // direct control over it, but if we're in the air, we only have partial
+    // control over it.
     Vector3 moveDirection = Vector3.zero;
+
+    // A cached reference to the character controller, which we'll be using
+    // often.
+    CharacterController controller;
+
+    void Start()
+    {
+        controller = GetComponent<CharacterController>();
+    }
+
+    // We do our movement logic in FixedUpdate so that our movement can happen
+    // at the same pace as physics updates. If it didn't, we'd see jitter when
+    // we interact with physics objects that can move around.
+    void FixedUpdate () {
         
-	void FixedUpdate () {
-        CharacterController controller = GetComponent<CharacterController>();
 
         // The input vector describes the user's desired local-space movement;
         // if we're on the ground, this will immediately become our movement,
@@ -53,13 +76,17 @@ public class Movement : MonoBehaviour {
             // preserve our current y direction (so that the arc of the jump is
             // preserved)
             input.y = moveDirection.y;
-            moveDirection = 
-                Vector3.Lerp(moveDirection, input, airControl * Time.fixedDeltaTime);
+            moveDirection = Vector3.Lerp(moveDirection, input, 
+                                         airControl * Time.fixedDeltaTime);
         }
 
         // Bring our movement down by applying gravity over time
         moveDirection.y -= gravity * Time.fixedDeltaTime;
 
+        // Move the controller. The controller will refuse to move into other 
+        // colliders, which means that we won't clip through the ground or
+        // through other colliders. (However, this doesn't stop other colliders
+        // from moving into us, and it won't mean that 
         controller.Move(moveDirection * Time.fixedDeltaTime);
 	}
 

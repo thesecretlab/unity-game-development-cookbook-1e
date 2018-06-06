@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+// Implements pushing rigidbodies from a charactercollider.
 public class Pushing : MonoBehaviour {
 
-    [SerializeField] float pushPower = 5;
-
+    // Defines the possible types of pushing we can apply.
     public enum PushMode
     {
         // Don't allow any pushing
@@ -18,7 +18,11 @@ public class Pushing : MonoBehaviour {
         ApplyForces
     }
 
+    // The type of pushing we've selected.
     [SerializeField] PushMode pushMode = PushMode.DirectlySetVelocity;
+
+    // The amount of force to apply, when push mode is set to ApplyForces.
+    [SerializeField] float pushPower = 5;
 
     // Called when a character collider on the obejct that this script is 
     // attached to touches any other collider.
