@@ -2,11 +2,12 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+// BEGIN 3d_movement
 // Implements character controller movement.
 public class Movement : MonoBehaviour {
 
     // The speed at which we can move, in units per second.
-    [SerializeField] float moveSpeed = 8;
+    [SerializeField] float moveSpeed = 6;
 
     // The height of a jump, in units.
     [SerializeField] float jumpHeight = 2;
@@ -85,10 +86,11 @@ public class Movement : MonoBehaviour {
 
         // Move the controller. The controller will refuse to move into other 
         // colliders, which means that we won't clip through the ground or
-        // through other colliders. (However, this doesn't stop other colliders
-        // from moving into us, and it won't mean that 
+        // other colliders. (However, this doesn't stop other colliders from 
+        // moving into us. For that, we'd need to detect when we're overlapping
+        // another collider, and move away from them. We'll cover this in 
+        // another recipe!)
         controller.Move(moveDirection * Time.fixedDeltaTime);
 	}
-
-
 }
+// END 3d_movement

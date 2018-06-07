@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+// BEGIN grabbing
 // Implements pulling, grabbing, holding and throwing.
 // A rigidbody is required because we need one to connect our grabbing joint to
 [RequireComponent(typeof(Rigidbody))]
@@ -56,6 +57,9 @@ public class Grabbing : MonoBehaviour {
             Debug.LogError("Grab hold point must be a child of this object");            
         }
 
+        var playerCollider = GetComponentInParent<Collider>();
+
+        playerCollider.gameObject.layer = LayerMask.NameToLayer("Player");
     }
 
     private void Update()
@@ -118,13 +122,29 @@ public class Grabbing : MonoBehaviour {
         // is not kinematic, pick it up.
 
 
+        // Create a ray that goes from our current position, and goes out along
+        // our current direction.
         var ray = new Ray(transform.position, transform.forward);
-        RaycastHit hit;
-        float maxDistance = pullingRange;
 
-        if (Physics.Raycast(ray, out hit, maxDistance) == false)
+        // Create a variable to store the results of what we hit.
+        RaycastHit hit;
+
+        // Create a layer mask that represents every layer except the players
+        var everythingExceptPlayers = ~(1 << LayerMask.NameToLayer("Player"));
+
+        // Combine this layer mask with the one that raycasts usually use; this
+        // has the effect of removing the player layer from the list of layers
+        // to raycast against
+        var layerMask = Physics.DefaultRaycastLayers
+                               & everythingExceptPlayers;
+
+        // Perform a raycast that uses this layermask to ignore the players.
+        // We use our pulling range because it's the longest; if the object
+        // is actually within our (shorter) grabbing range, we'll grab it 
+        // instead of pulling it.
+        if (Physics.Raycast(ray, out hit, pullingRange, layerMask) == false)
         {
-            // Our raycast hit nothing.
+            // Our raycast hit nothing within the pulling range.
             return;
         }
 
@@ -138,10 +158,14 @@ public class Grabbing : MonoBehaviour {
             return;
         }
 
-        if (hit.distance < grabbingRange) {
-            // This object is in grabbing range; we can pick it up.
+        // We now have an object that's within our pulling range.
 
-            // Move the body to our grab position
+        // Is the object within the grabbing range, too?
+        if (hit.distance < grabbingRange) {
+            
+            // We can pick it up.
+
+            // Move the body to our grab position.
             grabbedRigidbody.transform.position = holdPoint.position;
 
             // Create a joint that will hold this in place, and configure it
@@ -213,3 +237,4 @@ public class Grabbing : MonoBehaviour {
         Drop();
     }
 }
+// END grabbing

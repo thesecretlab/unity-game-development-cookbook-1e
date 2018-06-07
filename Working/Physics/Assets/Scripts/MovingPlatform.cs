@@ -2,11 +2,12 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+// BEGIN moving_platform
 // Moves an object at a fixed speed through a series of points.
 public class MovingPlatform : MonoBehaviour {
 
     // The positions that the platform will move through stored in local position.
-    [SerializeField] Vector3[] points;
+    [SerializeField] Vector3[] points = {};
 
     // The speed at which it will move between them.
     [SerializeField] float speed = 10f;
@@ -110,3 +111,4 @@ public class MovingPlatform : MonoBehaviour {
         }
     }
 }
+// END moving_platform
