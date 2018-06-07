@@ -38,6 +38,7 @@ public class MovingPlatform : MonoBehaviour {
         transform.position = currentPoint;
 	}
 
+    // Returns the point that we're currently moving towards.
     Vector3 currentPoint {
         get {
             // If we have no points, return our current position

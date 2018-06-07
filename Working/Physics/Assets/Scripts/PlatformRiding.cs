@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+// BEGIN platform_riding
 // Implements platform riding (standing on a moving platform means we'll move
 // with the platform), and pushing (if an object moves into us, it will push
 // us away)
@@ -22,6 +23,8 @@ public class PlatformRiding : MonoBehaviour {
     // something, and if it is, push ourselves out of it.
     private void FixedUpdate()
     {
+        // First, we'll handle pushing the character collider out of the way
+        // if another object moves into it.
 
         // A character collider's physical shape is a capsule. We need to
         // ask the physics system if this capsule is overlapping anything else;
@@ -45,13 +48,15 @@ public class PlatformRiding : MonoBehaviour {
         var capsulePoint2 = transform.position - new Vector3(
             0, (controller.height / 2) + controller.radius, 0);
 
-        // The list of colliders we may be overlapping.
+        // The list of colliders we may be overlapping. We're unlikely to 
+        // overlap more than ten colliders, so make the list that long. (Adjust
+        // this if you're encountering lots of overlaps.)
         Collider[] overlappingColliders = new Collider[10];
 
-        // Figure out what colliders we're overlapping. We pass in the 
-        // overlappingColliders array, and it will be filled with references
-        // to other colliders. The function returns the number of colliders that
-        // it found.
+        // Figure out which colliders we're overlapping. We pass in the 
+        // overlappingColliders array, and it when this function returns, the 
+        // array will be filled with references to other colliders. The function
+        // returns the number of colliders that overlap the capsule.
         var overlapCount  = Physics.OverlapCapsuleNonAlloc(
             capsulePoint1, capsulePoint2,  // the centers of the spheres
             controller.radius,  // the radius of the spheres
@@ -64,13 +69,13 @@ public class PlatformRiding : MonoBehaviour {
         // the garbage collector will run more often, which means performance
         // hitches. By creating our own array locally, it's stored on the stack;
         // data on the stack doesn't get turned into garbage when it goes away,
-        // but it can't stay around after this function returns, but that's fine
+        // but it can't stay around after this function returns, which is fine
         // for this case.)
 
-        // For each overlapping collider...
+        // For each item we were told the capsule overlaps...
         for (int i = 0; i < overlapCount; i++) {
 
-            // Get the collider
+            // Get the collider the capsule overlaps
             var overlappingCollider = overlappingColliders[i];
 
             // If this collider is our controller, ignore it
@@ -113,6 +118,10 @@ public class PlatformRiding : MonoBehaviour {
         // Cast a ray down to our feet. If it hit a MovingPlatform, inherit its 
         // velocity.
 
+        // (We don't need to worry about avoiding the character controller here,
+        // because the raycast starts inside the controller, so it won't hit
+        // it.)
+
         var ray = new Ray(transform.position, Vector3.down);
         RaycastHit hit;
 
@@ -128,11 +137,11 @@ public class PlatformRiding : MonoBehaviour {
             var platform = hit.collider.gameObject.GetComponent<MovingPlatform>();
 
             if (platform != null) {
-                // If it did, update our position based on its current velocity.
+                // If it did, update our position based on the platform's
+                // current velocity.
                 transform.position += platform.velocity * Time.fixedDeltaTime;
             }
         }
     }
-
-
 }
+// END platform_riding

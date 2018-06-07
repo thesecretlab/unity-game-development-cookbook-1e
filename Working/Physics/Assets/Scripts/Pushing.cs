@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+// BEGIN pushing
 // Implements pushing rigidbodies from a charactercollider.
 public class Pushing : MonoBehaviour {
 
@@ -82,3 +83,4 @@ public class Pushing : MonoBehaviour {
     }
 
 }
+// END pushing
