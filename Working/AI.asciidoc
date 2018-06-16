@@ -1,0 +1,165 @@
+== AI
+
+[[navigation]]
+=== Setting up a navigation mesh
+// card: https://trello.com/c/FgBKCYBc
+
+==== Problem
+
+You want to use a navigation mesh, which allows your game objects to find paths around a scene.
+
+==== Solution
+
+Navigation meshes are easiest to set up when your level is made of objects that you don't expect to move during gameplay, such as the ground, walls, and other obstacles.
+
+. Select the objects that you don't expect to move.
+. At the top-right of the inspector, click the drop-down arrow, and choose Navigation Static (<<animation_navigation_static>>)
+
+img: animation_navigation_static
+
+NOTE: You can also select the Static checkbox, which will mark the selected objects static for all other purposes as well.
+
+Once you have at least one object that's marked as Navigation Static, you can bake a navigation mesh.
+
+. Open the Window menu, and choose Navigation.
+. Go to the Bake tab. Click Bake.
+
+A navigation mesh will be generated (<<animation_navigation_navmesh>>)
+
+img: animation_navigation_navmesh
+
+==== Discussion
+
+Discuss what a navigation mesh is, and what it's used for (navigation agents are able to find paths around the mesh.)
+
+[[navigation_paths]]
+=== Finding paths on a navigation mesh
+// card: https://trello.com/c/4T37UE45
+
+==== Problem
+
+You want to create an object that can find a path from its current location to a given destination, avoiding walls and other obstacles. You want to test this feature by clicking on the world and making the object try to move to where you clicked.
+
+==== Solution
+
+. First, ensure that your scene has a nav mesh, by following the steps in [[navigation]].
+. Create a new Capsule by opening the GameObject menu and choosing 3D Object -> Capsule.
+. Add a Nav Mesh Agent to the capsule.
+. Create a new C# script called MoveToPoint, and add the following code to it:
+
+// snip: navigation_move_to_point
+
+. Add a MoveToPoint component to the capsule.
+
+. Play the game. Click on somewhere in the world, and the capsule will start walking to the point you clicked.
+
+==== Discussion
+
+Discuss how agents may not be able to reach the point you specify; rather, they'll do their best.
+
+[[enemy_visibility]]
+=== Enemies detecting when they can see the player
+// card: https://trello.com/c/odXKNOIB
+
+==== Problem
+
+You want an object to be able to detect when it can "see" its target; that is, the target is both close enough to the object, and is in front of the object. You want to be able to visualise and configure the area in which targets can be seen.
+
+==== Solution
+
+. Create a new script called EnemyVisibility.cs, and add the following code to it:
+
+// snip: enemy_visibility
+
+. Create two capsules in the scene, by opening the GameObject menu and choosing 3D Object -> Capsule.
+
+. Add an EnemyVisibility component to one of the capsules. Make its Target field refer to the other capsule. Note how you can see the visibility arc (<<ai_visibility_cone>>)
+
+img: ai_visibility_cone
+
+. Play the game. The capsule with the EnemyVisibility component will turn bright yellow when it can see its target. 
+
+
+==== Discussion
+
+Discuss the algorithm used by this component (basically follow the comments)
+
+
+=== Finding a good distribution of random points (poisson disc)
+// card: https://trello.com/c/mWF5bleN
+
+==== Problem
+
+You want to efficiently find a random collection of points in a given area.
+
+==== Solution
+
+Use a Poisson disc distribution.
+
+Create a new C# script called PoissonDiscSampler.cs and add the following code to it.
+
+// snip: poisson_disc_sampler
+
+NOTE: This script doesn't define a new component. Instead, it defines a class that other scripts can make use of.
+
+To test this, create a new C# script called PoissonDiscDemo.cs and add the following code to it:
+
+// snip: poisson_disc_demo
+
+Next, create an empty game object, and add a PoissonDiscDemo component to it. Play the game, and notice how it creates a randomly-positioned field of dots. Note also that the dots are fairly evenly distributed - they don't bunch up together, and there are no sparse areas (<<ai_poisson>>)
+
+img: ai_poisson
+
+==== Discussion
+
+Discuss how random noise is useful - it makes things look less artificial, and can serve as the basis for making decisions about things like pathfinding (which is what it's used for in the next recipe)
+
+=== Enemies detecting where they can take cover
+// card: https://trello.com/c/CgqBpjWz
+
+==== Problem
+
+You want to create an object that hides from another object, taking into account that object's ability to see things and the surrounding environment.
+
+==== Solution
+
+. Create a new C# script called EnemyAvoider.cs, and add the following code to it:
+
+// snip: enemy_avoider
+
+. Add an EnemyAvoider script to the object that should be hiding from the target.
+
+. Ensure that the target has an EnemyVisibility component (from <<enemy_visibility>>).
+
+. Set the Visbility field to the target.
+
+. Play the game. When the avoider can be seen by the target, it looks for a place where it can't be seen, and moves to it (<<ai_avoiding>>)
+
+img: ai_avoiding The avoider, currently in the process of looking for a place to hide. Red lines point to places where it can be see, while green lines point to places where it can't be seen.
+
+==== Discussion
+
+Discuss how this algorithm works: every so often, if the target can see us, it generates a collection of random points nearby, and for each point, figures out if the target can see that point. Any point that can be seen is discarded. All remaining points are then tested to see if they can be reached; any point that can't be is discarded. Finally, each point is tested to find the length of the path to reach it, and the shortest is selected.
+
+For better performance, increase the Search Cell Size to reduce the number of possible hiding spots that are tested, and if you've still got too many points, reduce the Search Area Size to reduce the range of possible hiding spots.
+
+=== Building and using a state machine
+// card: https://trello.com/c/sZ6MKKEF
+
+==== Problem
+
+You want to use a state machine, which is a programming pattern that lets you manage the various states that an object can be in.
+
+==== Solution
+
+. Create a new C# script called StateMachine, and add the following code to it:
+
+// snip: statemachine
+
+This +StateMachine+ class can be used like this:
+
+// snip: statemachine_demo
+
+==== Discussion
+
+Discuss the theory of state machines.

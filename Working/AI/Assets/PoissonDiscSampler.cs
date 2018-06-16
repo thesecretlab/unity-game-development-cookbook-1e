@@ -11,6 +11,8 @@ using UnityEngine;
 // http://gregschlom.com/devlog/2014/06/29/Poisson-disc-sampling-Unity.html
 // http://www.cs.ubc.ca/~rbridson/docs/bridson-siggraph07-poissondisk.pdf
 
+// Generates a distribution of 2D points that aren't too close to each other.
+// Operates in O(N) time.
 public class PoissonDiscSampler
 {
     // Maximum number of attempts before marking a sample as inactive.
@@ -72,8 +74,8 @@ public class PoissonDiscSampler
 
                 float r = Mathf.Sqrt(Random.value * 3 * radius2 + radius2); 
 
-                Vector2 candidate = sample + r 
-                    * new Vector2(Mathf.Cos(angle), Mathf.Sin(angle));
+                Vector2 candidate = sample + r * new Vector2(
+                    Mathf.Cos(angle), Mathf.Sin(angle));
 
                 // Accept candidates if it's inside the rect and farther than 
                 // 2 * radius to any existing sample.

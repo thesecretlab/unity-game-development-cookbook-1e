@@ -5,7 +5,6 @@ using UnityEngine;
 // BEGIN poisson_disc_demo
 public class PoissonDiscDemo : MonoBehaviour {
 
-    List<Vector3> points;
 
     // The area in which we'll place our points
     [SerializeField] Vector2 size = new Vector2(10,10);
@@ -13,6 +12,10 @@ public class PoissonDiscDemo : MonoBehaviour {
     // The points won't be any closer than this to each other
     [SerializeField] float cellSize = 0.5f;
 
+    // The list of points we'll show
+    List<Vector3> points;
+
+    // Calculate the points to show when the game starts
     private void Awake()
     {
         // Create a list of points from the sampler
@@ -25,6 +28,7 @@ public class PoissonDiscDemo : MonoBehaviour {
         }
     }
 
+    // Visualise the points we've calculated
     private void OnDrawGizmos()
     {
         // Early out if we have no list to use

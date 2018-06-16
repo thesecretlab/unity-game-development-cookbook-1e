@@ -2,15 +2,14 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-// BEGIN enemy_visibility_editor
-// Put this at the top of the file
+// BEGIN enemy_visibility
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
 
-// END enemy_visibility_editor
-
-// BEGIN enemy_visibility
+// Detects when a given target is visible to this object. A target is visible
+// when it's both in range and in front of the target. Both the range and the
+// angle of visibility are configurable.
 public class EnemyVisibility : MonoBehaviour
 {
 
@@ -20,15 +19,18 @@ public class EnemyVisibility : MonoBehaviour
     // If the object is more than this distance away, we can't see it.
     public float maxDistance = 10f;
 
+    // The angle of our arc of visibility.
     [Range(0f, 360f)]
     public float angle = 45f;
 
     // If true, visualise changes in visilibity by changing material colour
     [SerializeField] bool visualize = true;
 
+    // A property that other classes can access to determine if we can currently
+    // see our target.
     public bool targetIsVisible { get; private set; }
 
-    // Check to see if we can see the target
+    // Check to see if we can see the target every frame.
     void Update()
     {
         targetIsVisible = CheckVisibility();
@@ -160,9 +162,7 @@ public class EnemyVisibility : MonoBehaviour
 
     }
 }
-// END enemy_visibility
 
-// BEGIN enemy_visibility_editor
 #if UNITY_EDITOR
 // A custom editor for the EnemyVisibility class. Visualises and allows
 // editing the visible range.
@@ -224,4 +224,4 @@ public class EnemyVisibilityEditor : Editor {
     }
 }
 #endif
-// END enemy_visibility_editor
+// END enemy_visibility

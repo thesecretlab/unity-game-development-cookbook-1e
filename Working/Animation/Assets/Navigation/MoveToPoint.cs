@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+// BEGIN navigation_move_to_point
 using UnityEngine.AI;
 // When the player clicks on a part of the world, the NavMeshAgent moves
 // to that position.
@@ -50,3 +51,4 @@ public class MoveToPoint : MonoBehaviour
         }
     }
 }
+// END navigation_move_to_point
