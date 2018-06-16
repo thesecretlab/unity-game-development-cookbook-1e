@@ -69,7 +69,8 @@ public class Pushing : MonoBehaviour {
         switch (pushMode)
         {
             case PushMode.DirectlySetVelocity:
-                // Directly apply the velocity. Less realistic, but can feel better.
+                // Directly apply the velocity. Less realistic, but can feel
+                // better.
                 hitRigidbody.velocity = controller.velocity;
                 break;
             case PushMode.ApplyForces:

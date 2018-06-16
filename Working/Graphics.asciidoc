@@ -10,307 +10,598 @@ You want to create a scene that uses sprites, which are textures that appear on 
 ===== Solution
 
 . Add a texture to your project.
-. Select the texture, and 
+. Select the texture, and set its Texture Type to "Sprite (2D and UI)" (<<graphics_sprite_setup>>). Click Apply.
 
-// TODO: still working on this
+img: graphics_sprite_setup
+
+. Drag the texture into the scene. Because it's now got a Sprite asset generated for it, Unity will create a Sprite Renderer for it (<<graphics_sprite_in_scene>>)
+
+img: graphics_sprite_in_scene
 
 ===== Discussion
 
 Mention that sprites are technically in 3D space, and what can mean for your scene layouts (stuff like how sprites can go behind other sprites, and how you can set up the camera to use perspective vs ortographic)
 
-=== Customising sprite physics shapes
-// card: https://trello.com/c/PAchcMaX
+=== Creating a simple material
+// card: https://trello.com/c/2ZY0GIAQ
 
-===== Problem
+==== Problem
 
+You want to customise the appearance of the surface of a 3D object, by creating a material.
 
+==== Solution
 
-===== Solution
+In this recipe, we'll customise a simple shape, though the steps apply to most other meshes you'll end up using in your game.
 
+. Create a new sphere by opening the GameObject menu and choosing 3D Object -> Sphere.
 
-===== Discussion
+. Open the Assets menu, and choose Create -> Material. Name it whatever you like.
 
+. Select the new material, and configure its colours (<<graphics_material_setup>>)
 
+img: graphics_material_setup
 
-=== Creating a custom tile map brush
-// card: https://trello.com/c/DkXZhkVu
+. Drag and drop the material onto the sphere.
 
-===== Problem
+==== Discussion
 
+Discuss the difference between: albedo, metalness, smoothness, emission. (Textures are covered in a later recipe.)
 
-===== Solution
+=== Controlling a material's property through a script
+// card: https://trello.com/c/lzVq4H5u
 
+==== Problem
 
-===== Discussion
+You want to change a property of a material during gameplay, such as its color.
 
+==== Solution
 
+Access the material from an object's renderer, and modify its properties. For example:
 
-=== Sprite sort layers
-// card: https://trello.com/c/C1mtzFhd
+// snip: material_change_color
 
-===== Problem
+==== Discussion
 
+Discuss the difference between a renderer's material (instanced when you access it via script) and its sharedMaterial (refers to the shared asset on disk; changing it changes the asset)
 
-===== Solution
+Discuss other methods on the Material class, like SetColor, SetFloat, SetInt,
 
+=== Creating an unlit material
+// card: https://trello.com/c/xthIokmb
 
-===== Discussion
+==== Problem
 
+You want to create a material that is a solid color, and doesn't participate in lighting.
 
+==== Solution
 
-=== Working with tilemaps
-// card: https://trello.com/c/KNOi8LYo
+. Open the Assets menu, and choose Create -> Material.
+. Set the shader to Unlit -> Color.
+. Apply the shader to an object, and observe that it ignores any lighting conditions; it just shows as a flat colour (<<graphics_material_unlit>>)
 
-===== Problem
+img: graphics_material_unlit
 
+==== Discussion
 
-===== Solution
+Discuss how unlit materials can be used when you're not going for a photorealistic look.
 
+=== Setting up a material using textures
+// card: https://trello.com/c/Ob6cTcfm
 
-===== Discussion
+==== Problem
 
+You want to use textures to control the appearance of a material.
 
+==== Solution
 
-=== Using lighting with sprites
-// card: https://trello.com/c/7Pyrym63
+Most slots in a material can take a texture, instead of a flat colour. Generally, most modern materials use multiple textures to define their surface appearance; in addition to the albedo, they also use textures to define normals, roughness, ambient occlusion, and more.
 
-===== Problem
+For example, the material in <<graphics_material_metal>> uses six maps (seen in <<graphics_material_metal_setup>>)
 
+img: graphics_material_metal
 
-===== Solution
+img: graphics_material_metal_setup
 
 
-===== Discussion
+==== Discussion
 
+Discuss how https://cc0textures.com has a good source of textures to experiment with.
 
-=== Understanding how lighting works in Unity
-// card: https://trello.com/c/rz2WDrlL
+=== Setting up a bloom effect using post-processing
+// card: https://trello.com/c/WO0TSQQO
 
-===== Problem
+==== Problem
 
+You want to configure a camera so that post-processing effects can be applied to it.
 
-===== Solution
+==== Solution
 
+First, ensure that you've got the post-processing stack installed for your project. 
 
-===== Discussion
+. Open the Window menu, and choose Package Manager.
 
+. Click the All tab.
+. Locate the Post-Processing package, and click the Install button <<graphics_post_package>>
 
+img: graphics_post_package
 
-=== Understanding the rendering pipeline
-// card: https://trello.com/c/NKz4kUbC
+NOTE: If you're using any of the Scriptable Render Pipeline packages, the Post-Processing package will already be installed, as it's part of them.
 
-===== Problem
+Next, we'll set up the post-processing volume. This controls what post-processing effects are in place, and what their settings are.
 
+. Create a new empty game object. Name it "Post-Processing Volume".
 
-===== Solution
+. Add a new Post-Processing Volume component to it.
 
+    . Turn on the Is Global setting. This means that the effect will apply to the camera no matter where it is.
+    
+    . At the top-right corner of the Inspector, change the layer to PostProcessing (<<graphics_post_volume>>)
 
-===== Discussion
+img: graphics_post_volume
 
+Next, we'll set up the profile that determines what post-processing effects to apply. We'll set up this profile to apply a bloom effect.
 
+. Click the New button next to the Profile field. A new post-processing profile asset will be created. Select it.
 
-=== Understanding the relationship between materials, shaders and meshes
-// card: https://trello.com/c/OfTz1QtP
+. In the Inspector, click Add Effect, and choose Unity -> Bloom. A new Bloom effect will be added (<<graphics_post_bloom_profile>>).
 
-===== Problem
+img: graphics_post_bloom_profile
 
+Next, we'll set up the camera.
 
-===== Solution
+. Select the camera you want to apply post-processing effects to (typically, your your main camera.)
 
+. Add a new Post-Processing Layer component to it.
 
-===== Discussion
+. Set the Layer property to PostProcessing (<<graphics_post_layer>>)
 
+img: graphics_post_layer
 
+. A bloom effect appears: bright parts of the screen will appear brighter, by "bleeding" out to nearby parts of the screen.
 
-=== Creating a flat colour shader
-// card: https://trello.com/c/cYTlzO4j
+==== Discussion
 
-===== Problem
+Discuss what post-processing effects are, and what they let you do.
 
+Discuss how you can have multiple post-processing volumes; if they have a trigger collider on them, and the Post-Processing Layer's Trigger (which is usually the camera, though you can make it be any Transform) is within the bounds of the collider, the volume's settings will apply.
 
-===== Solution
 
 
-===== Discussion
+=== Using high-dynamic-range colours
+// card: https://trello.com/c/uFowd8zE
 
+==== Problem
 
+You want to use high-dynamic-range, or HDR, colours in your scene, for more realistic effects.
 
-=== Creating a surface shader
-// card: https://trello.com/c/o70tsMjW
+==== Solution
 
-===== Problem
+First, in order for HDR rendering to be visible, you'll need to enable HDR mode on the camera. A quick way to demonstrate the usefulness of HDR rendering is to combine it with a bloom post-processing effect.
 
+. Select your camera, and turn on the HDR setting.
 
-===== Solution
+. Select your post-processing profile, and set the threshold to 1.1, and the intensity to 5.
 
+. Select your scene's directional light, and increase its intensity to 5 (<<graphics_post_bloom_light>>)
 
-===== Discussion
+img: graphics_post_bloom_light
 
+The bright reflection of the light will appear much brighter than the parts of the object that aren't facing the light (see <<graphics_post_bloom_inactive>> and <<graphics_post_bloom_active>>).
 
+img: graphics_post_bloom_inactive
 
-=== Distortion effects
-// card: https://trello.com/c/hpkxkB2a
+img: graphics_post_bloom_active
 
-===== Problem
+==== Discussion
 
+Discuss how HDR rendering is different to LDR rendering. LDR clamps colours to between 0 and 1; HDR can go above or below, though the final image must be clamped; we can simulate eye adaptation by adjusting values up or down; we represent colours below 0 as black; we simulate 'over-bright' colours by applying a bloom effect on pixels that are above 1. This is why we set the threshold of the bloom effect to 1.1, so that only over-bright pixels have the bloom effect on them.
 
-===== Solution
 
+=== Setting up a project to use a scriptable render pipeline
+// card: https://trello.com/c/5MEqWGoq
 
-===== Discussion
+==== Problem
 
+You want to use Unity's Scriptable Render Pipelines, which allow for more advanced rendering techniques and editor features.
 
+==== Solution
 
-=== Refraction (glass effect)
-// card: https://trello.com/c/1SB0dh80
+In this example, and in the following recipes, we'll be using the Lightweight Render Pipeline.
 
-===== Problem
+Create a new project, and select the Lightweight RP template (<<graphics_srp_setup>>).
 
+img: graphics_srp_setup
 
-===== Solution
+Depending on your version of Unity, you may need to update the version of the lightweight render pipeline package. To do this, open the Window menu, and choose Package Manager; in the In Project tab, find and select the Lightweight Render Pipeline package, and click the Update button (<<graphics_srp_updating>>).
 
+img: graphics_srp_updating
 
-===== Discussion
+==== Discussion
 
+Discuss what the scriptable render pipeline is.
 
+Discuss how the scriptable render is required for the use of the Shader Graph feature.
 
-=== Glow effect
-// card: https://trello.com/c/To0BK6H5
+Discuss Unity's pre-prepared pipelines - the Lightweight pipeline, and the High-Definition pipeline. Discuss the differences between the two.
 
-===== Problem
+Discuss how you can also manually do it yourself (add the Lightweight Pipeline package, create a new Rendering -> Lightweight Pipeline Asset, go to the Graphics settings, drag the pipeline asset onto the Scriptable )
 
+=== Creating a shader using the shader graph
+// card: https://trello.com/c/wJKndVR2
 
-===== Solution
+==== Problem
 
+You want to use Unity's Shader Graph tool to create new shaders, with which you can create your own custom materials.
 
-===== Discussion
+==== Solution
 
+Create a new shader by opening the Assets menu, and choosing Create -> Shader -> PBR Graph.
 
+You'll see a new shader graph with a single node (<<graphics_shadergraph_basic>>). Click Save Asset, and your shader is ready for use in a material.
 
-=== Post-processing stack
-// card: https://trello.com/c/KzlvAO5A
+img: graphics_shadergraph_basic
 
-===== Problem
+==== Discussion
 
+Discuss what the shader graph is (connecting nodes together to produce a surface.)
 
-===== Solution
+Discuss what a PBR graph is (a shader that renders its surface by following a Physically Based Rendering model, as opposed to an Unlit Graph, which is a shader that ignores lighting)
 
+=== Creating a material from a shader
+// card: https://trello.com/c/AhThm420
 
-===== Discussion
+==== Problem
 
+You have a shader, and you want to create a material that uses it, so that you can apply the material to an object.
 
+==== Solution
 
-=== Seeing through walls
-// card: https://trello.com/c/eavH8y9O
+There are two ways you can do this.
 
-===== Problem
+In the first way, create a new material by opening the Assets menu, and choosing Create -> Material. Next, select your shader from the drop-down menu at the top of the inspector. 
 
+Alternatively, select the shader in the Projects tab, and create the material. The material will use the shader you have selected.
 
-===== Solution
+==== Discussion
 
+Discuss how different shaders produce different material effects.
 
-===== Discussion
+=== Creating a glowing effect using the shader graph
+// card: https://trello.com/c/8SjWg6WN
 
+==== Problem
 
+You want to create a shader that makes the edges of an object glow.
 
-=== Screen space banding (hologram scanlines effect)
-// card: https://trello.com/c/RmJbZzW7
+==== Solution
 
-===== Problem
+. Create a new SRP Graph shader.
 
+. Open the Create Node menu, by either right-clicking in empty space, or pressing the space bar.
 
-===== Solution
+. Locate the Fresnel Effect node. You can do this by either typing the name, or finding it in Math -> Vector -> Fresnel Effect.
 
+We want to tint this glow.
 
-===== Discussion
+. Create a new Color node (again, either by searching for it, or by finding it in Input -> Basic -> Color). Set it to the color you want.
 
+. Create a Multiply node. (Math -> Basic -> Multiply)
 
+. Click and drag from the Out slot of the Color node into one of the inputs of the Multiply node.
 
-=== Sampling textures in shaders
-// card: https://trello.com/c/t9N0TVq3
+. Click and drag from the Out slot of the Fresnel Effect into the other input of the Multiply node.
 
-===== Problem
+. Finally, connect the Out slot of the Multiply node into the Emission slot of the PBR Master node.
 
+When you're done, the shader graph should look like <<graphics_shadergraph_glow>>.
 
-===== Solution
+img: graphics_shadergraph_glow
 
+==== Discussion
 
-===== Discussion
+Discuss what the fresnel effect is (certain materials reflect more when the light bounces off them at a grazing angle to the viewer; basically, "the edges get brighter")
 
+Discuss how if you set the Color to be an HDR color, and combine it with a camera set up with the Glow post-processing effect, the glow will appear to be much more realistically bright (<<graphics_shadergraph_glow_active>>).
 
+img: graphics_shadergraph_glow_active
 
-=== Using the stencil buffer
-// card: https://trello.com/c/9zF6uabT
 
-===== Problem
+=== Exposing properties from a shader graph
+// card: https://trello.com/c/Fscvqz0N
 
+==== Problem
 
-===== Solution
+You want to expose a property from your shader graph, so that materials that use the shader can be modified without having to create and use a whole new shader.
 
+==== Solution
 
-===== Discussion
+Click the `+` button at the top-right of the Blackboard pane in your shader (<<graphics_shadergraph_property_blackboard>>)
 
+img: graphics_shadergraph_property_blackboard
 
+Select the type of property you want to create. A new property will be created; you can drag the property out into the shader graph, and it will appear as a node.
 
-=== Normal mapping
-// card: https://trello.com/c/vjLOgpvE
+==== Discussion
 
-===== Problem
+You can rename the property by double-clicking on it.
 
+You can right-click any Input node and convert it to a property (<<graphics_shadergraph_property_convert>>)
 
-===== Solution
+img: graphics_shadergraph_property_convert
 
+=== Animating a shader over time
+// card: https://trello.com/c/3lUimsOW
 
-===== Discussion
+==== Problem
 
+You want to create a shader that automatically animates over time. For example, you want to create a glowing effect that fades in and out.
 
+==== Solution
 
-=== Screen effects (colour grading, bloom, blur)
-// card: https://trello.com/c/QTJ2HyaY
+Use a Time node, which exposes various representations of the amount of time that has elapsed since the game started.
 
-===== Problem
+. Start with the Glow shader that you created in an earlier recipe.
 
+. Add a Time node (Input -> Basic -> Time).
 
-===== Solution
+The Time node exposes a Sine Time output, which is the current time in seconds, run through the Sine function (which produces a sine wave that goes from -1 to 1.)
 
+To create a fading effect that goes from 0.2 to 1 (that is, a slight glow to a full glow), we'll use a Remap node.
 
-===== Discussion
+. Add a Remap node (Math -> Range -> Remap)..
 
+    . Set its In Min Max values to -1 and 1. (This is the range of values that it's expecting to receive.)
+    . Set its Out Min Max values to 0.2 and 1. (This is the range of values that it will emit.)
 
+. Create a new Multiply node.
 
-=== Creating an animated shader
-// card: https://trello.com/c/ZS8UtBAu
+. Connect the Remap node and the original Multiply node (the one that multiplies the Color and the Fresnel Effect) into the new Multiply Node.
 
-===== Problem
+. Connect the new Multiply node into the Emission slot of the PBR Master node.
 
+When you're done, the graph should look like <<graphics_shadergraph_animated>>.
 
-===== Solution
+img: graphics_shadergraph_animated The completed shader graph, which animates over time.
 
+When you play the game, the glow will fade in and out over time.
 
-===== Discussion
+==== Discussion
 
+Discuss why we need to remap from -1,1 to 0.2,1 ('negative' emissiveness looks extremely bad; zero glow just looks a bit strange)
 
+=== Controlling the speed of an animated shader
+// card: https://trello.com/c/sd7XtR7m
 
-=== Using realtime and baked lighting
-// card: https://trello.com/c/k7S841XZ
+==== Problem
 
-===== Problem
+You have an animated shader that uses the Time node to change values over time, and you want to make it happen faster or slower.
 
+==== Solution
 
-===== Solution
+. Use a Time node as before.
 
+. Create a new Multiply node.
 
-===== Discussion
+. Connect both the Time node's Time output - not the Sine Time, or any of the others - and an Vector1 Input or a Property to the Multiply node. Set the Vector1 to be more than 1 if you want it to go faster, less than 1 if you want it to go slower, and less than 0 if you want it to go in reverse. 
 
+. Connect the output of the Multiply node to a new Sine node (Math -> Trigonometry -> Sine).
 
+. Use the output of your Sine node as you would in any other animation.
 
-=== Working with light probes
-// card: https://trello.com/c/RHmGk445
+==== Discussion
 
-===== Problem
+Mention that a Vector1 is the same thing as a floating point number. (It's a vector that has one component. Which is the same thing as a plain number. I'm not sure why Unity decided to call it a Vector1.)
 
+Discuss how you can't multiply Sine Time by a number, since it would happen at the same rate but just produce values over a wider scale.
 
-===== Solution
+=== Using a subgraph to reuse graph components
+// card: https://trello.com/c/SJzDm9rh
 
+==== Problem
 
-===== Discussion
+You want to simplify your shader graphs by re-using common patterns of nodes.
+
+==== Solution
+
+Use a subgraph, which is a collection of nodes that you can store in a file and re-use in other graphs. Subgraphs appear as a single 'node' in your graphs.
+
+To create one, open the Assets menu, and choose Create -> Shader -> Sub Graph.
+
+In the SubGraphOutputs node, click Add Output, and choose what outputs you want the subgraph to expose.
+
+Any Properties that you create will appear as inputs to the subgraph.
+
+
+==== Discussion
+
+Discuss how you can keep your shaders tidy by using subgraphs.
+
+=== Implementing a dissolve effect using a shader graph
+
+==== Problem
+
+You want to create an effect in which parts of the object gradually disappear. You want the edges of the effect to glow.
+
+==== Solution
+
+. Create three properties: a Color called Edge Color, a Vector1 called Dissolve Amount, and a Vector1 called Edge Thickness. Drag all three properties out into the graph, so that they each have their own node.
+
+. Create a Simple Noise node (Procedural -> Noise -> Simple Noise). Connect its Out slot to the Alpha slot of the PBR Master Node.
+
+. Connect the Dissolve Amount to the Alpha Clip Threshold slot of the PBR Master Node.
+
+When you increase the Dissolve Amount value, parts of the object will disappear.
+
+The next step is to create the glowing edge effect.
+
+. Create an Add node (Math -> Basic -> Add).
+
+. Connect the Edge Thickness and Dissolve Amount properties to it.
+
+. Create a Step node (Math -> Round -> Step).
+
+. Connect the Simple Noise's Out slot to the Step's Edge input.
+
+. Connect the Add node's Out slot to the Step's In input.
+
+If you were to connect the Step's out slot to the PBR Master's Emission input, you'd see a white edge around dissolved parts of the object. To provide control over the colour, we'll multiply this edge with a colour.
+
+. Create a new Multiply node.
+
+. Connect its output to the Emission slot of the PBR Master node, and the Step and Edge Color properties  to its input.
+
+Your dissolve shader is now complete; the finished graph should look something like <<graphics_shadergraph_dissolve>>.
+
+img: graphics_shadergraph_dissolve
+
+You can now create a new material that uses this shader; as you change the Dissolve Amount value from 0 to 1, the object will slowly dissolve (<<graphics_shadergraph_dissolve_active_3>>).
+
+img: graphics_shadergraph_dissolve_active_3 The image dissolving. In this image, we've also set up the camera to use a bloom effect.
+
+==== Discussion
+
+Discuss what 'opaque' and 'transparent' surface modes in the PBR Master node do (if it's in transparent mode, alpha means transparency; in opaque mode, all pixels are at full opacity.)
+
+Discuss what the alpha clip threshold is is (any pixel that is below a certain alpha value is discarded.)
+
+Discuss how you can make the effect more or less detailed by changing the Scale of the Simple Noise node.
+
+Discuss how if you make the edge colour be an HDR colour, you can get a nice looking glow if you combine it with a bloom post-processing effect.
+
+Discuss how you can tune the effect by modifying the Edge Thickness and Color. Fire's pretty easy to achieve if you use an orange color.
+
+
+
+=== Using baked lighting and realtime lighting
+// card: https://trello.com/c/7g1W4Oh9
+
+==== Problem
+
+You want to use Unity's baked lighting system, which lets you create high-quality shadows and reflected light.
+
+==== Solution
+
+Select an object, and at the top-right corner of the Inspector, click the drop-down menu, and choose Lightmap Static. Unity's lightmapper will begin calculating the baked lighting in the scene.
+
+
+
+==== Discussion
+
+Discuss what baked lighting is, and how it's different from realtime lighting (higher quality, less flexible) (<<graphics_light_shadows_realtime_vs_baked>>)
+.
+
+img: graphics_light_shadows_realtime_vs_baked
+
+
+Discuss why baked lighting requires the object to be static (the lightmap is a texture that's calculated and stored; if you moved the object, the shadows painted onto other objects would no longer be correct.
+
+Discuss how, if you know that an object will never move ever (maybe it's part of the fixed scenery in the level?), you can just click the Static checkbox, and _all_ static modes will be enabled at once.
+
+Note that the lightmapper will not calculate the lighting for objects that aren't lightmap static.
+
+Discuss what the advantages and disadvantages of baked lighting vs realtime lighting.
+
+=== Using baked emission sources
+// card: https://trello.com/c/LBALFdJk
+
+==== Problem
+
+You want to create objects that emit light in a scene with baked lighting. For example, you want to create a lamp in the scene.
+
+==== Solution
+
+Create a material that has an emissive color. Set the intensity of the emissive HDR color to 1 or more. Apply this material to an object that is set to be lightmap static. When the lightmap calculates the lighting, light from the emissive object will illuminate other static objects (<<graphics_light_bakedemissive>>).
+
+img: graphics_light_bakedemissive Emissive lighting. There are no lights in this scene; instead, the light from the emissive object in the center is illuminating the walls. A bloom effect on the camera completes the effect of a very bright object.
+
+==== Discussion
+
+
+=== Making static objects cast shadows on dynamic objects
+// card: https://trello.com/c/BZqJ0092
+
+==== Problem
+
+You have an object that is lightmap static, and you want it to cast shadows onto realtime objects (<<graphics_light_shadows_mixed_casting_onto_dynamic>>).
+
+img: graphics_light_shadows_mixed_casting_onto_dynamic Three cubes, each casting shadows onto a sphere. From left to right: a cube that is static, and its shadow is high quality, but does not affect the sphere; a cube that is realtime, so its shadow is less high quality, but affects the spehre; a cube that is static, and is in the same location as another cube of the same shape and size that is set to render only shadows, so that the shadow is high quality and some shadowing is still applied to the sphere.
+
+==== Solution
+
+. Select the mesh that you want to cast realtime shadows from, and duplicate it. Make sure it's the same size, shape and position as the original. (Consider making it a child of the original object.)
+. Turn off Lightmap Static, so that it casts realtime shadows. 
+. Remove every component except the mesh renderer. 
+. Set its Cast Shadows property to Shadows Only. This means that it won't appear in the scene, but it will cast shadows onto other object.
+
+==== Discussion
+
+Another solution is to use light probes. Place light probes in areas both inside the shadowed region and outside; this will darked objects that pass into the shadowed area, though you won't see the edges of the shadow (it will just darken uniformly.) It doesn't look as good, but it's cheaper to render.
+
+NOTE: The alternative is to design your a scene layouts so that static objects don't cast shadows onto a realtime object in the first place.
+
+=== Using light probes to influence lighting
+// card: https://trello.com/c/xNGxWi5P
+
+==== Problem
+
+You want to use light probes, so that realtime objects are lit by light bouncing off objects with baked lighting.
+
+
+==== Solution
+
+Create a light probe group, by opening the GameObject menu and choosing Light -> Light Probe Group. This creates a group of 4 probes; you can select each individual probe, and re-position them. You can create more light probes, 
+
+Light probes are affected by both realtime and baked lighting. Realtime objects will use nearby light probes to calculate how they should be lit (<<graphics_light_dynamic_object_receiving_baked_lighting>>)
+
+img: graphics_light_dynamic_object_receiving_baked_lighting A realtime cylinder, lit by a baked emissive object. There are no realtime lights in the scene; instead, light probes near the light source capture how light affects objects at each point, and the cylinder is using that information to light itself. <<graphics_light_dynamic_object_receiving_baked_lighting_lightprobes>> shows the light probe setup in this shot.
+
+img: graphics_light_dynamic_object_receiving_baked_lighting_lightprobes The light probes used in <<graphics_light_dynamic_object_receiving_baked_lighting>>.
+
+==== Discussion
+
+Discuss effective places to put light probes (in areas where you expect realtime objects to be, near areas where there are sudden changes in light intensity)
+
+=== Using reflection probes
+// card: https://trello.com/c/TskrD1gn
+
+==== Problem
+
+You want to use reflection probes, so that reflective materials look more realistic and reflect the scene around them. 
+
+==== Solution
+
+Create a reflection probe by opening the GameObject menu, and choosing Light -> Reflection Probe.
+
+Place your probe somewhere in the center of the area that you'd like to have reflections for.
+
+Shiny materials will use the information gathered by the probe to determine their reflections (<<graphics_reflectionprobe>>)
+
+img: graphics_reflectionprobe A shiny metal sphere, reflecting the room around it. Its reflections come from a reflection probe near it (not pictured).
+
+==== Discussion
+
+Discuss how reflection probes work by rendering a version of the scene at their current point. 
+
+Discuss how this generally works pretty well for most reflective objects - shiny objects don't need to reflect an _exactly_ accurate view of what's around them.
+
+Discuss how you can create multiple reflection probes, shiny materials will blend between them.
+
+Discuss the different update modes (on awake, every frame) for reflection probes. Discuss when you'd use them (every frame if the scene changes around the probe a lot, but it's a performance cost)
+
+=== Faking a dynamic emissive object
+// card: https://trello.com/c/wcat0luN
+
+==== Problem
+
+You have a realtime object that has an emissive color, and you want it to illuminate other objects.
+
+==== Solution
+
+Fake it. Create a realtime light, and add it as a child. Make it the same colour as your emissive light, and, if you place it right, the player won't realise that the emissive light isn't what's lighting up other objects. (see <<graphics_light_fakeglow_light_active>> vs <<graphics_light_fakeglow_light_inactive>>)
+
+img: graphics_light_fakeglow_light_active An object with the glow effect, with a point light inside it that's illuminating both the static walls and the realtime object next to it.
+img: graphics_light_fakeglow_light_inactive The same object with the light disabled. The effect is much less convincing.
+
+==== Discussion
+
+Remember, all of computer graphics that isn't ray-tracing is just utter fakery. To the player, there's no difference between an object that's correct and an object that just looks correct.

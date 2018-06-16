@@ -134,7 +134,8 @@ public class PlatformRiding : MonoBehaviour {
             // It did!
 
             // Did it have a MovingPlatform component?
-            var platform = hit.collider.gameObject.GetComponent<MovingPlatform>();
+            var platform = hit.collider.gameObject
+                              .GetComponent<MovingPlatform>();
 
             if (platform != null) {
                 // If it did, update our position based on the platform's

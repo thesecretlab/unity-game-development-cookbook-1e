@@ -1,0 +1,395 @@
+== Animation and Movement
+
+=== Understanding animations and properties
+// card: https://trello.com/c/a9UbUqtQ
+
+==== Problem
+
+You want to understand how animations make changes to objects over time, such as their position or colour.
+
+==== Discussion
+
+Discuss animation clips (assets that store information about changes over time).
+
+Discuss what a keyframe is.
+
+Discuss various kinds of animatable properties (position, rotation).
+
+=== Single Animations
+// card: https://trello.com/c/FU0gjuCi
+
+==== Problem
+
+You want to create an animation controller that manages a single animation.
+
+==== Solution
+
+. Create a new cube by opening the GameObject menu, and choosing 3D Object -> Cube.
+
+. Create a new Animator Controller asset by opening the Assets menu and choosing Create -> Animator Controller.
+
+. Add an Animator to the cube, using either the Component menu (Component -> Miscellaneous -> Animator), or by dragging and dropping the Animator Controller asset onto the cube in the hierarchy.
+
+. Open the Animator tab, by opening the Window menu and choosing Animator.
+
+. Create a new Animation asset by opening the Assets menu and choosing Create -> Animation. Name the new asset "Bounce".
+
+. Drag the Bounce animation into the Animator. A new Animation State will be created, which uses the Bounce animation. Because it's the first state, it will be marked as the default state (that is, when the game starts, the animator controller will start in the Bounce state.) The graph will now look like <<animation_single_states>>.
+
+img: animation_single_states The animation controller's states.
+
+Next, we'll set up the animation itself. We'll make the animation bounce up and down, by animating its local position on the Y axis.
+
+. Open the Animation pane (this is different to the Animator!) by opening the Window menu, and choosing Animation.
+
+. Select the Cube. In the Animation pane, ensure that the Bounce animation is selected in the drop-down menu at the top.
+
+. Click the Add Property button. Choose Transform -> Position.
+
+. Click the Add Keyframe button, which is the small button that contains a diamond shape. This will record the fact that the cube is at this position at this point in the animation.
+
+. Move to the 1-second position in the animation, by either clicking and dragging in the top bar of the animation pane, or by typing '60' into the text field at the top-left corner of the animation pane. Click Add Keyframe again.
+
+. Move to half-way between the first and second keyframes.
+
+. Click the Record button, which is the red dot to the right of the Preview button. Unity will enter Record mode, which means any change you make to the object will create a new keyframe.
+
+. Move the cube up in the scene. A new keyframe will be created.
+
+The animation pane should now look like <<animation_single_dopesheet>>.
+
+img: animation_single_dopesheet
+
+. Click the Record button again to disable record mode.
+
+We can now test the animation.
+
+. Click the Play button in the Animation pane, and the cube will move up and down. This gives you a good way to preview what the animation will look like.
+
+. Play the game, and the animation will play as soon as the game starts.
+
+
+==== Discussion
+
+Discuss what an animation controller is, and what it manages. Discuss what an animation state is, and how it relates to animation clip assets.
+
+Discuss how you can control the details of how an object moves by using the curves pane (<<animation_single_curves>>).
+
+img: animation_single_curves The curves pane.
+
+=== Basic Character Movement
+// card: https://trello.com/c/H6JU2MvE
+
+==== Problem
+
+You want to make a character play different animations based on their speed. You want that animation to control character movement.
+
+==== Solution
+
+NOTE: In this recipe, and in many of the other recipes in this chapter, we'll be using the free motion-capture animations released by Unity, which are available here: https://assetstore.unity.com/packages/3d/animations/raw-mocap-data-for-mecanim-5330. This package also contains a simple human character, whom we'll use for demonstrating the animations.
+
+Let's start by adding the character to the scene, and setting up a simple animation controller.
+
+. Download and import the Raw Mocap Data package.
+
+. Locate the DefaultAvatar model, and add it to your scene (<<animation_avatar>>)
+
+img: animation_avatar
+
+. Create a new Animator Controller, and add it to the DefaultAvatar.
+
+Next, we'll add the default state that the character will be in, which will be an idle animation.
+
+. Locate the +Idle_Neutral_1+ animation, by searching for it in the Project tab. You'll find two items with this name: the animation itself, and the file that the animation was imported from. Drag the animation in to the animator controller. (it has a grey icon with a play symbol in the middle of it, as seen in <<animation_basic_locating_asset>>)
+
+img: animation_basic_locating_asset
+
+. Play the game. The character will play its idle animation.
+
+Next, we'll create a parameter on the controller, which will control which animation state the character is in.
+
+. Open the Parameters tab, and click the `+` button. Choose Float. A new parameter will be added.
+
+. Name the new parameter "Speed".
+
+We'll now make a new script that controls the animation controller's speed parameter.
+
+. Create a new C# script called CharacterMovement.cs, and add the following code to it:
+
+// snip: animation_movement except animation_movement_sidespeed
+
+. Add a CharacterMovement component to the character.
+
+Next, we'll add another animation state to the character, and set up transitions between them.
+
+. Select the character, and go to the Animator pane.
+
+. Locate the Run_Implulse animation, and drag it into the Animator. A new state will be created.
+
+. Right-click the Idle_Neutral_1 state, and choose Make Transition. Click on the Run_Impulse state. A new line will be created that connects them.
+
+We now need to configure this transition so that it applies when the Speed parameter is above a certain threshold.
+
+. Select the line, and go to the Conditions list at the bottom of the Inspector. 
+
+. Click the `+` button, and a new condition will be added. There's only one parameter in the controller, so it will automatically be selected. Make sure that the mode is set to "Greater", and set the value to 0.1. This means that this transition will apply when the Speed parameter is greater than 0.1.
+
+. Turn off the Has Exit Time setting. This means that this transition can apply at any time, and doesn't need to wait for the current animation to complete.
+
+When you're done, the inspector should look like <<animation_basic_transition_to_run>>.
+
+img: animation_basic_transition_to_run
+
+We'll now set up the transition that happens when the speed drops below 0.1.
+
+. Right-click the Run_Impulse state, and choose Make Transition. Click the Idle_Neutral_1 state.
+
+. Select the new transition you just created, and set it up the same way as the previous one. This time, however, set the mode of the condition to be Less, rather than Greater. This will make the transition happen when the speed drops below 0.1.
+
+. Play the game. Hold down the Up Arrow key or the W key, and the character will start walking forward.
+
+==== Discussion
+
+Discuss what animation parameters are. Discuss the different types (bool, float, int, trigger). Mention that a trigger parameter is identical to a bool parameter, except it automatically returns to a false state in the frame after being set to true (making it ideal for one-off 'triggers' like 'jump' or 'died').
+
+Discuss what root motion is (the animation itself moves the object, which guarantees that it's moving at the right speed; this is why the character moves when the animation is playing.)
+
+=== Inverse Kinematics
+// card: https://trello.com/c/FLamZr2R
+
+==== Problem
+
+You want to use Inverse Kinematics to make a character's arm or foot reach towards a point in space.
+
+==== Solution
+
+First, we need to enable IK on the current layer.
+
+. Open your Animator Controller, and go to the Layers tab.
+. Click the Gear icon on the Base Layer.
+. Turn on IK Pass. The layer list should now look like <<animation_ik_layer_settings>>.
+
+img: animation_ik_layer_settings
+
+Next, we'll create a script that tells the animation controller what to reach for, and what to reach with.
+
+. Create a new C# script called IKReach, and add the following code to it:
+
+// snip: animation_ik
+
+. Add an IKReach component to the character.
+
+. Create a sphere in the scene, and scale it down until it's about the size of a tennis ball. Place it near the character (<<animation_ik_scene>>). 
+
+img: animation_ik_scene
+
+. Make the IKReach component's Target field refer to the sphere you just added.
+
+. Play the game. The character will reach towards the target. When you move the target around, the character's pose will alter.
+
+==== Discussion
+
+Discuss what Inverse Kinematics is, and how it works.
+
+Discuss what this technique is useful for.
+
+
+=== Masked Movement
+// card: https://trello.com/c/8X9gp87a
+
+==== Problem
+
+You want to play an animation, but have the animtion only apply to certain body parts.
+
+==== Solution
+
+. Create a new Avatar Mask by opening the Assets menu and choosing Create -> Avatar Mask. 
+
+. Select the new Mask, and click anywhere outside the figure of a person to deselect all body parts. Next, select the right arm. (This is on the left side of the image - pretend that the figure is facing you.) <<animation_masked_mask>>
+
+img: animation_masked_mask
+
+. Create a new layer in your animation controller. Name it Arms, and set its Weight to 1. Set the Mask to the Avatar Mask you just created (<<animation_masked_arm_layer>>). This will make any animations playing on this layer only affect the specified body parts.
+
+img: animation_masked_arm_layer
+
+. Add whatever animation states you want to into this layer. When they run, they will only affect the body parts specified in the mask.
+
+==== Discussion
+
+Discuss animation layers, and how they can be used to override or add to earlier layers. Discuss how you can set different weights on them, so that you have control over how much influence they have over the final pose. 
+
+Discuss what an Avatar is (a mapping of common body parts like arms or legs to specific bones in the animation rig, which allows you to re-use animations across multiple meshes even if the bones aren't the same)
+
+
+=== Blended Movement
+// card: https://trello.com/c/CELukpNu
+
+==== Problem
+
+You want to blend between multiple animations. For example, you have a walking animation and a running animation, and you want to smoothly blend between the two as a character's speed increases.
+
+==== Solution
+
+Use a Blend Tree, which is an animation state that blends between two or more animation clips.
+
+To create one, follow these steps.
+
+. Right-click in your animator controller and choose Create State -> From New Blend Tree.
+. Double-click on the new state, and you'll be taken to the details of the blend tree (<<animation_blended_controller>>).
+
+img: animation_blended_controller
+
+Blend trees work in conjunction with a parameter on the animation controller. Depending on the value of the parameter, the blend tree will blend together different animation clips. In <<animation_blended_blendtree>>, you can see a blend tree that has four clips, which allow for walking backwards, standing still, walking forwards, and running forwards.
+
+img: animation_blended_blendtree
+
+
+
+==== Discussion
+
+Discuss the fact that there are multiple types of blend trees, including 2D blend trees. These are useful for when you have two kinds of directions you want to move in (for example, forward/backward and side-to-side). An example of a 2D blend tree can be see in <<animation_advanced_blending_blend_tree>>; this blend tree uses two parameters, one for forward and reverse motion, and one for sideways motion. When the character is only applying forward motion, the regular running animation is played; when the character is only applying sideways motion, a turning animation is played; when both are applied at once, a running-while-turning animation is played.
+
+img: animation_advanced_blending_blend_tree
+
+Discuss how you can set the speed of a clip. This is how reverse walking is done in these examples.
+
+Discuss how you can mirror a clip; for example, <<animation_advanced_blending_blend_tree>> only uses a single 'turn right' animation, but because the Mirror checkbox is enabled for the left turns, the animation is flipped and used for turning right.
+
+
+=== Navigation And Animation
+// card: https://trello.com/c/irLuBXmo
+
+==== Problem
+
+You have a character set up to use a navigation mesh, and you want the character's animation system to respond to the navigation agent moving around the world, so that the character looks more realistic.
+
+==== Solution
+
+You can get information about how a navigation agent is moving, and use that to provide information to an animation controller's parameters.
+
+. First, set up an animation controller that supports, at the very least, one parameter for controlling forward and backwards speed, though a second parameter for sideways speed is useful as well.
+
+. Additionally, set up your character so that it works using a navigation mesh, by following the steps in <<navigation>>.
+
+. Create a new C# script called NavigationAnimator.cs, and add the following code to it.
+
+// snip: navigation_animator
+
+. Add a NavigationAnimator component to the object.
+
+When the navigation agent starts moving to another location, it will update the parameters of the animation controller.
+
+==== Discussion
+
+Basically talk through what this script does, following the comments.
+
+=== Cinemachine
+// card: https://trello.com/c/JdPtwRBS
+
+==== Problem
+
+You want to set up a camera using Cinemachine, Unity's cinematic camera control system. You want a camera to always keep a certain object in view.
+
+==== Solution
+
+First, install the Cinemachine package.
+
+. Open the Window menu, and choose Package Manager.
+
+. In the All tab, locate the Cinemachine package, and click Install.
+
+Next, we'll set up a Cinemachine virtual camera.
+
+. Open the Cinemachine menu, and choose Create Virtual Camera (<<animation_cinemachine_create_virtual_camera>>). This will create and select a new virtual camera.
+
+img: animation_cinemachine_create_virtual_camera
+
+. Position the virtual camera somewhere in your scene. 
+
+. Drag the object that you want the camera to look at into the virtual camera's Look At slot (<<animation_cinemachine_look_at_target>>).
+
+img: animation_cinemachine_look_at_target
+
+. Run the game. The camera will look at the target.
+
+==== Discussion
+
+Discuss how Cinemachine's virtual cameras are lightweight objects that influence the position, rotation and field of view of the actual camera. 
+
+Discuss how Cinemachine uses a Cinemachine Brain component attached to the actual camera to modify it (<<animation_cinemachine_camera_brain_on_main_camera>>)
+
+img: animation_cinemachine_camera_brain_on_main_camera
+
+
+=== Automatically switching cameras
+// card: https://trello.com/c/4eRFeRUY
+
+==== Problem
+
+You have multiple cameras in the scene, and you want Cinemachine to automatically switch between them so that a target object is always in view.
+
+
+==== Solution
+
+Use a ClearShot camera.
+
+. Open the Cinemachine menu, and choose Create ClearShot Camera.
+. Select the ClearShot object, and drag the target you want to maintain a view of into the Look At field.
+
+. Add as many virtual cameras as you want as children of the ClearShot group.
+
+==== Discussion
+
+A ClearShot is an object that has one or more virtual cameras as its children, and is configured to look at a certain target. It will select from its different children to decide which camera has the best shot of the target.
+
+=== Keeping multiple objects in view
+// card: https://trello.com/c/HUfXmmc9
+
+==== Problem
+
+You have multiple objects in your scene, and you want a camera to try to keep them all in view at the same time.
+
+
+==== Solution
+
+Use a Look At Group.
+
+. Create a new empty game object, and name it "Look At Group".
+. Add a new CinemachineTargetGroup component to it.
+. In the list of targets, you can specify the list of Transforms that you want the Look At Group to refer to (<<animation_cinemachine_lookatgroup>>).
+
+animation_cinemachine_lookatgroup
+
+. When you want a camera to look at the entire group, set the camera's Look At property to refer to the Look At Group, rather than the target itself.
+
+==== Discussion
+
+
+
+=== Dollying a camera
+// card: https://trello.com/c/4SUe9yIv
+
+==== Problem
+
+You want a camera to move around in order to keep an object in frame, but you want ensure that the camera only moves around on a fixed track.
+
+==== Solution
+
+Create a Dolly Camera.
+
+. Open the Cinemachine menu, and choose Dolly Camera with Track.
+
+This will create two objects: a camera, and a track for it to follow. The camera will always be positioned somewhere on the track, though it can rotate freely to look at its Look At target. It will re-position itself along the track in order to be close to its Follow target.
+
+. Configure the camera's Look At and Follow properties to refer to the object you want to track (<<animation_cinemachine_dolly_settings>>)
+
+img: animation_cinemachine_dolly_settings
+
+. Select the Dolly Track, and configure the points that you want the track to go from and to. You can also create points in between the start and finish, to create a curving track (<<animation_cinemachine_dolly_track>>)
+
+img: animation_cinemachine_dolly_track
+
+==== Discussion
+
+Discuss what dollying means. Discuss how this is derived from actual physical tracks when using real camera.s
