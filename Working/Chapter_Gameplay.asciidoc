@@ -1,19 +1,38 @@
+[[chapter_gameplay]]
 == Gameplay
+
+=== Introduction
+
+Gameplay comes in many different guises.
 
 === Managing quests
 // card: https://trello.com/c/QzEs0kfB
 
 ==== Problem
 
-You want to manage a quest structure, where the player needs to complete certain objectives in order to finish a quest. You want some objectives to be optional, and some objectives to not be presented to the player until they're achieved. If an objective is failed, and it isn't optional, then the entire quest is failed.
+You want to manage a quest structure, where the player needs to complete certain objectives in order to finish a quest. 
+
+As part of your quest structure, you want some objectives to be optional, and some objectives to not be presented to the player until they're achieved. If an objective is failed, and it isn't optional, then the entire quest is failed.
 
 ==== Solution
 
+Before we can manage a quest structure, we need a quest. 
+
 First, let's define a simple quest: we'll position the camera in front of some coloured blocks, and say that the player has to click on them in order to complete the quest. However, one of the blocks is forbidden, and clicking on it will fail the quest.
 
+// image: quests1.png
+
+First, we'll see need to create the scene for our quest:
+
 . Create four cubes, and place them in front of the camera.
-    . For each of the cubes, create a Material, and add it by dragging and dropping it onto the cube in the Scene View.
-    . Change the colour of the material for each cube. Make one red, one green, one yellow, and one blue. (If any of these colours are hard to tell apart, change the colours to whatever suits you best.)
+
+. For each of the cubes, create a Material, and add it by dragging and dropping it onto the cube in the Scene View.
+
+. Change the colour of the material for each cube. Make one red, one green, one yellow, and one blue. (If any of these colours are hard to tell apart, change the colours to whatever suits you best.)
+
+// image: quests2.png
+// annotation: One of our cubes, showing how it is set up.
+
 . Select the Main Camera, and add a Physics Raycaster to it.
 
 Next, we'll create a canvas that displays the status of the quest and its objectives.
