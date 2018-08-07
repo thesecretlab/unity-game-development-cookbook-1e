@@ -100,18 +100,6 @@ img: quests-objective-trigger
 
 ==== Discussion
 
-=== Creating an Inventory Manager
-
-==== Problem
-
-You want to create a system that tracks various quantities of items in the player's possession.
-
-==== Solution
-
-// TODO - STILL DOING THE IMPLEMENTATION OF THIS ONE
-
-==== Discussion
-
 
 
 
