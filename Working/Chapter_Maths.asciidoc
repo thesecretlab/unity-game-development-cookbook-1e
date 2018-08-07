@@ -17,24 +17,6 @@ We can't recommend Paco Nathan's _Just Enough Math_ video series, also from O'Re
 === Understanding Vectors
 // card: https://trello.com/c/K8vCgHZD
 
-////
-* Vector2
-* Vector3
-* Common vectors (up, down, left, right, back, forward)
-* Vector magnitude and what it is
-* Vector addition and subtraction
-* Measuring the distance between two points
-* Quickly comparing the distance between two points using sqrMagnitude
-* Scaling vectors
-* Dot product and what it's useful for (measures the difference between the direction that two vectors point in)
-* Cross product and what it's useful for (produces a vector that's orthogonal to both the inputs)
-* Vector projection and what it's useful for
-* MoveTowards is useful for making a vector move over time without overshooting
-* Reflect is useful for bouncing a vector off a plane defined by a normal
-* Lerp lets you interpolate between two vectors
-* LerpUnclamped does the same, but doesn't clamp
-////
-
 ===== Problem
 
 You want to work with vectors, which are a fundamental type of value in 3D graphics that can represent locations in space and directions.
@@ -288,6 +270,23 @@ var unclamped = Vector3.LerpUnclamped(Vector3.zero, Vector3.right, 2.0f);
 
 ===== Discussion
 
+////
+* Vector2
+* Vector3
+* Common vectors (up, down, left, right, back, forward)
+* Vector magnitude and what it is
+* Vector addition and subtraction
+* Measuring the distance between two points
+* Quickly comparing the distance between two points using sqrMagnitude
+* Scaling vectors
+* Dot product and what it's useful for (measures the difference between the direction that two vectors point in)
+* Cross product and what it's useful for (produces a vector that's orthogonal to both the inputs)
+* Vector projection and what it's useful for
+* MoveTowards is useful for making a vector move over time without overshooting
+* Reflect is useful for bouncing a vector off a plane defined by a normal
+* Lerp lets you interpolate between two vectors
+* LerpUnclamped does the same, but doesn't clamp
+////
 
 === Understanding Quaternions
 // card: https://trello.com/c/pQXNT5Rv
@@ -297,6 +296,10 @@ var unclamped = Vector3.LerpUnclamped(Vector3.zero, Vector3.right, 2.0f);
 You want to work with quaternions, which allow you to represent rotations in 3D space.
 
 ===== Solution
+
+Quaternions can be a tricky beast, inspiring fear in the eyes of game developers new and experienced alike. But really, all they are is a rotation, and for most game development purposes it doesn't matter if you don't quite understand exactly what a quaternion is and how it works: it's just a rotation.
+
+You can do all sorts of things with quaternions—rotations—including rotating a point around the origin and slerping (spherical linear interpolation) cleanly between different rotations:
 
 // snip: quaternions
 [source,csharp]
@@ -361,6 +364,8 @@ You want to work with matrices, which, in the context of 3D graphics, let you pe
 
 ===== Solution
 
+A matrix is just a grid of numbers, where you can set and get values at each location in the grid:
+
 // snip: matrix_intro
 [source,csharp]
 ----
@@ -373,6 +378,13 @@ var m00 = matrix[0, 0];
 
 matrix[0, 1] = 2f;
 ----
+
+Matrices can be used in a variety of ways: for example, you can multiply them with a vector to modify the vector for things like movement, scaling, shearing, perspective projections, and more. You can also multiply two matrices together.
+
+[TIP]
+====
+Computer graphics, and therefore game development, typically uses 4x4 matrices because they can be used to perform a wide range of common transformations.
+====
 
 // snip: matrix_with_vector
 [source,csharp]
@@ -452,6 +464,8 @@ var result = translationMatrix.MultiplyPoint(input);
 // and scales.
 ----
 
+Unity provides helper methods to translate points using a matrix:
+
 // snip: matrix_translate
 [source,csharp]
 ----
@@ -464,6 +478,8 @@ var translationMatrix = Matrix4x4.Translate(new Vector3(5, 1, -2));
 var result = translationMatrix.MultiplyPoint(input);
 // = (5, 2, 0)
 ----
+
+You can also rotate a point around the origin using matrices and quaternions:
 
 // snip: matrix_rotate
 [source,csharp]
@@ -489,6 +505,8 @@ result = rotationMatrix.MultiplyVector(input);
 // = (0, -1, 0) - the same result.
 ----
 
+Or scale a point away from the origin:
+
 // snip: matrix_scale
 [source,csharp]
 ----
@@ -501,6 +519,15 @@ var input = new Vector3(1f, 2f, 3f);
 var result = scale2x2x2.MultiplyPoint3x4(input);
 // = (2, 4, 6)
 ----
+
+Multiplying matrices together results in a new matrix that, when multiplied with a vector, produces the same result as if you'd multiplied the vector by each of the original matrices in order. In other words, if you think of matrices as an instruction to modify a point, you can combine multiple matrices into a single step. 
+
+[TIP]
+====
+When you combine matrices together like this, we call it concatenating the matrices.
+====
+
+In the example below, we concatenate matrices:
 
 // snip: matrix_concatenate
 [source,csharp]
@@ -551,6 +578,8 @@ var transformMatrix = Matrix4x4.TRS(
 // apply it to.
 ----
 
+You can also get a matrix that converts a point in the component's local space to world space, applying a translation, rotation, and scaling from this object as well as all of its parents:
+
 // snip: matrix_transform
 [source,csharp]
 ----
@@ -565,11 +594,9 @@ var localToWorld = this.transform.localToWorldMatrix;
 var worldToLocal = this.transform.worldToLocalMatrix;
 ----
 
+Phew. That's a lot of things you can do with matrices. In the following section we'll touch on what all this means for game development.
 
 ===== Discussion
-
-
-
 
 
 === Working with Angles
@@ -585,6 +612,23 @@ var worldToLocal = this.transform.worldToLocalMatrix;
 You want to work with the angles between vectors.
 
 ===== Solution
+
+In Unity, most rotations that are represented as Euler angles are done as degrees. As a refresher, there are 360 degrees in a circle. 
+
+So we can rotate things using degrees:
+
+TODO fix the snippets here
+
+[TIP]
+====
+There are 2π radians in a circle.
+====
+
+Degrees are much more familiar to most people, but radians are often easier to calculate with. This is why parts of Unity, particularly related to maths, expect radians:
+
+// sine of pi radians
+
+You can convert from radians to degrees, and back again:
 
 // snip: angles
 [source,csharp]
