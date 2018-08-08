@@ -205,8 +205,8 @@ The dot product between two vectors aiming in the opposite directions is -1:
 ----
 !!!!!!!!
 No code found for query 'dot_product2' at ref 'HEAD'. Possible replacement tags
-include: dot_product2           , dot_product, dot_product4     , dot_product5
-, dot_product3
+include: dot_product2   , dot_product, dot_product5     , dot_product3,
+dot_product4
 !!!!!!!!
 ----
 
@@ -215,11 +215,7 @@ The dot product between two vectors at right-angles to each other is 0:
 // snip: dot_product3
 [source,swift]
 ----
-!!!!!!!!
-No code found for query 'dot_product3' at ref 'HEAD'. Possible replacement tags
-include: dot_product3           , dot_product, dot_product4     , dot_product2
-, dot_product5
-!!!!!!!!
+var orthogonal = Vector3.Dot(Vector3.up, Vector3.forward); // 0
 ----
 
 The dot product is also the arc cosine of the angle between the two vectors (`Mathf.Acos works in radians):
@@ -227,11 +223,8 @@ The dot product is also the arc cosine of the angle between the two vectors (`Ma
 // snip: dot_product4
 [source,swift]
 ----
-!!!!!!!!
-No code found for query 'dot_product4' at ref 'HEAD'. Possible replacement tags
-include: dot_product4   , dot_product, dot_product2             , dot_product5
-, dot_product3
-!!!!!!!!
+var orthoAngle = Mathf.Acos(orthogonal);
+var orthoAngleDegrees = orthoAngle * Mathf.Rad2Deg; // = 90
 ----
 
 The dot product is a great way to tell if an object is in front of, or behind, another:
@@ -241,8 +234,8 @@ The dot product is a great way to tell if an object is in front of, or behind, a
 ----
 !!!!!!!!
 No code found for query 'dot_product5' at ref 'HEAD'. Possible replacement tags
-include: dot_product5           , dot_product, dot_product4     , dot_product2
-, dot_product3
+include: dot_product5   , dot_product, dot_product2     , dot_product3,
+dot_product4
 !!!!!!!!
 ----
 

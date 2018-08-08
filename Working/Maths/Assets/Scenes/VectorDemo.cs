@@ -152,7 +152,7 @@ public class VectorDemo : MonoBehaviour {
             // The dot product between two vectors aiming in opposite directions
             // is -1:
             
-            // BEGIN dot_product2	
+            // BEGIN dot_product2
             var opposite = Vector3.Dot(Vector3.left, Vector3.right); // -1
             // END dot_product2
            
@@ -174,7 +174,7 @@ public class VectorDemo : MonoBehaviour {
             // The dot product is a good way to tell if an object is in front
             // of you or behind you.
             
-            // BEGIN dot_product5	
+            // BEGIN dot_product5
             var directionToOtherObject = someOtherObjectPosition - transform.position;
             var differenceFromMyForwardDirection = 
                 Vector3.Dot(transform.forward, directionToOtherObject);
