@@ -18,32 +18,6 @@ You want to build a user interface for the player to work with.
 . Create a new C# script called ButtonClicked.cs, and add the following code to it:
 
 // snip: button_clicked
-[source,swift]
-----
-public class ButtonClicked : MonoBehaviour {
-
-    // This will appear in the list of methods
-    public void ButtonWasClicked() {
-        Debug.Log("The button was clicked!");
-    }
-
-    // This will appear in the list of methods, and let you specify a parameter
-    public void ButtonWasClickedWithParameter(string parameter) {
-        string message = 
-            string.Format("The button was clicked: {0}", parameter);
-
-        Debug.Log(message);
-    }
-
-    // This won't appear in the list of methods, because it's private
-    // (even though we didn't specify its protection level, because all class
-    // methods are private by default in C#)
-    void PrivateButtonWasClicked() {
-        Debug.Log("This won't run as the direct result of a button click!");
-    }
-
-}
-----
 
 . Attach a +ButtonClicked+ component to the Canvas, or to any other game object - for the purposes of this example, it doesn't matter which.
 
@@ -131,59 +105,6 @@ We'll make a button spin when it's clicked.
 . Create a new C# script called SpinButton.cs, and add the following code to it:
 
 // snip: spin_button
-[source,swift]
-----
-public class SpinButton : MonoBehaviour {
-
-    // The amount of time needed to perform a full spin
-    [SerializeField] float spinTime = 0.5f;
-
-    // Controls the pacing of the animation.
-    [SerializeField] AnimationCurve curve = AnimationCurve.EaseInOut(0, 0, 1, 1);
-
-    public void Spin() {
-
-        // Start a spin.
-        StartCoroutine(StartSpinning());
-
-    }
-
-    // A coroutine that updates the rotation every frame, until it runs out of
-    // time.
-    private IEnumerator StartSpinning()
-    {
-        // Don't do any spinning if spin time is zero or less (
-        if (spinTime <= 0) {
-            yield break;
-        }
-
-        // Keep track of how long we've been spinning for.
-        float elapsed = 0f;
-
-        while (elapsed < spinTime) {
-            elapsed += Time.deltaTime;
-
-            // Calculate how far along the animation we are, measured between 
-            // 0 and 1.
-            var t = elapsed / spinTime;
-
-            // Use this value to figure out how many degrees we should be 
-            // rotated at on this frame.
-            var angle = curve.Evaluate(t) * 360f;
-
-            // Calculate the rotation by rotating this many angles around
-            // the X axis.
-            transform.localRotation = Quaternion.AngleAxis(angle, Vector3.right);
-
-            // Wait a new frame.
-            yield return null;
-        }
-
-        // The animation is now complete. Reset the rotation to normal.
-        transform.localRotation = Quaternion.identity;
-    }
-}
-----
 
 . Attach a +SpinButton+ component to it.
 
@@ -236,29 +157,6 @@ Next, we'll add some code that lets each list item manage its content.
 . Create a new C# script called ListItem.cs. Add the following code to it:
 
 // snip: list_item
-[source,swift]
-----
-public class ListItem : MonoBehaviour {
-
-    // The Text object that displays our label
-    [SerializeField] UnityEngine.UI.Text labelText;
-
-    // Expose a string; setting or getting this will set or get the text of
-    // the label.
-	public string Label
-    {
-        get
-        {
-            return labelText.text;
-        }
-        set
-        {
-            labelText.text = value;
-        }
-    }
-
-}
-----
 
 . Add a ListItem script to the List Item.
     . Drag the Text into the Label Text field.
@@ -271,48 +169,6 @@ Finally, we'll add code that populates the list with instances of the List Item.
 . Create a new C# script called List.cs. Add the following code to it:
 
 // snip: list
-[source,swift]
-----
-public class List : MonoBehaviour {
-
-    // The number of items to create
-    [SerializeField] int itemCount = 5;
-
-    // Each list item will be of this type
-    [SerializeField] ListItem itemPrefab;
-
-    // The object that new items should be inserted into
-    [SerializeField] RectTransform itemContainer;
-
-	void Start () {
-
-        // Create as many items as we need to
-        for (int i = 0; i < itemCount; i++)
-        {
-            var label = string.Format("Item {0}", i);
-
-            // Create a new item
-            CreateNewListItem(label);
-
-        }
-
-    }
-
-    public void CreateNewListItem(string label)
-    {
-        var newItem = Instantiate(itemPrefab);
-
-        // Place it in the container; tell it to not keep its current
-        // position or scale, so it will be laid out correctly by the UI
-        // system
-        newItem.transform.SetParent(itemContainer, worldPositionStays: false);
-
-        // Give it a label
-        newItem.Label = label;
-    }
-
-}
-----
 
 . Add a List component to the scroll view. 
     . Drag the List Item prefab into its List Item Prefab slot.
@@ -352,64 +208,6 @@ You want to manage a list of items that fade out some time after being removed.
 . Create a new C# Script called FadeAfterDelay.cs, with the following code:
 
 // snip: fade_after_delay
-[source,swift]
-----
-public class FadeAfterDelay : MonoBehaviour {
-
-    // The number of seconds before a fade starts
-    [SerializeField] float delayBeforeFading = 2f;
-
-    // The amount of time to take while fading out
-    [SerializeField] float fadeTime = 0.25f;
-
-    // Notice the return type - this Start method is a coroutine!
-    IEnumerator Start () {
-
-        // Wait the required amount of time
-        yield return new WaitForSeconds(delayBeforeFading);
-
-        // We need a canvas group in order to fade
-        CanvasGroup canvasGroup = GetComponent<CanvasGroup>();
-
-        if (canvasGroup == null) {
-            Debug.LogWarning("Cannot fade - no canvas group attached!");
-            yield break;
-        }
-
-        // Fade time must be more than zero in order for a fade to be 
-        // animated
-        if (fadeTime <= 0) {
-            yield break;
-        }
-
-        // Keep track of how much time we've spent fading
-        var fadeTimeElapsed = 0f;
-
-        // Perform the fade every frame
-        while (fadeTimeElapsed < fadeTime) {
-
-            fadeTimeElapsed += Time.deltaTime;
-
-            // Calculate the fraction of the fade time (between 0 and 1)
-            var t = fadeTimeElapsed / fadeTime;
-
-            // Calculate our alpha; it starts at 1, and goes to 0
-            var alpha = 1f - t;
-
-            // Apply the fade
-            canvasGroup.alpha = alpha;
-
-            // Wait for the next frame
-            yield return null;
-        }
-
-        // Remove this game object from the scene
-        Destroy(gameObject);
-	}
-
-
-}
-----
 
 . Attach a +FadeAfterDelay+ component to the Fading List Item.
 
@@ -447,148 +245,6 @@ Next, we'll create the code that creates, positions, and removes indicators as t
 . Create a new C# script called IndicatorManager.cs, and add the following code to it:
 
 // snip: indicator_manager
-[source,swift]
-----
-public class IndicatorManager : MonoBehaviour {
-
-    // The indicator that appears over each tracked object.
-    [SerializeField] RectTransform indicatorPrefab = null;
-
-    // The object that all indicators will go into.
-    [SerializeField] RectTransform indicatorContainer = null;
-
-    // The single instance of the indicator manager.
-    public static IndicatorManager manager;
-
-    // Maps objects in the world to indicators on screen.
-    Dictionary<TrackedObject, RectTransform> indicators = 
-        new Dictionary<TrackedObject, RectTransform>();
-
-    private void Awake()
-    {
-        // Set up the singleton variable to refer to this instance.
-        manager = this;
-    }
-
-    private void LateUpdate()
-    {
-        // We do this in LateUpdate so that the calculation of the positions
-        // can happen after the objects have moved, which prevents jitter.
-
-        // Every frame, for each object that we're tracking, update the 
-        // position of its indicator.
-        foreach (var pair in indicators) {
-            TrackedObject target = pair.Key;
-            RectTransform indicator = pair.Value;
-
-            // Has the target been removed from the scene?
-            if (target == null) {
-                // Skip this indicator
-                continue;
-            }
-
-            // Update the indicator's position in the canvas.
-            indicator.anchoredPosition = GetCanvasPositionForTarget(target);
-        }
-    }
-
-    // Returns the location in canvas-space that an indicator should be
-    // for a given object
-    private Vector2 GetCanvasPositionForTarget(TrackedObject target)
-    {
-        // Convert the position of the object from world-space to viewport-space
-        var indicatorPoint = 
-            Camera.main.WorldToViewportPoint(target.transform.position);
-
-        // Viewport coordinates are (0,0) to (1,1); (0,0) is the bottom-left
-        // corner of the screen.
-
-        // If a point is outside the screen, we clamp it to the edges.
-        indicatorPoint.x = Mathf.Clamp01(indicatorPoint.x);
-        indicatorPoint.y = Mathf.Clamp01(indicatorPoint.y);
-
-        // If a point is behind the camera, we force it to the bottom of the
-        // screen.
-        if (indicatorPoint.z < 0) {
-            indicatorPoint.y = 0;
-
-            // We also have to flip it on the X axis, for it to appear 
-            // correctly.
-            indicatorPoint.x = 1f - indicatorPoint.x;
-        }
-
-        // Canvas coordinates are (0,0) -> (width, height); (0,0) is the
-        // bottom-left corner of the canvas.
-
-        // This means that we can scale by the canvas' size to get the position 
-        // in canvas-space.
-
-        // Get the canvas
-        var canvas = indicatorContainer.GetComponentInParent<Canvas>();
-
-        // Get its size
-        Vector2 canvasSize = canvas.GetComponent<RectTransform>().sizeDelta;
-
-        // Scale it
-        indicatorPoint.Scale(canvasSize);
-
-        // We've now calculated where it belongs in the canvas!
-        return indicatorPoint;
-    }
-
-    public void AddTrackingIndicator(TrackedObject transform) {
-
-        // Do we already have an indicator for this object?
-        if (indicators.ContainsKey(transform)) {
-            // Nothing to do; we already have an indicator for this transform
-            return;
-        }
-
-        // Create our indicator from the prefab
-        var indicator = Instantiate(indicatorPrefab);
-
-        // Give it a useful name
-        indicator.name = string.Format("Indicator for {0}", 
-                                       transform.gameObject.name);
-
-        // Move the indicator into the container
-        indicator.SetParent(indicatorContainer, false);
-
-        // Ensure the pivot point is in the center of the object, so that the
-        // center of the image is right over the object's position
-        indicator.pivot = new Vector2(0.5f, 0.5f);
-
-        // Ensure the object doesn't adjust its size and position based on the 
-        // size of its parent
-        indicator.anchorMin = Vector2.zero;
-        indicator.anchorMax = Vector2.zero;
-
-        // Keep track of the relationship between the target and its indicator
-        indicators[transform] = indicator;
-
-        // Place the indicator in the right location
-        indicator.anchoredPosition = GetCanvasPositionForTarget(transform);
-
-    }
-
-    // Stops tracking a target.
-    public void RemoveTrackingIndicator(TrackedObject transform) {
-
-        // If we have an indicator for this target object, remove it from the
-        // scene
-        if (indicators.ContainsKey(transform)) {
-            // Destroy the indicator, if it isn't already gone from the scene.
-            if (indicators[transform] != null) {
-                Destroy(indicators[transform].gameObject);
-            }
-        }
-
-        // And remove it from the list, if it's present. (The Remove method
-        // won't throw an exception if 'transform' isn't in the dictionary.)
-        indicators.Remove(transform);
-    }
-}
-----
 
 . Create an empty game object. Name it "Indicator Manager".
 . Add an IndicatorManager component to the Indicator Manager.
@@ -600,26 +256,6 @@ Next, we'll create a script that requests an indicator when it first appears, an
 . Create a new C# script called TrackedObject.cs, and add the following code to it:
 
 // snip: tracked_object
-[source,swift]
-----
-public class TrackedObject : MonoBehaviour {
-
-	void Start () {
-        // When the object first appears, request an indicator.
-        IndicatorManager.manager.AddTrackingIndicator(this);
-	}
-
-    // Tell the indicator manager to remove our tracking indicator.
-    // OnDestroy is called when either the object is removed from the scene,
-    // or the scene is being unloaded (including when we exit play mode).
-    private void OnDestroy()
-    {
-        IndicatorManager.manager.RemoveTrackingIndicator(this);
-
-    }
-
-}
-----
 
 Finally, we'll create an object that will have an indicator drawn over it.
 
@@ -656,132 +292,6 @@ Next, we'll write the code for the wall. This file will contain two classes: one
 . Create a new C# script called Wall.cs. Add the following code to it:
 
 // snip: wall
-[source,swift]
-----
-#if UNITY_EDITOR
-// Bring in the UnityEditor namespace, if this file is being compiled for
-// the editor. (Code between the #if and #endif won't be included in the final 
-// game; it will only be available in the editor.)
-using UnityEditor;
-#endif
-
-// A wall.
-public class Wall : MonoBehaviour
-{
-    [SerializeField] public int rows = 5;
-    [SerializeField] public int columns = 5;
-
-    [SerializeField] public Renderer brickPrefab;
-}
-
-
-#if UNITY_EDITOR
-// The Editor object that will manage the Inspector for Wall components.
-[CustomEditor(typeof(Wall))]
-public class WallEditor : Editor {
-
-    // Called by Unity to display the contents of the Inspector for this object.
-    public override void OnInspectorGUI()
-    {
-        // Make sure that we have the latest data stored in the 
-        serializedObject.Update();
-
-        EditorGUILayout.PropertyField(serializedObject.FindProperty("rows"));
-        EditorGUILayout.PropertyField(serializedObject.FindProperty("columns"));
-
-        EditorGUILayout.PropertyField(serializedObject.FindProperty("brickPrefab"));
-
-        serializedObject.ApplyModifiedProperties();
-
-        if (GUILayout.Button("Create Wall")) {
-            CreateWall();
-        }
-    }
-
-    void CreateWall() {
-        // Register the state of this object before we make changes to its contents
-        Undo.RegisterFullObjectHierarchyUndo(target, "Create Wall");
-
-        var wall = target as Wall;
-
-        if (wall == null) {
-            return;
-        }
-
-        // Temporarily store all current children
-        GameObject[] allChildren = new GameObject[wall.transform.childCount];
-
-        int i = 0;
-
-        // We can't call DestroyImmediate on the objects in a list that we're 
-        // iterating over, because doing that would change the size of the list
-        // as we're iterating over it. Instead, we copy references to them into 
-        // an array of fixed size, and then destroy that.
-
-        // Find all child objects, and temporarily put them in the array
-        foreach (Transform child in wall.transform)
-        {
-            allChildren[i] = child.gameObject;
-            i += 1;
-        }
-
-        // We can now iterate over that array and destroy them
-        foreach (GameObject child in allChildren)
-        {
-            // Destroy the object, and also record it as an undo-able action
-            DestroyImmediate(child.gameObject);
-        }
-
-        // We can now replace them with new objects
-        var brickSize = wall.brickPrefab.GetComponent<Renderer>().bounds.size;
-
-        for (int row = 0; row < wall.rows; row++) {
-
-            // Figure out where the row should be
-            var rowPosition = Vector3.zero;
-            rowPosition.y += brickSize.y * row;
-
-            for (int column = 0; column < wall.columns; column++)
-            {
-                // Figure out where the brick should be
-                var columnPosition = rowPosition;
-                columnPosition.x += brickSize.x * column;
-
-                // Every second row is offset a bit
-                if (row % 2 == 0) {
-                    columnPosition.x += brickSize.x / 2f;
-                }
-
-                // PrefabUtility.InstantiatePrefab is like Instantiate, but it
-                // remembers that it was a prefab, and maintains the connection.
-                // (We have to cast it to GameObject because there's no generic
-                // version of InstantiatePrefab - the compiler won't figure 
-                // out the type automatically based on the type that was 
-                // passed in.
-
-                var brick = PrefabUtility
-                    .InstantiatePrefab(wall.brickPrefab.gameObject) as GameObject;
-
-                // Give it a name appropriate to its position
-                brick.name = string.Format("{0} ({1},{2})",
-                                           wall.brickPrefab.name, column, row);
-
-                // Place it in the scene
-                brick.transform.SetParent(wall.transform, false);
-
-                // Update its position, relative to its parent
-                brick.transform.localPosition = columnPosition;
-
-                // Don't rotate it, relative to its parent
-                brick.transform.localRotation = Quaternion.identity;
-
-            }
-        }
-    }
-
-}
-#endif 
-----
 
 . Create a new empty game object, called "Wall". Add a +Wall+ component to it.
 
@@ -814,63 +324,12 @@ We'll demonstrate how to do this by defining a new type, called "MultiValue". Th
 . Create a new C# script called MultiValue. Add the following code to it:
 
 // snip: multivalue
-[source,swift]
-----
-#if UNITY_EDITOR
-using UnityEditor;
-#endif
-
-[System.Serializable]
-public class MultiValue {
-
-    // The index of the currently selected value.
-    [SerializeField] int _selectedIndex = 0;
-
-    // The list of available options
-    [SerializeField] string[] options;
-
-    // Manages the selected index, and keeps it from going out of bounds.
-    public int SelectedIndex {
-        get {
-            return _selectedIndex;
-        }
-        set {
-            value = Mathf.Clamp(value, 0, options.Length);
-        }
-    }
-
-    // Creates a new chooser, using the specified values.
-    public MultiValue(params string[] values) {
-        this.options = values;
-    }
-
-    // Returns the text of the currently selected value.
-    public string SelectedValue {
-        get {
-            if (options.Length > 0) {
-                return options[_selectedIndex];
-            } else {
-                return null;
-            }
-        }
-    }
-}
-----
 
 . Create a new empty game object, and call it "Demo".
 
 . Create a new C# script called MultiValueDemo. Add the following code to it.
 
 // snip: multivaluedemo
-[source,swift]
-----
-// A simple component to demo the MultiValueChooser property drawer.
-public class MultiValueDemo : MonoBehaviour {
-
-    [SerializeField] 
-    MultiValue multiValue = new MultiValue("One", "Two", "Three");
-}
-----
 
 Note how the +MultiValue+ property looks like <<property-drawer-original>>.
 
@@ -879,102 +338,6 @@ img: property-drawer-original
 Next, add the following code to the end of MultiValue.cs.
 
 // snip: multivalue_editor
-[source,swift]
-----
-#if UNITY_EDITOR
-// Overrides how Unity will draw a MultiValueproperty.
-[CustomPropertyDrawer(typeof(MultiValue))]
-public class MultiValuePropertyDrawer : PropertyDrawer {
-
-    // Called by Unity when it needs to draw a MultiValue property in the
-    // Inspector.
-    public override void OnGUI(Rect position, SerializedProperty property,
-                               GUIContent label)
-    {
-        // Ensure that the controls found in the GUI class behave properly. This
-        // also tells Unity that any edit to any field in here should be recorded
-        // for the purposes of Undoing them.
-        EditorGUI.BeginProperty(position, label, property);
-
-        // Get a reference to the variables that store the info we need
-        var indexProperty = property.FindPropertyRelative("_selectedIndex");
-        var valuesProperty = property.FindPropertyRelative("options");
-
-        // Calculate the rectangle to draw the first line in. This will hold
-        // our Toolbar (our list of buttons).
-        var firstLinePosition = position;
-        firstLinePosition.height = EditorGUI.GetPropertyHeight(indexProperty);
-
-        // Use this to calculate the rectangle to draw the second property in.
-        // (This will vary, depending on whether the user has elected to expand
-        // the list in the Inspector or not.)
-        var secondLinePosition = firstLinePosition;
-        secondLinePosition.y += 2 + firstLinePosition.height;
-        secondLinePosition.height = EditorGUI.GetPropertyHeight(valuesProperty);
-
-        // Display the label in front of the toolbar, and get back a new rectangle
-        // to draw the toolbar in.
-        firstLinePosition = EditorGUI.PrefixLabel(
-            firstLinePosition, new GUIContent(property.displayName));
-
-        // Get every string inside the "options" property, as an array
-        string[] labels = new string[valuesProperty.arraySize];
-
-        for (int i = 0; i < labels.Length; i++) {
-            labels[i] = valuesProperty.GetArrayElementAtIndex(i).stringValue;
-        }
-
-        // Because Toolbar is not in the EditorGUI class, it won't automatically
-        // report to the editor that it was updated in a way that the editor
-        // can track for the purposes of the Undo system. So, we use 
-        // BeginChangeCheck before drawing the toolbar, and call EndChangeCheck.
-        // If EndChangeCheck returns true, the user made a change.
-        EditorGUI.BeginChangeCheck();
-        var index = indexProperty.intValue;
-        var newValue = GUI.Toolbar(firstLinePosition, index, labels);
-        if (EditorGUI.EndChangeCheck()) {
-            // The toolbar was changed.
-            indexProperty.intValue = newValue;
-        }
-
-        // Draw the 'options' list as a regular list. This will also draw things
-        // like the expand arrow, the items in the list, and the number of items
-        // in the list.
-        EditorGUI.indentLevel += 1;
-        EditorGUI.PropertyField(secondLinePosition, valuesProperty, true);
-        EditorGUI.indentLevel -= 1;
-
-        // We're done editing this property.
-        EditorGUI.EndProperty();
-    }
-
-    // Called by Unity to determine the height of the MultiValue property.
-    public override float GetPropertyHeight(SerializedProperty property, 
-                                            GUIContent label)
-    {
-
-        // The height of a MultiValue property is the height of both of its two
-        // child properties, plus the spacing between them.
-
-        float lineSpacing = EditorGUIUtility.standardVerticalSpacing;
-
-        // Get the child properties 
-        var indexProperty = property.FindPropertyRelative("_selectedIndex");
-        var valuesProperty = property.FindPropertyRelative("options");
-
-        // Calculate the height of this property by getting the height of both
-        // properties (including the strings inside the options, if it's been
-        // expanded), plus the line spacing
-        float indexHeight = EditorGUI.GetPropertyHeight(indexProperty);
-        float optionsHeight = EditorGUI.GetPropertyHeight(valuesProperty, true);
-
-        return indexHeight + lineSpacing + optionsHeight;
-    }
-
-}
-
-#endif 
-----
 
 When you return to Unity, the Inspector will look like <<property-drawer-custom>>. You can select a string from the bar at the top of the property, and modify the available strings as well. If you add more properties to the +MultiValueDemo+ class, they will be displayed as per normal.
 
@@ -1001,15 +364,6 @@ You want to customise how the Inspector draws a type of variable when a certain 
 We'll add an attribute that lets you draw a help box above variables, like so:
 
 // snip: helpbox_demo
-[source,swift]
-----
-public class HelpBoxDemo : MonoBehaviour {
-
-    [HelpBox(text = "Here's a help box above the variable!")]
-    [SerializeField] int integer;
-
-}
-----
 
 This code produces the following Inspector: <<property-attribute>>
 
@@ -1018,100 +372,6 @@ img: property-attribute
 To create the +HelpBox+ attribute, create a new C# script called HelpBox.cs, and add the following code to it:
 
 // snip: helpbox_attribute
-[source,swift]
-----
-#if UNITY_EDITOR
-using UnityEditor;
-#endif
-
-// A HelpBoxAttribute attribute can be placed above a variable to make it display a 
-// help box above it in the inspector.
-
-// Note how we define the HelpBoxAttribute class _outside_ the #if UNITY_EDITOR
-// areas. This because code that refers to the HelpBox will be compiled outside
-// of the editor context (that is, with UNITY_EDITOR not defined), and it will 
-// fail to compile if the class doesn't exist.
-
-public class HelpBoxAttribute : PropertyAttribute
-{
-    // The text that will appear in the help box.
-    public string text;
-}
-
-#if UNITY_EDITOR
-// The code that draws the help box, as well as the original property.
-[CustomPropertyDrawer(typeof(HelpBoxAttribute))]
-public class HelpBoxAttributePropertyDrawer : PropertyDrawer {
-    public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
-    {
-
-        // Let's start by calculating the rectangle in which we'll draw the 
-        // help box.
-
-        // 'position' is the rectangle that we've been given to draw everything
-        // to do with this property. It's calculated by taking the width of the
-        // Inspector tab, and the height returned by GetPropertyHeight.
-
-        // The help box will be at the top of the property, so we just take the
-        // original position, and reduce the height.
-        var helpBoxPosition = position;
-        helpBoxPosition.height = HelpBoxHeight;
-
-        // Next, we figure out the rectangle we need to draw the property in.
-
-        // We'll start with the entire available area...
-        var propertyPosition = position;
-
-        // Shift it down by the help box's height, plus line spacing
-        propertyPosition.y += EditorGUIUtility.standardVerticalSpacing + 
-            helpBoxPosition.height;
-
-        // And update its height to be however tall the property wants to be,
-        // including any child properties.
-        propertyPosition.height = EditorGUI.GetPropertyHeight(property, includeChildren: true);
-
-        // Get the text from the HelpBoxAttribute.
-        HelpBoxAttribute helpBox = (attribute as HelpBoxAttribute);
-        string text = helpBox.text;
-
-        // Draw the help box itself.
-        EditorGUI.HelpBox(helpBoxPosition, text, MessageType.Info);
-
-        // Draw the original property underneath.
-        EditorGUI.PropertyField(propertyPosition, property, includeChildren: true);
-
-
-    }
-
-    public override float GetPropertyHeight(SerializedProperty property, GUIContent label)
-    {
-        // Calculate the height of the help box, given the editor width (the text might wrap over multiple lines)
-
-        float lineSpacing = EditorGUIUtility.standardVerticalSpacing;
-        float propertyHeight = EditorGUI.GetPropertyHeight(property, includeChildren: true);
-
-        return HelpBoxHeight + lineSpacing + propertyHeight;
-
-    }
-
-    // Calculates the height of the help box.
-    private float HelpBoxHeight
-    {
-        get
-        {
-            var width = EditorGUIUtility.currentViewWidth;
-            var helpBoxAttribute = attribute as HelpBoxAttribute;
-            var content = new GUIContent(helpBoxAttribute.text);
-            float helpBoxHeight = EditorStyles.helpBox.CalcHeight(content, width);
-
-            // Add a single line's height to ensure that text doesn't get 
-            // clipped
-            return helpBoxHeight + EditorGUIUtility.singleLineHeight;
-        }
-    }
-}
-#endif 
-----
 
 ===== Discussion
 
@@ -1131,13 +391,6 @@ Let's set up an asset post-processor that automatically sets up any texture whos
 . Create a new C# script called NormalMapTextureImporter.cs, and add the following code:
 
 // snip: asset_preprocessor
-[source,swift]
-----
-!!!!!!!!
-No code found for query 'asset_preprocessor' at ref 'HEAD'. Possible replacement
-tags include: asset_postprocessor
-!!!!!!!!
-----
 
 . Take a texture that contains a normal map - if you don't have one, a useful generator of normal map textures can be found at https://cpetry.github.io/NormalMap-Online/ - and rename it so that its name ends with "_n".
 
@@ -1167,12 +420,6 @@ Let's begin by creating an asset that we'll then write an importer for.
 . Put the following code in the file:
 
 // snip-file: Test.cube
-----
-{
-    "size": {"x":1, "y":1, "z":2},
-    "color": {"r":0.5, "g":1, "b":0.5, "a":1}    
-}
-----
 
 . Save the file as "Test.cube", in your Unity project's Assets folder.
 
@@ -1181,123 +428,6 @@ Let's begin by creating an asset that we'll then write an importer for.
 . Create a new C# script, and enter the following code:
 
 // snip: cube_importer
-[source,swift]
-----
-#if UNITY_EDITOR
-using UnityEditor;
-
-// At the time of writing, asset importers are in the Experiemental module.
-// By the time you're reading this, the API may have changed, so check the
-// documentation.
-using UnityEditor.Experimental.AssetImporters;
-
-// A CubeDescription contains the variables that define our cubes. We'll create
-// them by loading them from text files that contain JSON.
-public struct CubeDescription {
-    public Vector3 size;
-
-    // storing the r, g, b, a values in this 4-component vector
-    public Color color;
-}
-
-// Indicate to Unity that this script imports files with the file extension
-// ".cube", and that this is version 0 of the importer (changing the number will
-// make Unity re-import assets of this type)
-[ScriptedImporter(0, "cube")]
-public class CubeImporter : ScriptedImporter {
-
-    // Called by Unity to perform an import
-    public override void OnImportAsset(AssetImportContext ctx)
-    {
-
-        // "ctx" contains information about the import that Unity wants us to
-        // do; it contains the path to the file, and we'll put the Unity
-        // objects into it when we're done
-
-        // "cube" files will contain JSON that describes the color and size
-        // of the cube.
-
-        // Create a variable to load the cube description into
-        CubeDescription cubeDescription;
-
-        // Attempt to load the JSON.
-        try {
-            var text = System.IO.File.ReadAllText(ctx.assetPath);
-
-            cubeDescription = JsonUtility.FromJson<CubeDescription>(text);
-        } catch (System.ArgumentException e) {
-            // We failed to load the JSON. Maybe it's not valid. Report the error.
-            Debug.LogErrorFormat("{0} is not a valid cube: {1}", ctx.assetPath, e.Message);
-            return;
-        } catch (System.Exception e) {
-            // We caught some other kind of exception, and can't continue. Re-throw
-            // the error.
-            throw e;
-        }
-
-        // Create a generic cube object, which we'll make changes to and save
-        // as a new asset.
-        var cubeObject = GameObject.CreatePrimitive(PrimitiveType.Cube);
-
-        // Get the last part of the file path, and use it as the cube's name
-        string name = System.IO.Path.GetFileNameWithoutExtension(ctx.assetPath);
-
-        // Next, we'll create a cube that's the right size. The default cube mesh
-        // is 1x1x1; we'll scale it based on the size that was passed in.
-
-        // Copy the default cube mesh.
-        var cubeMesh = Instantiate(cubeObject.GetComponent<MeshFilter>().sharedMesh);
-
-        // Create a matrix that scales vertices by the given X, Y and Z amounts.
-        var scaleMatrix = Matrix4x4.Scale(cubeDescription.size);
-
-        // Get a copy of the vertices in the mesh.
-        var vertices = cubeMesh.vertices;
-
-        // For each of these vertices, apply the scale by multiplying the matrix
-        // against the vertex.
-        for (int v = 0; v < vertices.Length; v++) {
-            vertices[v] = scaleMatrix.MultiplyPoint(vertices[v]);
-        }
-
-        // Store these scaled vertices in the mesh.
-        cubeMesh.vertices = vertices;
-
-        // Tell the cube's MeshFilter to use this new mesh.
-        cubeObject.GetComponent<MeshFilter>().sharedMesh = cubeMesh;
-
-        // Give the mesh a name.
-        cubeMesh.name = name + " Mesh";
-
-        // Create a new material, using the Standard shader (which is the 
-        // default)
-        var cubeMaterial = new Material(Shader.Find("Standard"));
-
-        // Apply the color that we loaded.
-        cubeMaterial.color = cubeDescription.color;
-
-        // Give it a name, too.
-        cubeMaterial.name = name + " Material";
-
-        // Tell the cube's MeshRenderer to use this material.
-        cubeObject.GetComponent<MeshRenderer>().material = cubeMaterial;
-
-        // Now we store the objects we just created as assets.
-
-        // First, store the GameObject (the collection of components that uses
-        // and renders the mesh and material), and mark it as the "main" object.
-        ctx.AddObjectToAsset(name, cubeObject);
-        ctx.SetMainObject(cubeObject);
-
-        // We also need to store the mesh and material as well.
-        ctx.AddObjectToAsset(cubeMaterial.name, cubeMaterial);
-        ctx.AddObjectToAsset(cubeMesh.name, cubeMesh);
-
-    }
-
-}
-#endif
-----
 
 . Return to Unity. Your Test.cube file will now be imported. It now contains three assets usable by Unity: a mesh, a material, and a game object that uses the mesh and material. You can drag the file into the scene, just like any other model.
 
@@ -1320,70 +450,6 @@ Let's create a wizard that creates a cube, and also creates a new material that 
 . Create a new C# scipt called CreateCubeWizard.cs, and add the following code to it:
 
 // snip: cube_wizard
-[source,swift]
-----
-#if UNITY_EDITOR
-// This entire class only exists in the Editor. It doesn't need to be included
-// in built games.
-using UnityEditor;
-
-// Create a wizard that generates a new cube, as well as a colour.
-public class CreateCubeWizard : ScriptableWizard {
-
-    // Create a new entry in the GameObject menu, called "Cube with Color".
-    // When it's selected, a CreateCubeWizard will appear. Note that this method
-    // must be both public and static for MenuItem to work.
-    [MenuItem("GameObject/Cube with Color")]
-    public static void CreateWizard() {
-
-        // Create and display the wizard.
-        DisplayWizard<CreateCubeWizard>("Create Cube");
-    }
-
-    // Stores temporary information about the cube that the user wants to make.
-    // These variables are drawn in the window, just like variables in a
-    // MonoBehaviour component are.
-    [SerializeField] Vector3 size = Vector3.zero;
-    [SerializeField] Color color = Color.white;
-
-    // Run when the Create button is clicked.
-    private void OnWizardCreate()
-    {
-
-        // Create a cube
-        var newCube = GameObject.CreatePrimitive(PrimitiveType.Cube);
-
-        // Scale it
-        newCube.transform.localScale = size;
-
-        // Create a new material, using the Standard shader (which is the 
-        // default)
-        var tintedMaterial = new Material(Shader.Find("Standard"));
-
-        // Give it a colour
-        tintedMaterial.color = color;
-
-        // Materials need to be saved to disk. To do this, we need to figure out
-        // where we can save the file. GenerateUniqueAssetPath will give
-        // us a path that's guaranteed to not already have a file present.
-        var desiredPath = AssetDatabase.GenerateUniqueAssetPath("Assets/Tinted.mat");
-
-        // Create and save the new asset.
-        AssetDatabase.CreateAsset(tintedMaterial, desiredPath);
-        AssetDatabase.SaveAssets();
-
-        // Visually "ping" the asset, as though we'd selected it in the Editor.
-        // This will show the user that a new file has been created, and where 
-        // to find it.
-        EditorGUIUtility.PingObject(tintedMaterial);
-
-        // Finally, make the new cube use this new material.
-        newCube.GetComponent<MeshRenderer>().material = tintedMaterial;
-
-    }
-}
-#endif
-----
 
 . Open the GameObject menu, and note that you'll see a new menu entry: "Cube with Color". Click it.
 

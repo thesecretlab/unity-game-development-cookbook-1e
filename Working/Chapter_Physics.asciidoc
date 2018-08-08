@@ -22,6 +22,7 @@ Implementing mouse-look involves rotating two separate objects - the body, and t
 
 // snip: mouse_look
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 [source,swift]
 ----
@@ -109,6 +110,8 @@ public class MouseLook : MonoBehaviour
 }
 ----
 >>>>>>> 7e19563... Fixing stuff
+=======
+>>>>>>> 812d07f... More quaterrnions. ohgod.
 
 . Attach a MouseLook component to the body.
 
@@ -137,99 +140,6 @@ You'll typically want to start with mouse-look first, since without the ability 
 . Create a new C# script called Movement. Add the following code to it:
 
 // snip: 3d_movement
-[source,swift]
-----
-// Implements character controller movement.
-public class Movement : MonoBehaviour {
-
-    // The speed at which we can move, in units per second.
-    [SerializeField] float moveSpeed = 6;
-
-    // The height of a jump, in units.
-    [SerializeField] float jumpHeight = 2;
-
-    // The rate at which our vertical speed will be reduced, in units per
-    // second. 
-    [SerializeField] float gravity = 20;
-
-    // The degree to which we can control our movement while in mid-air.
-    [Range(0, 10), SerializeField] float airControl = 5;
-
-    // Our current movement direction. If we're on the ground, we have 
-    // direct control over it, but if we're in the air, we only have partial
-    // control over it.
-    Vector3 moveDirection = Vector3.zero;
-
-    // A cached reference to the character controller, which we'll be using
-    // often.
-    CharacterController controller;
-
-    void Start()
-    {
-        controller = GetComponent<CharacterController>();
-    }
-
-    // We do our movement logic in FixedUpdate so that our movement can happen
-    // at the same pace as physics updates. If it didn't, we'd see jitter when
-    // we interact with physics objects that can move around.
-    void FixedUpdate () {
-
-
-        // The input vector describes the user's desired local-space movement;
-        // if we're on the ground, this will immediately become our movement,
-        // but if we're in the air, we'll interpolate between our current 
-        // movement and this vector, to simulate momentum.
-        var input = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));
-
-        // Multiply this movement by our desired movement speed
-        input *= moveSpeed;
-
-        // The controller's Move method uses world-space directions, so we
-        // need to convert this direction to world space
-        input = transform.TransformDirection(input);
-
-        // Is the controller's bottom-most point touching the ground?
-        if (controller.isGrounded)
-        {
-            // Figure out how much movement we want to apply in local-space.
-            moveDirection = input;
-
-            // Is the user pressing the jump button right now?
-            if (Input.GetButton("Jump"))
-            {
-                // Calculate the amount of upwards speed we need, considering
-                // that we add moveDirection.y to our height every frame, and we
-                // reduce moveDirection.y by gravity every frame.
-                moveDirection.y = Mathf.Sqrt(2 * gravity * jumpHeight);
-            } else {
-                // We're on the ground, but not jumping. Set our downwards
-                // movement to zero (otherwise, because we're continuously 
-                // reducing our Y movement, if we walk off a ledge, we'd
-                // suddenly have a huge amount of downwards momentum.)
-                moveDirection.y = 0;
-            }
-        } else {
-            // Slowly bring our movement towards the user's desired input, but
-            // preserve our current y direction (so that the arc of the jump is
-            // preserved)
-            input.y = moveDirection.y;
-            moveDirection = Vector3.Lerp(moveDirection, input, 
-                                         airControl * Time.fixedDeltaTime);
-        }
-
-        // Bring our movement down by applying gravity over time
-        moveDirection.y -= gravity * Time.fixedDeltaTime;
-
-        // Move the controller. The controller will refuse to move into other 
-        // colliders, which means that we won't clip through the ground or
-        // other colliders. (However, this doesn't stop other colliders from 
-        // moving into us. For that, we'd need to detect when we're overlapping
-        // another collider, and move away from them. We'll cover this in 
-        // another recipe!)
-        controller.Move(moveDirection * Time.fixedDeltaTime);
-	}
-}
-----
 
 . Attach a Movement component to your Player object.
 
@@ -263,81 +173,12 @@ Interacting with objects requires firing invisible rays out of the camera, in or
 . Create a new C# script called Interactable. Add the following code to it:
 
 // snip: interactable
-[source,swift]
-----
-// Implements being interacted with by an Interacting component.
-// Requires a collider, because Interacting objects find their targets by
-// casting rays that hit colliders.
-[RequireComponent(typeof(Collider))]
-public class Interactable : MonoBehaviour {
-
-    public void Interact(GameObject fromObject) {
-        Debug.LogFormat("I've been interacted with by {0}!", fromObject);
-    }
-}
-----
 
 . Attach this component to the object you want to interact with. The object must have a collider of some kind.
 
 . Create a new C# script called Interacting. Add the following code to it:
 
 // snip: interacting
-[source,swift]
-----
-// Implements interacting with Interactable objects
-public class Interacting : MonoBehaviour {
-
-    // The key to press to interact with an object.
-    [SerializeField] KeyCode interactionKey = KeyCode.E;
-
-    // The range at which we can interact with objects.
-    [SerializeField] float interactingRange = 2;
-
-	void Update () {
-
-        // Did the user just press the interaction key?
-        if (Input.GetKeyDown(interactionKey)) {
-
-            // Then attempt to interact.
-            AttemptInteraction();
-        }
-	}
-
-    void AttemptInteraction() {
-
-        // Create a ray from the current position and forward direction
-        var ray = new Ray(transform.position, transform.forward);
-
-        // Store information about the hit in this variable
-        RaycastHit hit;
-
-        // Create a layer mask that represents every layer except the players
-        var everythingExceptPlayers = ~(1 << LayerMask.NameToLayer("Player"));
-
-        // Combine this layer mask with the one that raycasts usually use; this
-        // has the effect of removing the player layer from the list of layers
-        // to raycast against
-        var layerMask = Physics.DefaultRaycastLayers
-                               & everythingExceptPlayers;
-
-        // Perform the raycast out, hitting only object that are on layers 
-        // described by the layer mask we just assembled
-        if (Physics.Raycast(ray, out hit, interactingRange, layerMask)) {
-
-            // Try and get the Interactable component on the object we hit
-            var interactable = hit.collider.GetComponent<Interactable>();
-
-            // Does it exist?
-            if (interactable != null) {
-
-                // Signal that it was interacted with.
-                interactable.Interact(this.gameObject);
-            }
-        }
-
-    }
-}
-----
 
 . Attach this component to your Head object. Play the game; when you look at a nearby object that has the Interactable component and press the interaction key, the Interactable component will log that it's been interacted with.
 
@@ -359,242 +200,6 @@ NOTE: This recipe assumes that you've set up your player by following <<implemen
 . Create a new C# script called Grabbing, and add the following code to it:
 
 // snip: grabbing
-[source,swift]
-----
-// Implements pulling, grabbing, holding and throwing.
-// A rigidbody is required because we need one to connect our grabbing joint to
-[RequireComponent(typeof(Rigidbody))]
-public class Grabbing : MonoBehaviour {
-
-    // The range from this object at which an object can be picked up.
-    [SerializeField] float grabbingRange = 3;
-
-    // The range from this object at which an object can be pulled towards us.
-    [SerializeField] float pullingRange = 20;
-
-    // The location at which objects that are picked up will be placed.
-    [SerializeField] Transform holdPoint = null;
-
-    // The key to press to pick up or drop an object.
-    [SerializeField] KeyCode grabKey = KeyCode.E;
-
-    // The key to press to throw an object
-    [SerializeField] KeyCode throwKey = KeyCode.Mouse0;
-
-    // The amount of force to apply on a thrown object
-    [SerializeField] float throwForce = 100f;
-
-    // The amount of force to apply on objects that we're pulling towards us.
-    // Don't forget that objects we're pulling will have friction working
-    // against us, so the value might need to be higher than you think.
-    [SerializeField] float pullForce = 50f;
-
-    // If the grab joint encounters this much force, break it.
-    [SerializeField] float grabBreakingForce = 100f;
-
-    // If the grab joint encounters this much torque, break it.
-    [SerializeField] float grabBreakingTorque = 100f;
-
-    // The joint that holds our grabber object. Null if we're not holding 
-    // anything.
-    FixedJoint grabJoint;
-
-    // The rigidbody that we're holding. Null if we're not holding anything.
-    Rigidbody grabbedRigidbody;
-
-    private void Awake()
-    {
-        // Do some quick validity checks when we start up
-
-        if (holdPoint == null) {
-            Debug.LogError("Grab hold point must not be null!");
-        }
-
-        if (holdPoint.IsChildOf(transform) == false) {
-            Debug.LogError("Grab hold point must be a child of this object");            
-        }
-
-        var playerCollider = GetComponentInParent<Collider>();
-
-        playerCollider.gameObject.layer = LayerMask.NameToLayer("Player");
-    }
-
-    private void Update()
-    {
-        // Is the user holding the grab key, and we're not holding something?
-        if (Input.GetKey(grabKey) && grabJoint == null) {
-
-            // Attempt to perform a pull or a grab
-            AttemptPull();
-
-        } 
-        // Did the user just press the grab key, and we're holding something?
-        else if (Input.GetKeyDown(grabKey) && grabJoint != null) {
-            Drop();
-        }
-        // Does the user want to throw the held object, and we're holding 
-        // something?
-        else if (Input.GetKeyDown(throwKey) && grabJoint != null) {
-            // Now apply the throw force
-            Throw ();
-        }
-
-
-
-
-    }
-
-    // Throws a held object
-    void Throw()
-    {
-        // Can't throw if we're not holding anything!
-        if (grabbedRigidbody == null) {
-            return;
-        }
-
-        // Keep a reference to the body we were holding, because Drop will reset 
-        // it
-        var thrownBody = grabbedRigidbody;
-
-
-        // Calculate the force to apply
-        var force = transform.forward * throwForce;
-
-        // And apply it
-        thrownBody.AddForce(force);
-
-        // We need to drop what we're holding before we can throw it
-        Drop();
-
-    }
-
-    // Attempts to pull or pick up the object directly ahead of this object. 
-    // When this script is attached to a camera, it will try to get the object 
-    // directly in the middle of the camera's view. (You may want to add a 
-    // reticle to the GUI to help the player know where the precise center of
-    // the screen is.
-    private void AttemptPull()
-    {
-        // Perform a raycast. If we hit something that has a rigidbody and 
-        // is not kinematic, pick it up.
-
-
-        // Create a ray that goes from our current position, and goes out along
-        // our current direction.
-        var ray = new Ray(transform.position, transform.forward);
-
-        // Create a variable to store the results of what we hit.
-        RaycastHit hit;
-
-        // Create a layer mask that represents every layer except the players
-        var everythingExceptPlayers = ~(1 << LayerMask.NameToLayer("Player"));
-
-        // Combine this layer mask with the one that raycasts usually use; this
-        // has the effect of removing the player layer from the list of layers
-        // to raycast against
-        var layerMask = Physics.DefaultRaycastLayers
-                               & everythingExceptPlayers;
-
-        // Perform a raycast that uses this layermask to ignore the players.
-        // We use our pulling range because it's the longest; if the object
-        // is actually within our (shorter) grabbing range, we'll grab it 
-        // instead of pulling it.
-        if (Physics.Raycast(ray, out hit, pullingRange, layerMask) == false)
-        {
-            // Our raycast hit nothing within the pulling range.
-            return;
-        }
-
-        // We hit something! Is it something we can pick up?
-        grabbedRigidbody = hit.rigidbody;
-
-        if (grabbedRigidbody == null || grabbedRigidbody.isKinematic)
-        {
-            // We can't pick this up - it either has no rigidbody, or it's
-            // kinematic.
-            return;
-        }
-
-        // We now have an object that's within our pulling range.
-
-        // Is the object within the grabbing range, too?
-        if (hit.distance < grabbingRange) {
-
-            // We can pick it up.
-
-            // Move the body to our grab position.
-            grabbedRigidbody.transform.position = holdPoint.position;
-
-            // Create a joint that will hold this in place, and configure it
-            grabJoint = gameObject.AddComponent<FixedJoint>();
-            grabJoint.connectedBody = grabbedRigidbody;
-            grabJoint.breakForce = grabBreakingForce;
-            grabJoint.breakTorque = grabBreakingTorque;
-
-            // Ensure that this grabbed object doesn't collide with this collider,
-            // or any collider in our parent, which could cause problems
-            foreach (var myCollider in GetComponentsInParent<Collider>())
-            {
-                Physics.IgnoreCollision(myCollider, hit.collider, true);
-            }
-        } else {
-            // It's not in grabbing range, but it is in pulling range. Pull it
-            // towards us, until it's in grabbing range.
-
-            var pull = -transform.forward * this.pullForce;
-
-            grabbedRigidbody.AddForce(pull);
-
-        }
-
-
-
-    }
-
-    // Drops the object
-    private void Drop()
-    {
-
-        if (grabJoint != null)
-        {
-            Destroy(grabJoint);
-        }
-
-        // Bail out if the object we were holding isn't there anymore
-        if (grabbedRigidbody == null)
-        {
-            return;
-        }
-
-        // Re-enable collisions between this object and our collider(s)
-        foreach (var myCollider in GetComponentsInParent<Collider>())
-        {
-            Physics.IgnoreCollision(myCollider, grabbedRigidbody.GetComponent<Collider>(), false);
-        }
-
-        grabbedRigidbody = null;
-    }
-
-    // Draw the location of the hold point
-    private void OnDrawGizmos()
-    {
-        if (holdPoint == null) {
-            return;
-        }
-        Gizmos.color = Color.magenta;
-        Gizmos.DrawSphere(holdPoint.position, 0.2f);
-    }
-
-    // Called when a joint that's attached to the gameobject this component is
-    // on has broken.
-    private void OnJointBreak(float breakForce)
-    {
-        // When our joint breaks, call Drop to ensure that
-        // we clean up after ourselves.
-        Drop();
-    }
-}
-----
 
 To test it, create a cube, scale it to (0.25,0.25,0.25), and add a Rigidbody. When you play the game, you will be able to pull it towards you by pressing the E key. When it's in range, you will grab it. Press the left mouse button to throw the object you're holding.
 
@@ -620,26 +225,6 @@ You want to detect when two physical objects are touching.
 
 
 // snip: collision_detection
-[source,swift]
-----
-private void OnCollisionEnter(Collision collision)
-{
-    Debug.LogFormat("Object {0} started touching {1}!",
-                    collision.gameObject.name, this.name);
-}
-
-private void OnCollisionExit(Collision collision)
-{
-    Debug.LogFormat("Object {0} stopped touching {1}!",
-                    collision.gameObject.name, this.name);
-}
-
-private void OnCollisionStay(Collision collision)
-{
-    Debug.LogFormat("Object {0} remained touching {1}!",
-                    collision.gameObject.name, this.name);
-}
-----
 
 
 ==== Discussion
@@ -656,26 +241,6 @@ You want to detect when an object has entered a collider that's marked as a trig
 ==== Solution
 
 // snip: trigger_detection
-[source,swift]
-----
-private void OnTriggerEnter(Collider other)
-{
-    Debug.LogFormat("Object {0} entered trigger {1}!",
-                    other.name, this.name);
-}
-
-private void OnTriggerExit(Collider other)
-{
-    Debug.LogFormat("Object {0} exited trigger {1}!",
-                    other.name, this.name);
-}
-
-private void OnTriggerStay(Collider other)
-{
-    Debug.LogFormat("Object {0} remained in trigger {1}!", 
-                    other.name, this.name);
-}
-----
 
 ==== Discussion
 
@@ -695,118 +260,6 @@ You want objects to move from point to point.
 . Create a new C# script called MovingPlatform, and add the following code to it:
 
 // snip: moving_platform
-[source,swift]
-----
-// Moves an object at a fixed speed through a series of points.
-public class MovingPlatform : MonoBehaviour {
-
-    // The positions that the platform will move through stored in local position.
-    [SerializeField] Vector3[] points = {};
-
-    // The speed at which it will move between them.
-    [SerializeField] float speed = 10f;
-
-    // The index into the 'points' array; this is the point we're trying to
-    // move towards
-    int nextPoint = 0;
-
-    // Where the platform was when the game started
-    Vector3 startPosition;
-
-    // How fast this platform is currently moving, in units per second
-    public Vector3 velocity { get; private set; }
-
-	// Use this for initialization
-	void Start () {
-        if (points == null || points.Length < 2) {
-            Debug.LogError("Platform needs 2 or more points to work.");
-            return;
-        }
-
-        // All of our movement points are defined relative to where we are
-        // when the game starts, so record that (since transform.position will
-        // change over time)
-        startPosition = transform.position;
-
-        // Start our cycle at our first point
-        transform.position = currentPoint;
-	}
-
-    // Returns the point that we're currently moving towards.
-    Vector3 currentPoint {
-        get {
-            // If we have no points, return our current position
-            if (points == null || points.Length == 0) {
-                return transform.position;
-            }
-            // Return the point we're trying to get to
-            return points[nextPoint] + startPosition;
-        }
-    }
-
-	// Update every time physics updates
-	void FixedUpdate () {
-
-        // Move towards the target, at a fixed speed
-        var newPosition = Vector3.MoveTowards(
-            transform.position, currentPoint, speed * Time.fixedDeltaTime);
-
-        // Have we reached the target?
-        if (Vector3.Distance(newPosition, currentPoint) < 0.001) {
-            // Snap to the target point
-            newPosition = currentPoint;
-
-            // Move to the next target, wrapping around to the start if 
-            // necessary
-            nextPoint += 1;
-            nextPoint %= points.Length;
-        }
-
-        // Calculate our current velocity in units-per-second
-        velocity = (newPosition - transform.position) / Time.fixedDeltaTime;
-
-        // Update to our new location
-        transform.position = newPosition;
-
-
-	}
-
-    // Draw the path that the platform will follow
-    private void OnDrawGizmosSelected()
-    {
-        if (points == null || points.Length < 2) {
-            return;
-        }
-
-        // Our points are stored in local space, so we need to offset them
-        // in order to know where they are in world space.
-        Vector3 offsetPosition = transform.position;
-
-        // If we're playing, our transform is moving, so we need to use the
-        // cached start position to figure out where our points are in world
-        // space.
-        if (Application.isPlaying) {
-            offsetPosition = startPosition;
-        }
-
-        Gizmos.color = Color.blue;
-
-        // Loop over all the points
-        for (int p = 0; p < points.Length; p++) {
-
-            // Get this point and the next one, wrapping around to the first
-            var p1 = points[p];
-            var p2 = points[(p + 1) % points.Length];
-
-            // Draw the point
-            Gizmos.DrawSphere(offsetPosition + p1, 0.1f);
-
-            // Draw the line between the points
-            Gizmos.DrawLine(offsetPosition + p1, offsetPosition + p2);
-        }
-    }
-}
-----
 
 . Create a new cube, and add a MovingPlatform to it.
 . Add as many points to it as you'd like. They'll be displayed in the scene view.
@@ -978,20 +431,6 @@ public class PlatformRiding : MonoBehaviour {
 }
 ----
 
-            // Did it have a MovingPlatform component?
-            var platform = hit.collider.gameObject
-                              .GetComponent<MovingPlatform>();
-
-            if (platform != null) {
-                // If it did, update our position based on the platform's
-                // current velocity.
-                transform.position += platform.velocity * Time.fixedDeltaTime;
-            }
-        }
-    }
-}
-----
-
 . Add a PlatformRiding component to the object that has your CharacterCollider.
 
 . Play the game, and jump onto an object that has a MovingPlatform component. It will be carried with the platform.
@@ -1012,90 +451,6 @@ You want your character collider to be able to push rigidbodies.
 . Create a new C# script called Pushing. Add the following code to it:
 
 // snip: pushing
-[source,swift]
-----
-// Implements pushing rigidbodies from a charactercollider.
-public class Pushing : MonoBehaviour {
-
-    // Defines the possible types of pushing we can apply.
-    public enum PushMode
-    {
-        // Don't allow any pushing
-        NoPushing,
-
-        // Push by directly setting the velocity of things we hit
-        DirectlySetVelocity,
-
-        // Push by applying a physical force to the impact point
-        ApplyForces
-    }
-
-    // The type of pushing we've selected.
-    [SerializeField] PushMode pushMode = PushMode.DirectlySetVelocity;
-
-    // The amount of force to apply, when push mode is set to ApplyForces.
-    [SerializeField] float pushPower = 5;
-
-    // Called when a character collider on the obejct that this script is 
-    // attached to touches any other collider.
-    private void OnControllerColliderHit(ControllerColliderHit hit)
-    {
-        // Immediately exit if pushing is disabled
-        if (pushMode == PushMode.NoPushing)
-        {
-            return;
-        }
-
-        // Get the rigidbody attached to the collider we hit
-        var hitRigidbody = hit.rigidbody;
-
-        // Is this rigidbody something we can push?
-        if (hitRigidbody == null || hitRigidbody.isKinematic == true)
-        {
-            // Either it doesn't have a rigidbody, or the rigid body is 
-            // kinematic (that is, it doesn't respond to external forces.)
-
-            // Since we're going to apply a force to it, we should respect its
-            // settings.
-            return;
-        }
-
-        // Get a reference to the controller that hit the object, since we'll
-        // be making references to it often.
-        CharacterController controller = hit.controller;
-
-        // Calculate the world position of the lowest point on the controller.
-        var footPosition = controller.transform.position.y 
-                                     - controller.center.y  
-                                     - controller.height / 2;
-
-        // If the thing we've hit is underneath us, then we don't want to push
-        // it - it would make it impossible for us to walk on top of it, beacuse
-        // it would be "pushed".
-        if (hit.point.y <= footPosition ) {
-            return;
-        }
-
-        // Apply the push, based on our setting.
-        switch (pushMode)
-        {
-            case PushMode.DirectlySetVelocity:
-                // Directly apply the velocity. Less realistic, but can feel
-                // better.
-                hitRigidbody.velocity = controller.velocity;
-                break;
-            case PushMode.ApplyForces:
-                // Calculate how much push force to apply
-                Vector3 force = controller.velocity * pushPower;
-
-                // Apply this force to the object we're pushing
-                hitRigidbody.AddForceAtPosition(force, hit.point);
-                break;
-        }
-    }
-
-}
-----
 
 . Add a Pushing component to the object in your scene that has a CharacterController attached to it.
 . Add a cube to the scene, and add a rigidbody to it.
