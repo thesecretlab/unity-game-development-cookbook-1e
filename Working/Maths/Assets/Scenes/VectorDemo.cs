@@ -206,7 +206,7 @@ public class VectorDemo : MonoBehaviour {
             // its total distance to a given factor. This is useful for 
             // preventing overshooting.
 
-            // Move from (0,0,0) to (1,1,1), but don't move any further than
+            // Move from (0,0,0) towards (1,1,1), but don't move any further than
             // 0.5 units
 			// BEGIN move_towards
             var moved = Vector3.MoveTowards(Vector3.zero, Vector3.one, 0.5f);
