@@ -237,7 +237,7 @@ public class VectorDemo : MonoBehaviour {
             // BEGIN vector_lerp2
             var unclamped = Vector3.LerpUnclamped(Vector3.zero, Vector3.right, 2.0f);
             // = (2, 0, 0)
-            // BEGIN vector_lerp2
+            // END vector_lerp2
             	
         }
 
