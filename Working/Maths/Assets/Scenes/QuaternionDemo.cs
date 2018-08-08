@@ -50,13 +50,14 @@ public class QuaternionDemo : MonoBehaviour {
             // Quaternions can be combined together. For example, to rotate
             // something around the Y axis and then around the X axis, you
             // multiply them (they're applied in reverse order):
-
+			
+			// BEGIN quaternions5
             var combinedRotation = Quaternion.Euler(90, 0, 0) * // rotate around X
                                    Quaternion.Euler(0, 90, 0); // rotate around Y
-
+			// END quaternions5
+            
             // Note that this combination is not "commutative" - the order of
             // multiplication matters.
-            // END quaternions
         }
 	}
 	
