@@ -152,21 +152,21 @@ public class VectorDemo : MonoBehaviour {
             // The dot product between two vectors aiming in opposite directions
             // is -1:
             
-            // BEGIN dot_product2		
+            // BEGIN dot_product2	
             var opposite = Vector3.Dot(Vector3.left, Vector3.right); // -1
-            // END dot_product2	
+            // END dot_product2
            
             // The dot product between two vectors at right-angles to each other
             // is 0:
             
-            // BEGIN dot_product3		
+            // BEGIN dot_product3
             var orthogonal = Vector3.Dot(Vector3.up, Vector3.forward); // 0
-            // END dot_product3	
+            // END dot_product3
 
             // The dot product is also the arc cosine of the angle between the
             // two vectors. (Mathf.Acos works in radians.)
            
-            // BEGIN dot_product4	
+            // BEGIN dot_product4
             var orthoAngle = Mathf.Acos(orthogonal);
             var orthoAngleDegrees = orthoAngle * Mathf.Rad2Deg; // = 90
             // END dot_product4
@@ -174,7 +174,7 @@ public class VectorDemo : MonoBehaviour {
             // The dot product is a good way to tell if an object is in front
             // of you or behind you.
             
-            // BEGIN dot_product5		
+            // BEGIN dot_product5	
             var directionToOtherObject = someOtherObjectPosition - transform.position;
             var differenceFromMyForwardDirection = 
                 Vector3.Dot(transform.forward, directionToOtherObject);
@@ -187,7 +187,7 @@ public class VectorDemo : MonoBehaviour {
                 // The object neither before or behind us - it's at a perfect
                 // right angle to our forward direction.
             }
-            // END dot_product5	
+            // END dot_product5
         }
 
         {

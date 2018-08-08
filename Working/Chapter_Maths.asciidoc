@@ -195,11 +195,7 @@ You can also get the dot product of two vectors, which tells you the difference 
 // snip: dot_product
 [source,swift]
 ----
-!!!!!!!!
-No code found for query 'dot_product' at ref 'HEAD'. Possible replacement tags
-include: dot_product                     , dot_product3                  ,
-dot_product2                  , dot_product4                  , dot_product5
-!!!!!!!!
+var parallel = Vector3.Dot(Vector3.left, Vector3.left); // 1
 ----
 
 The dot product between two vectors aiming in the opposite directions is -1:
@@ -209,8 +205,8 @@ The dot product between two vectors aiming in the opposite directions is -1:
 ----
 !!!!!!!!
 No code found for query 'dot_product2' at ref 'HEAD'. Possible replacement tags
-include: dot_product2                   , dot_product                   ,
-dot_product3                  , dot_product4                  , dot_product5
+include: dot_product2           , dot_product, dot_product4     , dot_product5
+, dot_product3
 !!!!!!!!
 ----
 
@@ -221,8 +217,8 @@ The dot product between two vectors at right-angles to each other is 0:
 ----
 !!!!!!!!
 No code found for query 'dot_product3' at ref 'HEAD'. Possible replacement tags
-include: dot_product3                   , dot_product                   ,
-dot_product2                  , dot_product4                  , dot_product5
+include: dot_product3           , dot_product, dot_product4     , dot_product2
+, dot_product5
 !!!!!!!!
 ----
 
@@ -233,8 +229,8 @@ The dot product is also the arc cosine of the angle between the two vectors (`Ma
 ----
 !!!!!!!!
 No code found for query 'dot_product4' at ref 'HEAD'. Possible replacement tags
-include: dot_product4                   , dot_product                   ,
-dot_product3                  , dot_product2                  , dot_product5
+include: dot_product4   , dot_product, dot_product2             , dot_product5
+, dot_product3
 !!!!!!!!
 ----
 
@@ -245,8 +241,8 @@ The dot product is a great way to tell if an object is in front of, or behind, a
 ----
 !!!!!!!!
 No code found for query 'dot_product5' at ref 'HEAD'. Possible replacement tags
-include: dot_product5                   , dot_product                   ,
-dot_product3                  , dot_product2                  , dot_product4
+include: dot_product5           , dot_product, dot_product4     , dot_product2
+, dot_product3
 !!!!!!!!
 ----
 
