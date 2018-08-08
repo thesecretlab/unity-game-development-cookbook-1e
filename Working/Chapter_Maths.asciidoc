@@ -359,7 +359,6 @@ Phew. That's a lot of things you can do with matrices. In the following section 
 
 // TODO discuss this
 
-
 === Working with Angles
 // card: https://trello.com/c/sbK5cXEi
 
