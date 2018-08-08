@@ -189,7 +189,7 @@ public class MatrixDemo : MonoBehaviour {
 
             // You can create a combined translate-rotate-scale matrix using
             // the Matrix4x4.TRS method:
-			// BEGIN matrix_trs 
+			// BEGIN matrix_trs
             var transformMatrix = Matrix4x4.TRS(
                 new Vector3(5, 0, 0),
                 Quaternion.Euler(90, 0, 0),
