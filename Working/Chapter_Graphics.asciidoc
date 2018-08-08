@@ -59,7 +59,7 @@ You want to change a property of a material during gameplay, such as its color.
 Access the material from an object's renderer, and modify its properties. For example:
 
 // snip: material_change_color
-[source,csharp]
+[source,swift]
 ----
 public class ChangeMaterialColor : MonoBehaviour {
 

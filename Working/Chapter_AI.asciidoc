@@ -48,7 +48,7 @@ You want to create an object that can find a path from its current location to a
 . Create a new C# script called MoveToPoint, and add the following code to it:
 
 // snip: navigation_move_to_point
-[source,csharp]
+[source,swift]
 ----
 using UnityEngine.AI;
 // When the player clicks on a part of the world, the NavMeshAgent moves
@@ -121,7 +121,7 @@ You want an object to be able to detect when it can "see" its target; that is, t
 . Create a new script called EnemyVisibility.cs, and add the following code to it:
 
 // snip: enemy_visibility
-[source,csharp]
+[source,swift]
 ----
 #if UNITY_EDITOR
 using UnityEditor;
@@ -374,7 +374,7 @@ Use a Poisson disc distribution.
 Create a new C# script called PoissonDiscSampler.cs and add the following code to it.
 
 // snip: poisson_disc_sampler
-[source,csharp]
+[source,swift]
 ----
 // With thanks to Gregory Schlomoff, who wrote this implementation
 // and released it into the public domain, and to Robert Bridson of the 
@@ -526,7 +526,7 @@ NOTE: This script doesn't define a new component. Instead, it defines a class th
 To test this, create a new C# script called PoissonDiscDemo.cs and add the following code to it:
 
 // snip: poisson_disc_demo
-[source,csharp]
+[source,swift]
 ----
 public class PoissonDiscDemo : MonoBehaviour {
 
@@ -592,7 +592,7 @@ You want to create an object that hides from another object, taking into account
 . Create a new C# script called EnemyAvoider.cs, and add the following code to it:
 
 // snip: enemy_avoider
-[source,csharp]
+[source,swift]
 ----
 using UnityEngine.AI;
 
@@ -821,7 +821,7 @@ You want to use a state machine, which is a programming pattern that lets you ma
 . Create a new C# script called StateMachine, and add the following code to it:
 
 // snip: statemachine
-[source,csharp]
+[source,swift]
 ----
 // Manages a collection of states, which can be transitioned from and to.
 public class StateMachine {
@@ -951,7 +951,7 @@ public class StateMachine {
 This +StateMachine+ class can be used like this:
 
 // snip: statemachine_demo
-[source,csharp]
+[source,swift]
 ----
 // Demonstrates a state machine. This object has two states: 'searching', and
 // 'aiming'. When the target is in range, it transitions from 'searching' to

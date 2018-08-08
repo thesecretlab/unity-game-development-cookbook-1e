@@ -117,7 +117,7 @@ We'll now make a new script that controls the animation controller's speed param
 . Create a new C# script called CharacterMovement.cs, and add the following code to it:
 
 // snip: animation_movement except animation_movement_sidespeed
-[source,csharp]
+[source,swift]
 ----
 // Allows the control 
 public class CharacterMovement : MonoBehaviour {
@@ -197,7 +197,7 @@ Next, we'll create a script that tells the animation controller what to reach fo
 . Create a new C# script called IKReach, and add the following code to it:
 
 // snip: animation_ik
-[source,csharp]
+[source,swift]
 ----
 // Updates the positions and weights used for a specified IK goal.
 // The Animator attached to the object this script is on must have a layer
@@ -339,7 +339,7 @@ You can get information about how a navigation agent is moving, and use that to 
 . Create a new C# script called NavigationAnimator.cs, and add the following code to it.
 
 // snip: navigation_animator
-[source,csharp]
+[source,swift]
 ----
 using UnityEngine.AI;
 
