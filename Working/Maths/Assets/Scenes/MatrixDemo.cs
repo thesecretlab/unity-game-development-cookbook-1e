@@ -8,20 +8,21 @@ public class MatrixDemo : MonoBehaviour {
 	void Start () {
 		
         {
-            // BEGIN matrix_intro
             // A matrix is a grid of numbers, just like a vector is a column of
             // numbers.
+            // BEGIN matrix_intro
             var matrix = new Matrix4x4();
+            // END matrix_intro
 
             // You can set and get the values at the various locations in a matrix.
+			// BEGIN matrix_intro2
             var m00 = matrix[0, 0];
 
             matrix[0, 1] = 2f;
-            // END matrix_intro
+			// END matrix_intro2
         }
 
         {
-            // BEGIN matrix_with_vector
             // Matrices are powerful for two reasons: first, when you multiply them
             // with a vector, you get a modified vector, and those modifications
             // can be things like movement, rotation, scaling, shearing, perspective
@@ -38,12 +39,15 @@ public class MatrixDemo : MonoBehaviour {
 
             // Create a new matrix using four Vector4s. Each one of these is a 
             // _column_, not a row.
+            // BEGIN matrix_with_vector1
             var translationMatrix = new Matrix4x4(
                 new Vector4(1, 0, 0, 0),
                 new Vector4(0, 1, 0, 0),
                 new Vector4(0, 0, 1, 0),
                 new Vector4(5, 0, 0, 1)
             );
+            // END matrix_with_vector1
+
 
             // This creates a matrix that looks like this:
             // 1  0  0  5
@@ -79,12 +83,12 @@ public class MatrixDemo : MonoBehaviour {
 
             // Rather than doing all of this work ourselves, Unity's Matrix4x4 type
             // has a MultiplyPoint method.
-
+			// BEGIN matrix_with_vector2
             var input = new Vector3(0, 1, 2);
 
             var result = translationMatrix.MultiplyPoint(input);
             // = (6, 1, 2)
-
+			// END matrix_with_vector2
             // You might be wondering why the matrix has the 4th row at all,
             // since it just means we need to add and remove a useless fourth
             // component to our vectors. The reason why it's there is that the
@@ -95,15 +99,14 @@ public class MatrixDemo : MonoBehaviour {
             // matrix, and can use Matrix4x4's MultiplyPoint4x3 instead. It's
             // a bit faster, but can only be used for translations, rotations
             // and scales.
-            // END matrix_with_vector
         }
 
         {
-            // BEGIN matrix_translate
-            var input = new Vector3(0, 1, 2);
-
             // You can also create a matrix that translates a point using
             // helper methods:
+
+            // BEGIN matrix_translate
+            var input = new Vector3(0, 1, 2);
 
             var translationMatrix = Matrix4x4.Translate(new Vector3(5, 1, -2));
             var result = translationMatrix.MultiplyPoint(input);
@@ -111,10 +114,9 @@ public class MatrixDemo : MonoBehaviour {
             // END matrix_translate
         }
         {
-            // BEGIN matrix_rotate
             // Matrices can also rotate a point around the origin. First,
             // create a quaternion that describes the rotation:
-
+            // BEGIN matrix_rotate
             var rotate90DegreesAroundX = Quaternion.Euler(90, 0, 0);
 
             var rotationMatrix = Matrix4x4.Rotate(rotate90DegreesAroundX);
@@ -122,6 +124,8 @@ public class MatrixDemo : MonoBehaviour {
             var input = new Vector3(0, 0, 1);
 
             var result = rotationMatrix.MultiplyPoint(input);
+            // END matrix_rotate
+            
             // = (0, -1, 0); the point has moved from in front of the origin to
             // below it
 
@@ -129,15 +133,15 @@ public class MatrixDemo : MonoBehaviour {
             // a matrix to rotate the vector, you can use MultiplyVector. This
             // method uses only the parts of the matrix that are necessary to
             // do a rotation. It's a bit faster.
+			// BEGIN matrix_multiply_vector
             result = rotationMatrix.MultiplyVector(input);
             // = (0, -1, 0) - the same result.
-            // END matrix_rotate
+            // END matrix_multiply_vector
         }
 
         {
-            // BEGIN matrix_scale
             // Matrices can also scale a point away from the origin.
-
+            // BEGIN matrix_scale
             var scale2x2x2 = Matrix4x4.Scale(new Vector3(2f, 2f, 2f));
 
             var input = new Vector3(1f, 2f, 3f);
@@ -148,7 +152,6 @@ public class MatrixDemo : MonoBehaviour {
         }
 
         {
-            // BEGIN matrix_concatenate
             // When you multiply matrices together, you get a new matrix that,
             // when multiplied with a vector, produces the same result as if
             // you'd multiplied the vector by each of the original matrices in 
@@ -156,7 +159,7 @@ public class MatrixDemo : MonoBehaviour {
             // to modify a point, you can combine multiple matrices into a single
             // step. When you combine matrices together like this, we call it
             // "concatenating" the matrices.
-
+            // BEGIN matrix_concatenate
             var translation = Matrix4x4.Translate(new Vector3(5, 0, 0));
             var rotation = Matrix4x4.Rotate(Quaternion.Euler(90, 0, 0));
             var scale = Matrix4x4.Scale(new Vector3(1, 5, 1));
@@ -167,6 +170,7 @@ public class MatrixDemo : MonoBehaviour {
             var result = combined.MultiplyPoint(input);
             Debug.Log(result);
             // = (6, 1, 5)
+            // END matrix_concatenate
 
             // Note that, like quaternions, the order of multiplication matters! 
             // Matrix multiplication is not "commutative", while multiplying 
@@ -185,30 +189,31 @@ public class MatrixDemo : MonoBehaviour {
 
             // You can create a combined translate-rotate-scale matrix using
             // the Matrix4x4.TRS method:
+			// BEGIN matrix_trs 
             var transformMatrix = Matrix4x4.TRS(
                 new Vector3(5, 0, 0),
                 Quaternion.Euler(90, 0, 0),
                 new Vector3(1, 5, 1)
             );
-
+			// END matrix_trs
             // This new matrix will scale, rotate, and then translate any point you
             // apply it to.
-            // END matrix_concatenate
 
         }
 
         {
-            // BEGIN matrix_transform
             // You can get the matrix that converts a point in this component's
             // local space to world space, applying the translation, rotation,
             // and scaling from this object (as well as all of its parents.)
-
+            // BEGIN matrix_transform
             var localToWorld = this.transform.localToWorldMatrix;
+            // END matrix_transform
 
             // You can also get the matrix that converts from world-space to
             // local space, too.
+			// BEGIN matrix_transform2
             var worldToLocal = this.transform.worldToLocalMatrix;
-            // END matrix_transform
+            // END matrix_transform2
         }
 
 
