@@ -52,7 +52,7 @@ public class MenuManager : MonoBehaviour {
 		}
 	}
 
-    // BEGIN-HIDE
+    // BEGIN menu_manager_extra_methods
 	public void PlayGame() {
 		Debug.Log("Starting the game!");
 	}
@@ -60,7 +60,7 @@ public class MenuManager : MonoBehaviour {
 	public void OptionChanged() {
 		Debug.Log("Option changed!");
 	}
-    // END-HIDE
+    // END menu_manager_extra_methods
 }
 
 // END menu_manager
