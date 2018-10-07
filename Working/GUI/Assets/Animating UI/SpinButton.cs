@@ -3,24 +3,27 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-// BEGIN spin_button
 public class SpinButton : MonoBehaviour {
-
+    // BEGIN spin_button2
     // The amount of time needed to perform a full spin
     [SerializeField] float spinTime = 0.5f;
 
     // Controls the pacing of the animation.
     [SerializeField] AnimationCurve curve = AnimationCurve.EaseInOut(0, 0, 1, 1);
+    // END spin_button2
 
+    // BEGIN spin_button3
     public void Spin() {
 
         // Start a spin.
         StartCoroutine(StartSpinning());
 
     }
+    // BEGIN spin_button3
 
     // A coroutine that updates the rotation every frame, until it runs out of
     // time.
+    // BEGIN spin_button1
     private IEnumerator StartSpinning()
     {
         // Don't do any spinning if spin time is zero or less (
@@ -53,5 +56,5 @@ public class SpinButton : MonoBehaviour {
         // The animation is now complete. Reset the rotation to normal.
         transform.localRotation = Quaternion.identity;
     }
+    // END spin_button1
 }
-// END spin_button

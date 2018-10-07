@@ -6,11 +6,14 @@ using UnityEngine;
 public class ListItem : MonoBehaviour {
 
     // The Text object that displays our label
+    // BEGIN list_item1
     [SerializeField] UnityEngine.UI.Text labelText;
+    // END list_item1
 
     // Expose a string; setting or getting this will set or get the text of
     // the label.
-	public string Label
+	// BEGIN list_item2
+    public string Label
     {
         get
         {
@@ -21,6 +24,5 @@ public class ListItem : MonoBehaviour {
             labelText.text = value;
         }
     }
-
+    // END list_item2
 }
-// END list_item

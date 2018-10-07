@@ -2,11 +2,13 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-// BEGIN multivalue
+// BEGIN multivalue1
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
+// END multivalue1
 
+// BEGIN multivalue2
 [System.Serializable]
 public class MultiValue {
 
@@ -42,7 +44,7 @@ public class MultiValue {
         }
     }
 }
-// END multivalue
+// END multivalue2
 
 // BEGIN multivalue_editor
 #if UNITY_EDITOR

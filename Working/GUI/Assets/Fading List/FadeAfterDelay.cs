@@ -5,12 +5,15 @@ using UnityEngine;
 // BEGIN fade_after_delay
 public class FadeAfterDelay : MonoBehaviour {
 
+    // BEGIN fade_after_delay1
     // The number of seconds before a fade starts
     [SerializeField] float delayBeforeFading = 2f;
 
     // The amount of time to take while fading out
     [SerializeField] float fadeTime = 0.25f;
+    // END fade_after_delay1
 
+    // BEGIN fade_after_delay2
     // Notice the return type - this Start method is a coroutine!
     IEnumerator Start () {
 
@@ -55,7 +58,6 @@ public class FadeAfterDelay : MonoBehaviour {
         // Remove this game object from the scene
         Destroy(gameObject);
 	}
-	
+    // END fade_after_delay2
 	
 }
-// END fade_after_delay

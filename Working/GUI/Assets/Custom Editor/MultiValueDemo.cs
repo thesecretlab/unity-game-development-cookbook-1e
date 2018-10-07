@@ -7,6 +7,6 @@ using UnityEngine;
 public class MultiValueDemo : MonoBehaviour {
 
     [SerializeField] 
-    MultiValue multiValue = new MultiValue("One", "Two", "Three");
+    MultiValue multiValue = new MultiValue("One", "Two", "Three", "Four", "Five", "Six");
 }
 // END multivaluedemo
