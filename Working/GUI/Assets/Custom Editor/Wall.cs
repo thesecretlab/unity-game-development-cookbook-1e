@@ -28,7 +28,7 @@ public class Wall : MonoBehaviour
 // The Editor object that will manage the Inspector for Wall components.
 [CustomEditor(typeof(Wall))]
 public class WallEditor : Editor {
-// END wall2    
+// END wall2
     
     // Called by Unity to display the contents of the Inspector for this object.
     // BEGIN wall5
@@ -65,7 +65,7 @@ public class WallEditor : Editor {
         // END wall7
 
         // Temporarily store all current children
-        // BEGIN wall 8
+        // BEGIN wall8
         GameObject[] allChildren = new GameObject[wall.transform.childCount];
 
         int i = 0;
@@ -78,7 +78,7 @@ public class WallEditor : Editor {
 
         // Find all child objects, and temporarily put them in the array
 
-        // BEGIN wall 9
+        // BEGIN wall9
         foreach (Transform child in wall.transform)
         {
             allChildren[i] = child.gameObject;

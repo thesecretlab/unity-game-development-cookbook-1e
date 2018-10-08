@@ -19,7 +19,7 @@ public class SpinButton : MonoBehaviour {
         StartCoroutine(StartSpinning());
 
     }
-    // BEGIN spin_button3
+    // END spin_button3
 
     // A coroutine that updates the rotation every frame, until it runs out of
     // time.

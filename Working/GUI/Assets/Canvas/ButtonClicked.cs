@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-// BEGIN button_clicked
 public class ButtonClicked : MonoBehaviour {
 
     // This will appear in the list of methods
