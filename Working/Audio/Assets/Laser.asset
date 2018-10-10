@@ -10,6 +10,11 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d8980d1bb1b9240d19571672eced6b9c, type: 3}
-  m_Name: New Sound Effect
+  m_Name: Laser
   m_EditorClassIdentifier: 
-  clips: []
+  clips:
+  - {fileID: 8300000, guid: dfcde13240f4a4d33b497c177ed088c9, type: 3}
+  - {fileID: 8300000, guid: 10b129b2c500d4913bef60d01c650bd0, type: 3}
+  - {fileID: 8300000, guid: 5780a0cd0a90e41eeb113df1222e154f, type: 3}
+  - {fileID: 8300000, guid: 501e189d589bd42c99c4b349f8d73963, type: 3}
+  - {fileID: 8300000, guid: 05b67e96687f64fdd830a35835fc3da7, type: 3}
