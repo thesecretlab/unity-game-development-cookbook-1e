@@ -11,4 +11,10 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Game.unity
     guid: 76ede5b1bf6934b00be6db71b73925f2
+  - enabled: 1
+    path: Assets/Saving/SavingLoadingGameState.unity
+    guid: 21a32158b59a4416fb2c568969945277
+  - enabled: 1
+    path: Assets/Saving/SavingDemoExtraScene.unity
+    guid: 13eb9c725cb6c4bb397a0241e63e133d
   m_configObjects: {}
