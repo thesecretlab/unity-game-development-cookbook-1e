@@ -12,9 +12,11 @@ public class AngleChecker : MonoBehaviour {
     void Update () {
 
         // Get the normalised direction to the target
-        var directionToTarget = (target.position - transform.position).normalized;
+        var directionToTarget = 
+            (target.position - transform.position).normalized;
 
-        // Take the dot product between that direction and our forward direction
+        // Take the dot product between that direction and our forward
+        // direction
         var dotProduct = Vector3.Dot(transform.forward, directionToTarget);
 
         // Get the angle

@@ -8,9 +8,9 @@ public interface IObjectPoolNotifier {
     // Called when the object is being returned to the pool.
     void OnEnqueuedToPool();
 
-    // Called when the object is leaving the pool, or has just been created.
-    // If 'created' is true, the object has just been created, and is not being
-    // recycled.
+    // Called when the object is leaving the pool, or has just been
+    // created. If 'created' is true, the object has just been created, and
+    // is not being recycled.
 
     // (Doing it this way means you use a single method to do the object's
     // setup, for both your first time and all subsequent times.)
@@ -29,8 +29,8 @@ public class ObjectPool : MonoBehaviour
     // The queue of objects that are not currently in use
     private Queue<GameObject> inactiveObjects = new Queue<GameObject>();
 
-    // Gets an object from the pool. If there isn't one in the queue, a new one
-    // is created.
+    // Gets an object from the pool. If there isn't one in the queue, a new
+    // one is created.
     public GameObject GetObject() {
 
         // Are there any inactive objects to re-use?
@@ -39,14 +39,14 @@ public class ObjectPool : MonoBehaviour
             // Get an object from the queue
             var dequeuedObject = inactiveObjects.Dequeue();
 
-            // Queued objects are children of the pool, so we move them back to
-            // the root
+            // Queued objects are children of the pool, so we move them
+            // back to the root
             dequeuedObject.transform.parent = null;
             dequeuedObject.SetActive(true);
 
-            // If there are any MonoBehaviours on this object that implement 
-            // IObjectPoolNotifier, let them know that this object just left
-            // the pool
+            // If there are any MonoBehaviours on this object that
+            // implement IObjectPoolNotifier, let them know that this
+            // object just left the pool
 
             var notifiers = dequeuedObject
                 .GetComponents<IObjectPoolNotifier>();
@@ -65,15 +65,16 @@ public class ObjectPool : MonoBehaviour
 
             var newObject = Instantiate(prefab);
 
-            // Add the pool tag so that it's able to return to the pool when
-            // done.
+            // Add the pool tag so that it's able to return to the pool
+            // when done.
             var poolTag = newObject.AddComponent<PooledObject>();
 
             poolTag.owner = this;
 
-            // Mark the pool tag so that it never shows up in the Inspector.
-            // There's nothing configurable on it - it only exists to store
-            // a reference back to the pool that creates it.
+            // Mark the pool tag so that it never shows up in the
+            // Inspector. There's nothing configurable on it - it only
+            // exists to store a reference back to the pool that creates
+            // it.
             poolTag.hideFlags = HideFlags.HideInInspector;
 
             // Notify the object that it was created

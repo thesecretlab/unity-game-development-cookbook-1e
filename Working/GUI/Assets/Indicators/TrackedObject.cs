@@ -11,8 +11,9 @@ public class TrackedObject : MonoBehaviour {
     }
 
     // Tell the indicator manager to remove our tracking indicator.
-    // OnDestroy is called when either the object is removed from the scene,
-    // or the scene is being unloaded (including when we exit play mode).
+    // OnDestroy is called when either the object is removed from the
+    // scene, or the scene is being unloaded (including when we exit play
+    // mode).
     private void OnDestroy()
     {
         IndicatorManager.manager.RemoveTrackingIndicator(this);

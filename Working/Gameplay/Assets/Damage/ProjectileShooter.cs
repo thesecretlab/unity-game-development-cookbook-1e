@@ -55,9 +55,9 @@ public class ProjectileShooter : MonoBehaviour {
         var collider = projectile.GetComponent<Collider>();
         var myCollider = this.GetComponent<Collider>();
 
-        // If both of them are valid, tell the physics system to ignore 
-        // collisions between them (to prevent projectiles from colliding with
-        // their source)
+        // If both of them are valid, tell the physics system to ignore
+        // collisions between them (to prevent projectiles from colliding
+        // with their source)
         if (collider != null && myCollider != null) {
             Physics.IgnoreCollision(collider, myCollider);
         }

@@ -8,7 +8,8 @@ using UnityEditor;
 using System.Linq;
 #endif
 
-// Combines a quest, an objective in that quest, and an objective status to use.
+// Combines a quest, an objective in that quest, and an objective status to
+// use.
 [System.Serializable]
 public class ObjectiveTrigger
 {
@@ -49,35 +50,42 @@ public class ObjectiveTriggerDrawer : PropertyDrawer {
         EditorGUI.BeginProperty(position, label, property);
 
         // Get a reference to the three properties in the ObjectiveTrigger.
-        var questProperty = property.FindPropertyRelative("quest");
-        var statusProperty = property.FindPropertyRelative("statusToApply");
+        var questProperty = 
+            property.FindPropertyRelative("quest");
+        var statusProperty = 
+            property.FindPropertyRelative("statusToApply");
         var objectiveNumberProperty = 
             property.FindPropertyRelative("objectiveNumber");
 
         // We want to display three controls:
+        //
         // - An Object field for dropping a Quest object into
         // - A Popup field for selecting a Quest.Status from
-        // - A Popup field for selecting the specific objective from; it should
-        //   show the name of the objective.
-        // If no Quest has been specified, or if the Quest has no objectives,
-        // the objective popup should be empty and disabled.
+        // - A Popup field for selecting the specific objective from; it
+        //   should show the name of the objective.
+        //
+        //  If no Quest has been specified, or if the Quest has no
+        //  objectives, the objective popup should be empty and disabled.
 
         // Calculate the rectangles in which we're displaying.
         var lineSpacing = 2;
 
         // Calculate the rectangle for the first line
         var firstLinePosition = position;
-        firstLinePosition.height = base.GetPropertyHeight(questProperty, label);
 
-        // And for the second line (same as the first line, but shifted down 
-        // one line)
+        firstLinePosition.height = 
+            base.GetPropertyHeight(questProperty, label);
+
+        // And for the second line (same as the first line, but shifted
+        // down one line)
         var secondLinePosition = position;
         secondLinePosition.y = firstLinePosition.y + 
             firstLinePosition.height + lineSpacing;
         secondLinePosition.height = 
             base.GetPropertyHeight(statusProperty, label);
 
-        // Repeat for the third line (same as the second line, but shifted down)
+        // Repeat for the third line (same as the second line, but shifted
+        // down)
         var thirdLinePosition = position;
         thirdLinePosition.y = secondLinePosition.y + 
             secondLinePosition.height + lineSpacing;
@@ -96,7 +104,7 @@ public class ObjectiveTriggerDrawer : PropertyDrawer {
         // Draw a label on the left hand side, and get a new rectangle to
         // draw the popup in
         thirdLinePosition = EditorGUI.PrefixLabel(thirdLinePosition, 
-                                                  new GUIContent("Objective"));
+                                new GUIContent("Objective"));
 
         // Draw the UI for choosing a property
         var quest = questProperty.objectReferenceValue as Quest;
@@ -105,7 +113,8 @@ public class ObjectiveTriggerDrawer : PropertyDrawer {
         if (quest != null && quest.objectives.Count > 0)
         {
             // Get the name of every objective, as an array
-            var objectiveNames = quest.objectives.Select(o => o.name).ToArray();
+            var objectiveNames = 
+                quest.objectives.Select(o => o.name).ToArray();
 
             // Get the index of the currently selected objective
             var selectedObjective = objectiveNumberProperty.intValue;
@@ -130,8 +139,8 @@ public class ObjectiveTriggerDrawer : PropertyDrawer {
         } else {
             // Draw a disabled popup as a visual placeholder
             using (new EditorGUI.DisabledGroupScope(true)) {
-                // Show a popup with a single entry: the string "-". Ignore its
-                // return value, since it's not interactive anyway.
+                // Show a popup with a single entry: the string "-". Ignore
+                // its return value, since it's not interactive anyway.
                 EditorGUI.Popup(thirdLinePosition, 0, new[] { "-" });
             }
         }
@@ -152,8 +161,8 @@ public class ObjectiveTriggerDrawer : PropertyDrawer {
         // The height of each line
         var lineHeight = base.GetPropertyHeight(property, label);
 
-        // The height of this property is the number of lines times the height
-        // of each line, plus the spacing in between each line
+        // The height of this property is the number of lines times the
+        // height of each line, plus the spacing in between each line
         return (lineHeight * lineCount) + (lineSpacing * (lineCount - 1));
     }
 }

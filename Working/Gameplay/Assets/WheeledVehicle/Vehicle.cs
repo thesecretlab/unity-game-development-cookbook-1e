@@ -38,8 +38,9 @@ public class Vehicle : MonoBehaviour {
 
     private void Update() {
 
-        // If the Vertical axis is positive, apply motor torque and no brake torque.
-        // If it's negative, apply brake torque and no motor torque.
+        // If the Vertical axis is positive, apply motor torque and no
+        // brake torque. If it's negative, apply brake torque and no motor
+        // torque.
         var vertical = Input.GetAxis("Vertical");
 
         float motorTorqueToApply;
@@ -49,29 +50,30 @@ public class Vehicle : MonoBehaviour {
             motorTorqueToApply = vertical * motorTorque;
             brakeTorqueToApply = 0;
         } else {
-            // If the vertical axis is negative, cut the engine and step on the
-            // brakes.
+            // If the vertical axis is negative, cut the engine and step on
+            // the brakes.
 
-            // We use Mathf.Abs here to ensure that we use the positive value
-            // of 'vertical' (because applying negative braking torque would
-            // lead to weirdness.)
+            // We use Mathf.Abs here to ensure that we use the positive
+            // value of 'vertical' (because applying negative braking
+            // torque would lead to weirdness.)
             motorTorqueToApply = 0;
             brakeTorqueToApply = Mathf.Abs(vertical) * brakeTorque;
         }
 
         // Scale the maximum steering angle by the horizontal axis.
-        var currentSteeringAngle = Input.GetAxis("Horizontal") * steeringAngle;
+        var currentSteeringAngle = 
+            Input.GetAxis("Horizontal") * steeringAngle;
 
         // Update all wheels
 
-        // Using a for loop, rather than a foreach loop, because foreach loops
-        // allocate temporary memory, which is turned into garbage at the end of
-        // the frame. We want to minimise garbage, because the more garbage that
-        // gets generated, the more often the garbage collector has to run, which
-        // causes performance problems.
-        for (int wheelNumber = 0; wheelNumber < wheels.Length; wheelNumber++) {
+        // Using a for loop, rather than a foreach loop, because foreach
+        // loops allocate temporary memory, which is turned into garbage at
+        // the end of the frame. We want to minimise garbage, because the
+        // more garbage that gets generated, the more often the garbage
+        // collector has to run, which causes performance problems.
+        for (int wheelNum = 0; wheelNum < wheels.Length; wheelNum++) {
 
-            var wheel = wheels[wheelNumber];
+            var wheel = wheels[wheelNum];
 
             // If a wheel is powered, it updates its motor torque
             if (wheel.powered) {

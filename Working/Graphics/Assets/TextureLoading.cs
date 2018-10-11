@@ -17,9 +17,9 @@ public class TextureLoading : MonoBehaviour
 
         // Create the path to this file
 
-        // Application.dataPath is the path to where the built application is;
-        // in the editor, it is in the project's root folder (the one that 
-        // contains the Assets folder)
+        // Application.dataPath is the path to where the built application 
+        // is; in the editor, it is in the project's root folder (the one 
+        // that contains the Assets folder)
         var imagePath = Path.Combine(
             Application.dataPath,
             imageName
@@ -36,13 +36,13 @@ public class TextureLoading : MonoBehaviour
         // Load the file data.
         var fileData = File.ReadAllBytes(imagePath);
 
-        // Create a new texture. When you create any texture, you specify the
-        // width and height; however, when you load a texture, it will
-        // automatically resize itself
+        // Create a new texture. When you create any texture, you 
+        // specify the width and height; however, when you load a texture, 
+        // it will automatically resize itself
         var tex = new Texture2D(2, 2);
 
-        // Upload the image data. Unity will decompress it from PNG into raw
-        // pixels.
+        // Upload the image data. Unity will decompress it from PNG 
+        // into raw pixels.
         var success = tex.LoadImage(fileData);
 
         if (success) {

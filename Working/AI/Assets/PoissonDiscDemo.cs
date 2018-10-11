@@ -24,7 +24,9 @@ public class PoissonDiscDemo : MonoBehaviour {
         var sampler = new PoissonDiscSampler(size.x, size.y, cellSize);
 
         foreach (var point in sampler.Samples()) {
-            points.Add(new Vector3(point.x, transform.position.y, point.y));
+            points.Add(
+                new Vector3(point.x, transform.position.y, point.y)
+            );
         }
     }
 

@@ -6,7 +6,8 @@ using UnityEngine;
 // Moves an object at a fixed speed through a series of points.
 public class MovingPlatform : MonoBehaviour {
 
-    // The positions that the platform will move through stored in local position.
+    // The positions that the platform will move through stored in local
+    // position.
     [SerializeField] Vector3[] points = {};
 
     // The speed at which it will move between them.
@@ -30,8 +31,8 @@ public class MovingPlatform : MonoBehaviour {
         }
 
         // All of our movement points are defined relative to where we are
-        // when the game starts, so record that (since transform.position will
-        // change over time)
+        // when the game starts, so record that (since transform.position
+        // will change over time)
         startPosition = transform.position;
 
         // Start our cycle at our first point
@@ -69,7 +70,8 @@ public class MovingPlatform : MonoBehaviour {
         }
 
         // Calculate our current velocity in units-per-second
-        velocity = (newPosition - transform.position) / Time.fixedDeltaTime;
+        velocity = 
+            (newPosition - transform.position) / Time.fixedDeltaTime;
 
         // Update to our new location
         transform.position = newPosition;
@@ -89,8 +91,8 @@ public class MovingPlatform : MonoBehaviour {
         Vector3 offsetPosition = transform.position;
 
         // If we're playing, our transform is moving, so we need to use the
-        // cached start position to figure out where our points are in world
-        // space.
+        // cached start position to figure out where our points are in
+        // world space.
         if (Application.isPlaying) {
             offsetPosition = startPosition;
         }
@@ -100,7 +102,8 @@ public class MovingPlatform : MonoBehaviour {
         // Loop over all the points
         for (int p = 0; p < points.Length; p++) {
 
-            // Get this point and the next one, wrapping around to the first
+            // Get this point and the next one, wrapping around to the
+            // first
             var p1 = points[p];
             var p2 = points[(p + 1) % points.Length];
 

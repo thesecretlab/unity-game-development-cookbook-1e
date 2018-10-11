@@ -6,8 +6,8 @@ using UnityEngine;
 // This class is generic, which means that you can create multiple versions
 // of it that vary depending on what type you specify for 'T'.
 //
-// In this case, we're also adding a type constraint, which means that 'T' must
-// be a MonoBehaviour subclass.
+// In this case, we're also adding a type constraint, which means that 'T'
+// must be a MonoBehaviour subclass.
 public class Singleton<T> : MonoBehaviour where T : MonoBehaviour
 {
     // The instance. This property only has a getter, which means

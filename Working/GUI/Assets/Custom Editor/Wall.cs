@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 
 // Bring in the UnityEditor namespace, if this file is being compiled for
-// the editor. (Code between the #if and #endif won't be included in the final 
-// game; it will only be available in the editor.)
+// the editor. (Code between the #if and #endif won't be included in the
+// final game; it will only be available in the editor.)
 
 // BEGIN wall4
 #if UNITY_EDITOR
@@ -30,17 +30,23 @@ public class Wall : MonoBehaviour
 public class WallEditor : Editor {
 // END wall2
     
-    // Called by Unity to display the contents of the Inspector for this object.
+    // Called by Unity to display the contents of the Inspector for this
+    // object.
+
     // BEGIN wall5
     public override void OnInspectorGUI()
     {
         // Make sure that we have the latest data stored in the 
         serializedObject.Update();
 
-        EditorGUILayout.PropertyField(serializedObject.FindProperty("rows"));
-        EditorGUILayout.PropertyField(serializedObject.FindProperty("columns"));
+        EditorGUILayout.PropertyField(
+            serializedObject.FindProperty("rows"));
 
-        EditorGUILayout.PropertyField(serializedObject.FindProperty("brickPrefab"));
+        EditorGUILayout.PropertyField(
+            serializedObject.FindProperty("columns"));
+
+        EditorGUILayout.PropertyField(
+            serializedObject.FindProperty("brickPrefab"));
 
         serializedObject.ApplyModifiedProperties();
 
@@ -51,7 +57,9 @@ public class WallEditor : Editor {
     // END wall5
 
     void CreateWall() {
-        // Register the state of this object before we make changes to its contents
+        // Register the state of this object before we make changes to its
+        // contents
+
         // BEGIN wall6
         Undo.RegisterFullObjectHierarchyUndo(target, "Create Wall");
         // END wall6
@@ -66,15 +74,17 @@ public class WallEditor : Editor {
 
         // Temporarily store all current children
         // BEGIN wall8
-        GameObject[] allChildren = new GameObject[wall.transform.childCount];
+        GameObject[] allChildren = 
+            new GameObject[wall.transform.childCount];
 
         int i = 0;
         // END wall8
 
-        // We can't call DestroyImmediate on the objects in a list that we're 
-        // iterating over, because doing that would change the size of the list
-        // as we're iterating over it. Instead, we copy references to them into 
-        // an array of fixed size, and then destroy that.
+        // We can't call DestroyImmediate on the objects in a list that
+        // we're iterating over, because doing that would change the size
+        // of the list as we're iterating over it. Instead, we copy
+        // references to them into an array of fixed size, and then destroy
+        // that.
 
         // Find all child objects, and temporarily put them in the array
 
@@ -90,14 +100,16 @@ public class WallEditor : Editor {
         // BEGIN wall10
         foreach (GameObject child in allChildren)
         {
-            // Destroy the object, and also record it as an undo-able action
+            // Destroy the object, and also record it as an undo-able
+            // action
             DestroyImmediate(child.gameObject);
         }
         // END wall10
 
         // We can now replace them with new objects
         // BEGIN wall11
-        var brickSize = wall.brickPrefab.GetComponent<Renderer>().bounds.size;
+        var brickSize = 
+            wall.brickPrefab.GetComponent<Renderer>().bounds.size;
         // END wall11
 
         // BEGIN wall12
@@ -118,19 +130,22 @@ public class WallEditor : Editor {
                     columnPosition.x += brickSize.x / 2f;
                 }
 
-                // PrefabUtility.InstantiatePrefab is like Instantiate, but it
-                // remembers that it was a prefab, and maintains the connection.
-                // (We have to cast it to GameObject because there's no generic
-                // version of InstantiatePrefab - the compiler won't figure 
-                // out the type automatically based on the type that was 
-                // passed in.
+                // PrefabUtility.InstantiatePrefab is like Instantiate, but
+                // it remembers that it was a prefab, and maintains the
+                // connection. (We have to cast it to GameObject because
+                // there's no generic version of InstantiatePrefab - the
+                // compiler won't figure out the type automatically based
+                // on the type that was passed in.
 
                 var brick = PrefabUtility
-                    .InstantiatePrefab(wall.brickPrefab.gameObject) as GameObject;
+                    .InstantiatePrefab(wall.brickPrefab.gameObject) 
+                    as GameObject;
 
                 // Give it a name appropriate to its position
                 brick.name = string.Format("{0} ({1},{2})",
-                                           wall.brickPrefab.name, column, row);
+                                           wall.brickPrefab.name, 
+                                           column, 
+                                           row);
 
                 // Place it in the scene
                 brick.transform.SetParent(wall.transform, false);

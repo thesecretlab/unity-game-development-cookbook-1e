@@ -44,23 +44,24 @@ public class Pushing : MonoBehaviour {
             // Either it doesn't have a rigidbody, or the rigid body is 
             // kinematic (that is, it doesn't respond to external forces.)
 
-            // Since we're going to apply a force to it, we should respect its
-            // settings.
+            // Since we're going to apply a force to it, we should respect 
+            // its settings.
             return;
         }
 
-        // Get a reference to the controller that hit the object, since we'll
-        // be making references to it often.
+        // Get a reference to the controller that hit the object, since 
+        // we'll  be making references to it often.
         CharacterController controller = hit.controller;
 
-        // Calculate the world position of the lowest point on the controller.
+        // Calculate the world position of the lowest point on the 
+        // controller.
         var footPosition = controller.transform.position.y 
                                      - controller.center.y  
                                      - controller.height / 2;
 
-        // If the thing we've hit is underneath us, then we don't want to push
-        // it - it would make it impossible for us to walk on top of it, beacuse
-        // it would be "pushed".
+        // If the thing we've hit is underneath us, then we don't want to 
+        // push it - it would make it impossible for us to walk on top of 
+        // it, because it would be "pushed".
         if (hit.point.y <= footPosition ) {
             return;
         }
@@ -69,8 +70,8 @@ public class Pushing : MonoBehaviour {
         switch (pushMode)
         {
             case PushMode.DirectlySetVelocity:
-                // Directly apply the velocity. Less realistic, but can feel
-                // better.
+                // Directly apply the velocity. Less realistic, but can 
+                // feel better.
                 hitRigidbody.velocity = controller.velocity;
                 break;
             case PushMode.ApplyForces:

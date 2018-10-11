@@ -27,7 +27,8 @@ public class MoveToPoint : MonoBehaviour
         if (Input.GetMouseButtonDown(0))
         {
 
-            // Get the position on screen, in screen coordinates (ie pixels.)
+            // Get the position on screen, in screen coordinates (ie
+            // pixels.)
             var mousePosition = Input.mousePosition;
 
             // Convert this position into a ray that starts at the camera

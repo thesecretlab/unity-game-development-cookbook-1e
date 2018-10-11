@@ -9,7 +9,8 @@ public class SpinButton : MonoBehaviour {
     [SerializeField] float spinTime = 0.5f;
 
     // Controls the pacing of the animation.
-    [SerializeField] AnimationCurve curve = AnimationCurve.EaseInOut(0, 0, 1, 1);
+    [SerializeField] AnimationCurve curve = 
+        AnimationCurve.EaseInOut(0, 0, 1, 1);
     // END spin_button2
 
     // BEGIN spin_button3
@@ -21,8 +22,9 @@ public class SpinButton : MonoBehaviour {
     }
     // END spin_button3
 
-    // A coroutine that updates the rotation every frame, until it runs out of
-    // time.
+    // A coroutine that updates the rotation every frame, until it runs out
+    // of time.
+
     // BEGIN spin_button1
     private IEnumerator StartSpinning()
     {
@@ -37,8 +39,8 @@ public class SpinButton : MonoBehaviour {
         while (elapsed < spinTime) {
             elapsed += Time.deltaTime;
 
-            // Calculate how far along the animation we are, measured between 
-            // 0 and 1.
+            // Calculate how far along the animation we are, measured
+            // between 0 and 1.
             var t = elapsed / spinTime;
 
             // Use this value to figure out how many degrees we should be 
@@ -47,7 +49,8 @@ public class SpinButton : MonoBehaviour {
 
             // Calculate the rotation by rotating this many angles around
             // the X axis.
-            transform.localRotation = Quaternion.AngleAxis(angle, Vector3.right);
+            transform.localRotation = 
+                Quaternion.AngleAxis(angle, Vector3.right);
 
             // Wait a new frame.
             yield return null;

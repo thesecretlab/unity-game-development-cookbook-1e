@@ -42,7 +42,8 @@ public class MenuManager : MonoBehaviour {
                 // Is this menu currently active?
                 if (otherMenu.gameObject.activeInHierarchy)
                 {
-                    // If so, tell the Menu object to invoke its "will disappear" action
+                    // If so, tell the Menu object to invoke its "will
+                    // disappear" action
                     otherMenu.menuWillDisappear.Invoke();
                 }
 

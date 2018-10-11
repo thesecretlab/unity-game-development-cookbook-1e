@@ -40,7 +40,8 @@ public class QuestStatus {
                 
                 var objectiveData = questData.objectives[i];
 
-                // Optional objectives do not matter to the overall quest status
+                // Optional objectives do not matter to the overall quest
+                // status
                 if (objectiveData.optional)
                     continue;
 
@@ -61,14 +62,15 @@ public class QuestStatus {
                 }
             }
 
-            // All mandatory objectives are complete, so this quest is complete
+            // All mandatory objectives are complete, so this quest is
+            // complete
             return Quest.Status.Complete;
 
         }
     }
 
-    // Returns a string containing the list of objectives, their statuses, and
-    // the status of the quest.
+    // Returns a string containing the list of objectives, their statuses,
+    // and the status of the quest.
     public override string ToString()
     {
         var stringBuilder = new System.Text.StringBuilder();
@@ -86,7 +88,8 @@ public class QuestStatus {
                 continue;
             }
 
-            // If this objective is optional, display "(Optional)" after its name
+            // If this objective is optional, display "(Optional)" after
+            // its name
             if (objectiveData.optional)
             {
                 stringBuilder.AppendFormat("{0} (Optional) - {1}\n",
@@ -104,7 +107,8 @@ public class QuestStatus {
 
         // Add a blank line followed by the quest status
         stringBuilder.AppendLine();
-        stringBuilder.AppendFormat("Status: {0}", this.questStatus.ToString());
+        stringBuilder.AppendFormat(
+            "Status: {0}", this.questStatus.ToString());
 
         return stringBuilder.ToString();
     }
@@ -157,18 +161,25 @@ public class QuestManager : MonoBehaviour {
         objectiveSummary.text = label;
     }
 
-    // Called by other objects to indicate that an objective has changed status
-    public void UpdateObjectiveStatus(Quest quest, int objectiveNumber, Quest.Status status) {
+    // Called by other objects to indicate that an objective has changed
+    // status
+    public void UpdateObjectiveStatus(
+        Quest quest, int objectiveNumber, Quest.Status status) {
 
         if (activeQuest == null) {
-            Debug.LogError("Tried to set an objective status, but no quest is active");
+            Debug.LogError(
+                "Tried to set an objective status, but no quest is active"
+            );
             return;
         }
 
         if (activeQuest.questData != quest) {
-            Debug.LogWarningFormat("Tried to set an objective status for " +
-                                   "quest {0}, but this is not the active " +
-                                   "quest. Ignoring.", quest.questName);
+            
+            Debug.LogWarningFormat("Tried to set an objective status " +   
+                "for quest {0}, but this is not the active quest. " +      
+                "Ignoring.", 
+                quest.questName);
+
             return;
         }
 

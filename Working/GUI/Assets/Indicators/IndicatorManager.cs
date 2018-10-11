@@ -27,8 +27,9 @@ public class IndicatorManager : MonoBehaviour {
 
     private void LateUpdate()
     {
-        // We do this in LateUpdate so that the calculation of the positions
-        // can happen after the objects have moved, which prevents jitter.
+        // We do this in LateUpdate so that the calculation of the
+        // positions can happen after the objects have moved, which
+        // prevents jitter.
 
         // Every frame, for each object that we're tracking, update the 
         // position of its indicator.
@@ -43,7 +44,8 @@ public class IndicatorManager : MonoBehaviour {
             }
 
             // Update the indicator's position in the canvas.
-            indicator.anchoredPosition = GetCanvasPositionForTarget(target);
+            indicator.anchoredPosition = 
+                GetCanvasPositionForTarget(target);
         }
     }
 
@@ -51,19 +53,20 @@ public class IndicatorManager : MonoBehaviour {
     // for a given object
     private Vector2 GetCanvasPositionForTarget(TrackedObject target)
     {
-        // Convert the position of the object from world-space to viewport-space
+        // Convert the position of the object from world-space to
+        // viewport-space
         var indicatorPoint = 
             Camera.main.WorldToViewportPoint(target.transform.position);
 
-        // Viewport coordinates are (0,0) to (1,1); (0,0) is the bottom-left
-        // corner of the screen.
+        // Viewport coordinates are (0,0) to (1,1); (0,0) is the
+        // bottom-left corner of the screen.
 
         // If a point is outside the screen, we clamp it to the edges.
         indicatorPoint.x = Mathf.Clamp01(indicatorPoint.x);
         indicatorPoint.y = Mathf.Clamp01(indicatorPoint.y);
 
-        // If a point is behind the camera, we force it to the bottom of the
-        // screen.
+        // If a point is behind the camera, we force it to the bottom of
+        // the screen.
         if (indicatorPoint.z < 0) {
             indicatorPoint.y = 0;
 
@@ -75,14 +78,15 @@ public class IndicatorManager : MonoBehaviour {
         // Canvas coordinates are (0,0) -> (width, height); (0,0) is the
         // bottom-left corner of the canvas.
 
-        // This means that we can scale by the canvas' size to get the position 
-        // in canvas-space.
+        // This means that we can scale by the canvas' size to get the
+        // position in canvas-space.
 
         // Get the canvas
         var canvas = indicatorContainer.GetComponentInParent<Canvas>();
 
         // Get its size
-        Vector2 canvasSize = canvas.GetComponent<RectTransform>().sizeDelta;
+        Vector2 canvasSize = 
+            canvas.GetComponent<RectTransform>().sizeDelta;
 
         // Scale it
         indicatorPoint.Scale(canvasSize);
@@ -95,7 +99,8 @@ public class IndicatorManager : MonoBehaviour {
 
         // Do we already have an indicator for this object?
         if (indicators.ContainsKey(transform)) {
-            // Nothing to do; we already have an indicator for this transform
+            // Nothing to do; we already have an indicator for this
+            // transform
             return;
         }
 
@@ -109,16 +114,17 @@ public class IndicatorManager : MonoBehaviour {
         // Move the indicator into the container
         indicator.SetParent(indicatorContainer, false);
 
-        // Ensure the pivot point is in the center of the object, so that the
-        // center of the image is right over the object's position
+        // Ensure the pivot point is in the center of the object, so that
+        // the center of the image is right over the object's position
         indicator.pivot = new Vector2(0.5f, 0.5f);
 
-        // Ensure the object doesn't adjust its size and position based on the 
-        // size of its parent
+        // Ensure the object doesn't adjust its size and position based on
+        // the size of its parent
         indicator.anchorMin = Vector2.zero;
         indicator.anchorMax = Vector2.zero;
 
-        // Keep track of the relationship between the target and its indicator
+        // Keep track of the relationship between the target and its
+        // indicator
         indicators[transform] = indicator;
 
         // Place the indicator in the right location
@@ -129,17 +135,19 @@ public class IndicatorManager : MonoBehaviour {
     // Stops tracking a target.
     public void RemoveTrackingIndicator(TrackedObject transform) {
         
-        // If we have an indicator for this target object, remove it from the
-        // scene
+        // If we have an indicator for this target object, remove it from
+        // the scene
         if (indicators.ContainsKey(transform)) {
-            // Destroy the indicator, if it isn't already gone from the scene.
+            // Destroy the indicator, if it isn't already gone from the
+            // scene.
             if (indicators[transform] != null) {
                 Destroy(indicators[transform].gameObject);
             }
         }
 
         // And remove it from the list, if it's present. (The Remove method
-        // won't throw an exception if 'transform' isn't in the dictionary.)
+        // won't throw an exception if 'transform' isn't in the
+        // dictionary.)
         indicators.Remove(transform);
     }
 }

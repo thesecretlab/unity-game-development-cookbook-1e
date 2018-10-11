@@ -14,7 +14,7 @@ public class PooledObject : MonoBehaviour
 // A class that adds a new method to the GameObject class: ReturnToPool.
 public static class PooledGameObjectExtensions {
 
-    // This method is an extension method (note the 'this' parameter.) This 
+    // This method is an extension method (note the 'this' parameter.) This
     // means that it's a new method that's added to all instances of the
     // GameObject class; you call it like this:
     //
@@ -36,7 +36,8 @@ public static class PooledGameObjectExtensions {
             return;
         }
 
-        // Tell the pool that we came from that this object should be returned.
+        // Tell the pool that we came from that this object should be
+        // returned.
         pooledObject.owner.ReturnObject(gameObject);
     }
 }

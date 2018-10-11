@@ -11,14 +11,14 @@ public class SimpleSingleton : MonoBehaviour
     public static SimpleSingleton instance;
 
     void Awake() {
-        // When this object wakes up, it sets the instance variable
-        // to itself; because the instance variable is public and static,
-        // any class from any location can access it and call its methods.        
+        // When this object wakes up, it sets the instance variable to
+        // itself; because the instance variable is public and static, any
+        // class from any location can access it and call its methods.
         instance = this;
     }
 
-    // An example method, that any other part of the code can call,
-    // as long as there's a game object in the scene that has a SimpleSingleton
+    // An example method, that any other part of the code can call, as long
+    // as there's a game object in the scene that has a SimpleSingleton
     // component attached
     public void DoSomething() {
         Debug.Log("I'm the singleton! Hello!");

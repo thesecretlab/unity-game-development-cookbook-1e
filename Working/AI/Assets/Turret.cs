@@ -68,7 +68,8 @@ public class StateMachine {
             return;
         }
 
-        // If we don't currently have a state, transition to the initial state.
+        // If we don't currently have a state, transition to the initial
+        // state.
         if (currentState == null) {
             TransitionTo(initialState);
         }
@@ -96,7 +97,8 @@ public class StateMachine {
             currentState.onExit();
         }
 
-        Debug.LogFormat("Transitioning from '{0}' to '{1}'", currentState, newState);
+        Debug.LogFormat(
+            "Transitioning from '{0}' to '{1}'", currentState, newState);
 
         // This is now our current state
         currentState = newState;
@@ -129,9 +131,10 @@ public class StateMachine {
 // END statemachine
 
 // BEGIN statemachine_demo
-// Demonstrates a state machine. This object has two states: 'searching', and
-// 'aiming'. When the target is in range, it transitions from 'searching' to
-// 'aiming'; when the target leaves range, it transitions back.
+// Demonstrates a state machine. This object has two states: 'searching',
+// and 'aiming'. When the target is in range, it transitions from
+// 'searching' to 'aiming'; when the target leaves range, it transitions
+// back.
 public class Turret : MonoBehaviour {
     
     // The object we'll rotate to aim
@@ -185,8 +188,8 @@ public class Turret : MonoBehaviour {
         // The aiming state runs when the target is in range.
         var aiming = stateMachine.CreateState("aiming");
 
-        // Every frame, keep the turret aimed at the target. Detect when the
-        // target leaves range.
+        // Every frame, keep the turret aimed at the target. Detect when
+        // the target leaves range.
         aiming.onFrame = delegate {
 
             // Aim the weapon at the target

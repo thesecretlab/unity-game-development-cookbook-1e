@@ -7,7 +7,8 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 
 // Triggers an objective when an object enters it.
-public class TriggerObjectiveOnClick : MonoBehaviour, IPointerClickHandler {
+public class TriggerObjectiveOnClick : 
+    MonoBehaviour, IPointerClickHandler {
 
     // The objective to trigger, and how to trigger it.
     [SerializeField] ObjectiveTrigger objective = new ObjectiveTrigger();

@@ -22,7 +22,8 @@ public class TopDownCameraMovement : MonoBehaviour {
         var horizontal = Input.GetAxis("Horizontal");
         var vertical = Input.GetAxis("Vertical");
 
-        // Compute how much movement we want to apply this frame, in world-space.
+        // Compute how much movement we want to apply this frame, in
+        // world-space.
         var offset = new Vector3(horizontal, 0, vertical) 
             * Time.deltaTime * movementSpeed;
 
@@ -48,9 +49,12 @@ public class TopDownCameraMovement : MonoBehaviour {
             // and positioned at the current height of the camera.
             var cameraHeight = transform.position.y;
 
-            // Figure out the position of the corners of the boxes in world-space
-            Vector3 minLimit = new Vector3(minimumLimit.x, cameraHeight, minimumLimit.y);
-            Vector3 maxLimit = new Vector3(maximumLimit.x, cameraHeight, maximumLimit.y);
+            // Figure out the position of the corners of the boxes in
+            // world-space
+            Vector3 minLimit = 
+                new Vector3(minimumLimit.x, cameraHeight, minimumLimit.y);
+            Vector3 maxLimit = 
+                new Vector3(maximumLimit.x, cameraHeight, maximumLimit.y);
 
             // Create a new Bounds using these values and return it
             var newBounds = new Bounds();

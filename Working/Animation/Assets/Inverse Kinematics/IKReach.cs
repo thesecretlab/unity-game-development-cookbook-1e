@@ -16,8 +16,8 @@ public class IKReach : MonoBehaviour {
     [SerializeField] AvatarIKGoal goal = AvatarIKGoal.RightHand;
 
     // The strength with which we're reaching our goal towards the target.
-    // 0 = don't reach at all; 1 = the goal must be at the same point as the
-    // target, if it's within range.
+    // 0 = don't reach at all; 1 = the goal must be at the same point as
+    // the target, if it's within range.
     [Range(0, 1)]
     [SerializeField] float weight = 0.5f;
 
@@ -30,10 +30,10 @@ public class IKReach : MonoBehaviour {
         animator = GetComponent<Animator>();
     }
 
-    // Called every time the animator is about to apply inverse kinematics, 
+    // Called every time the animator is about to apply inverse kinematics,
     // which will bend the various joints to try to reach the goals towards
-    // their targets.
-    // This is our opportunity to provide it with updated information.
+    // their targets. This is our opportunity to provide it with updated
+    // information.
     private void OnAnimatorIK(int layerIndex)
     {
         // Set the position that the goal is trying to reach.

@@ -11,8 +11,8 @@ using UnityEditor;
 // documentation.
 using UnityEditor.Experimental.AssetImporters;
 
-// A CubeDescription contains the variables that define our cubes. We'll create
-// them by loading them from text files that contain JSON.
+// A CubeDescription contains the variables that define our cubes. We'll
+// create them by loading them from text files that contain JSON.
 public struct CubeDescription {
     public Vector3 size;
 
@@ -21,8 +21,8 @@ public struct CubeDescription {
 }
 
 // Indicate to Unity that this script imports files with the file extension
-// ".cube", and that this is version 0 of the importer (changing the number will
-// make Unity re-import assets of this type)
+// ".cube", and that this is version 0 of the importer (changing the number
+// will make Unity re-import assets of this type)
 [ScriptedImporter(0, "cube")]
 public class CubeImporter : ScriptedImporter {
 
@@ -30,8 +30,8 @@ public class CubeImporter : ScriptedImporter {
     public override void OnImportAsset(AssetImportContext ctx)
     {
 
-        // "ctx" contains information about the import that Unity wants us to
-        // do; it contains the path to the file, and we'll put the Unity
+        // "ctx" contains information about the import that Unity wants us
+        // to do; it contains the path to the file, and we'll put the Unity
         // objects into it when we're done
 
         // "cube" files will contain JSON that describes the color and size
@@ -46,36 +46,45 @@ public class CubeImporter : ScriptedImporter {
 
             cubeDescription = JsonUtility.FromJson<CubeDescription>(text);
         } catch (System.ArgumentException e) {
-            // We failed to load the JSON. Maybe it's not valid. Report the error.
-            Debug.LogErrorFormat("{0} is not a valid cube: {1}", ctx.assetPath, e.Message);
+            // We failed to load the JSON. Maybe it's not valid. Report the
+            // error.
+            Debug.LogErrorFormat(
+                "{0} is not a valid cube: {1}", 
+                ctx.assetPath, e.Message);
             return;
+
         } catch (System.Exception e) {
-            // We caught some other kind of exception, and can't continue. Re-throw
-            // the error.
+            // We caught some other kind of exception, and can't continue.
+            // Re-throw the error.
             throw e;
         }
 
-        // Create a generic cube object, which we'll make changes to and save
-        // as a new asset.
+        // Create a generic cube object, which we'll make changes to and
+        // save as a new asset.
         var cubeObject = GameObject.CreatePrimitive(PrimitiveType.Cube);
 
-        // Get the last part of the file path, and use it as the cube's name
-        string name = System.IO.Path.GetFileNameWithoutExtension(ctx.assetPath);
+        // Get the last part of the file path, and use it as the cube's
+        // name
+        string name = 
+            System.IO.Path.GetFileNameWithoutExtension(ctx.assetPath);
 
-        // Next, we'll create a cube that's the right size. The default cube mesh
-        // is 1x1x1; we'll scale it based on the size that was passed in.
+        // Next, we'll create a cube that's the right size. The default
+        // cube mesh is 1x1x1; we'll scale it based on the size that was
+        // passed in.
 
         // Copy the default cube mesh.
-        var cubeMesh = Instantiate(cubeObject.GetComponent<MeshFilter>().sharedMesh);
+        var cubeMesh =
+            Instantiate(cubeObject.GetComponent<MeshFilter>().sharedMesh);
 
-        // Create a matrix that scales vertices by the given X, Y and Z amounts.
+        // Create a matrix that scales vertices by the given X, Y and Z
+        // amounts.
         var scaleMatrix = Matrix4x4.Scale(cubeDescription.size);
 
         // Get a copy of the vertices in the mesh.
         var vertices = cubeMesh.vertices;
 
-        // For each of these vertices, apply the scale by multiplying the matrix
-        // against the vertex.
+        // For each of these vertices, apply the scale by multiplying the
+        // matrix against the vertex.
         for (int v = 0; v < vertices.Length; v++) {
             vertices[v] = scaleMatrix.MultiplyPoint(vertices[v]);
         }
@@ -104,8 +113,9 @@ public class CubeImporter : ScriptedImporter {
 
         // Now we store the objects we just created as assets.
 
-        // First, store the GameObject (the collection of components that uses
-        // and renders the mesh and material), and mark it as the "main" object.
+        // First, store the GameObject (the collection of components that
+        // uses and renders the mesh and material), and mark it as the
+        // "main" object.
         ctx.AddObjectToAsset(name, cubeObject);
         ctx.SetMainObject(cubeObject);
 

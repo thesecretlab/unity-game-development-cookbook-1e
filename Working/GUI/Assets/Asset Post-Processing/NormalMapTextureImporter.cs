@@ -13,9 +13,11 @@ public class NormalMapTextureImporter : AssetPostprocessor
     void OnPreprocessTexture() {
 
         // Get the name of the file.
-        var filename = System.IO.Path.GetFileNameWithoutExtension(assetPath);
+        var filename = 
+            System.IO.Path.GetFileNameWithoutExtension(assetPath);
 
-        // We're looking for texture files that end in any of these suffixes.
+        // We're looking for texture files that end in any of these
+        // suffixes.
         var normalMapSuffixes = new[] { "_n", "_normal", "_nrm" };
 
         // Check each one
@@ -24,12 +26,15 @@ public class NormalMapTextureImporter : AssetPostprocessor
 
                 // Get the texture importer that's currently importing this
                 // texture
-                TextureImporter textureImporter = assetImporter as TextureImporter;
+                TextureImporter textureImporter = 
+                    assetImporter as TextureImporter;
 
                 // Update its
-                textureImporter.textureType = TextureImporterType.NormalMap;
+                textureImporter.textureType = 
+                    TextureImporterType.NormalMap;
 
-                // Exit here, since we know we don't need to do any more work
+                // Exit here, since we know we don't need to do any more
+                // work
                 return;
             }
         }

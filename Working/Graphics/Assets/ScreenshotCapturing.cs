@@ -8,13 +8,13 @@ public class ScreenshotCapturing : MonoBehaviour
     // BEGIN persistent_data_path
     public string PathForFilename(string filename) {
 
-        // Application.persistentDataPath contains a path where we can safely
-        // store data
+        // Application.persistentDataPath contains a path where we can 
+        // safely store data
         var folderToStoreFilesIn = Application.persistentDataPath;
 
-        // System.IO.Path.Combine combines two paths, using the current system's
-        // directory separator ( \ on Windows, / on just about every 
-        // other platform)
+        // System.IO.Path.Combine combines two paths, using the current 
+        // system's directory separator ( \ on Windows, / on just about 
+        // every other platform)
         var path = System.IO.Path.Combine(folderToStoreFilesIn, filename);
 
         return path;
@@ -39,7 +39,8 @@ public class ScreenshotCapturing : MonoBehaviour
         // Capturing a screenshot as a texture
         // Note that this captures the screenshot immediately, and it may
         // not contain what you expect.
-        Texture2D capturedTexture = ScreenCapture.CaptureScreenshotAsTexture();
+        Texture2D capturedTexture = 
+            ScreenCapture.CaptureScreenshotAsTexture();
         // END capture_screenshot_texture
 
         // BEGIN capture_screenshot_texture_coroutine_start
@@ -56,7 +57,8 @@ public class ScreenshotCapturing : MonoBehaviour
         yield return new WaitForEndOfFrame();
 
         // Capture the screenshot
-        Texture2D capturedTexture = ScreenCapture.CaptureScreenshotAsTexture();
+        Texture2D capturedTexture = 
+            ScreenCapture.CaptureScreenshotAsTexture();
 
         // capturedTexture now contains the contents of the screen, after
         // everything in the frame has rendered

@@ -78,7 +78,8 @@ public class AudioManager : Singleton<AudioManager> {
 
         // Does the sound effect exist?
         if (_effectDictionary.ContainsKey(effectName) == false) {
-            Debug.LogWarningFormat("Effect {0} is not registered.", effectName);
+            Debug.LogWarningFormat(
+                "Effect {0} is not registered.", effectName);
             return;
         }
 
@@ -87,7 +88,8 @@ public class AudioManager : Singleton<AudioManager> {
 
         // Make sure it wasn't null
         if (clip == null) {
-            Debug.LogWarningFormat("Effect {0} has no clips to play.", effectName);
+            Debug.LogWarningFormat(
+                "Effect {0} has no clips to play.", effectName);
             return;
         }
 

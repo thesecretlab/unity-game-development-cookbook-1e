@@ -23,12 +23,14 @@ public class AlienForce : MonoBehaviour {
     void FixedUpdate () {
     
     
-        // Get user input, and scale it by the amount of force we want to apply
+        // Get user input, and scale it by the amount of force we want to
+        // apply
         var vertical = Input.GetAxis("Vertical") * verticalForce;
         var horizontal = Input.GetAxis("Horizontal") * sidewaysForce;
 
         // Generate a force vector from these inputs, scaled by time
-        var force = new Vector2(horizontal, vertical) * Time.fixedDeltaTime;
+        var force = 
+            new Vector2(horizontal, vertical) * Time.fixedDeltaTime;
 
         // Add the force to the sprite
         body.AddForce(force);

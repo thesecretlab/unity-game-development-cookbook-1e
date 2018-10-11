@@ -29,8 +29,8 @@ public class OrbitingCamera : MonoBehaviour
     float elevationToTarget = 0.0f;
 
     // BEGIN orbiting_camera_clip_variables
-    // When true, the camera will adjust its distance when there's a collider 
-    // between it and the target
+    // When true, the camera will adjust its distance when there's a
+    // collider between it and the target
     [SerializeField] bool clipCamera;
     // END orbiting_camera_clip_variables
 
@@ -43,26 +43,29 @@ public class OrbitingCamera : MonoBehaviour
 
         if (target) {
             // Take the current distance from the camera to the target
-            float currentDistance = (transform.position - target.position).magnitude;
+            float currentDistance = 
+                (transform.position - target.position).magnitude;
 
             // Clamp it to our required minimum/maximum
-            distance = Mathf.Clamp(currentDistance, distanceMin, distanceMax);
+            distance = Mathf.Clamp(
+                currentDistance, distanceMin, distanceMax);
         }
     }
 
-    // Every frame, after all Update() functions are called, update the camera
-    // position and rotation
+    // Every frame, after all Update() functions are called, update the
+    // camera position and rotation
     //
-    // We do this in LateUpdate so that if the object we're tracking has its 
-    // position changed in the Update method, the camera will be correctly
-    // positioned, because LateUpdate is always run afterwards.
+    // We do this in LateUpdate so that if the object we're tracking has
+    // its position changed in the Update method, the camera will be
+    // correctly positioned, because LateUpdate is always run afterwards.
     void LateUpdate()
     {
         if (target)
         {
             // Update our rotation and elevation based on mouse movement
             rotationAroundTarget += 
-                Input.GetAxis("Mouse X") * rotationSpeed * distance * 0.02f;
+                Input.GetAxis("Mouse X") 
+                    * rotationSpeed * distance * 0.02f;
             
             elevationToTarget -= 
                 Input.GetAxis("Mouse Y") * elevationSpeed * 0.02f;
@@ -87,31 +90,32 @@ public class OrbitingCamera : MonoBehaviour
             // And limit it to the minimum and maximum
             distance = Mathf.Clamp(distance, distanceMin, distanceMax);
 
-            // Figure out a position that's 'distance' units away from the target
-            // in the reverse direction to where we're looking
+            // Figure out a position that's 'distance' units away from the
+            // target in the reverse direction to where we're looking
             Vector3 negDistance = new Vector3(0.0f, 0.0f, -distance);
             Vector3 position = rotation * negDistance + target.position;
 
             // BEGIN orbiting_camera_clip_code
             if (clipCamera) {
 
-                // We'll cast out a ray from the target to the position we just
-                // computed. If the ray hits something, we'll update our position
-                // to where the ray hit.
+                // We'll cast out a ray from the target to the position we
+                // just computed. If the ray hits something, we'll update
+                // our position to where the ray hit.
 
                 // Store info about any hit in here.
                 RaycastHit hitInfo;
 
                 // Generate a ray from the target to the camera
-                var ray = new Ray(target.position, position - target.position);
+                var ray = 
+                    new Ray(target.position, position - target.position);
 
-                // Perform the ray cast; if it hit anything, it returns true,
-                // and updates the hitInfo variable
+                // Perform the ray cast; if it hit anything, it returns
+                // true, and updates the hitInfo variable
                 var hit = Physics.Raycast(ray, out hitInfo, distance);
 
                 if (hit) {
-                    // We hit something. Update the camera position to where
-                    // the ray hit an object.
+                    // We hit something. Update the camera position to
+                    // where the ray hit an object.
                     position = hitInfo.point;
                 }
             }
@@ -125,8 +129,8 @@ public class OrbitingCamera : MonoBehaviour
         }
     }
 
-    // Clamps an angle between 'min' and 'max', wrapping it if it's less than
-    // 360 degrees or higher than 360 degrees.
+    // Clamps an angle between 'min' and 'max', wrapping it if it's less
+    // than 360 degrees or higher than 360 degrees.
     public static float ClampAngle(float angle, float min, float max)
     {
 

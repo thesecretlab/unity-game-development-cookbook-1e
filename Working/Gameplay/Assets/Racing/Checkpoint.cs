@@ -4,7 +4,8 @@ using UnityEngine;
 
 // BEGIN checkpoint
 #if UNITY_EDITOR
-// Include the UnityEditor namespace when this class is being used in the Editor.
+// Include the UnityEditor namespace when this class is being used in the
+// Editor.
 using UnityEditor;
 #endif
 
@@ -14,20 +15,20 @@ public class Checkpoint : MonoBehaviour
     // If true, this is the start of the circuit
     [SerializeField] public bool isLapStart;
 
-    // The next checkpoint in the circuit. If we're visiting these in reverse, 
-    // or skipping too many, then we're going the wrong way.
+    // The next checkpoint in the circuit. If we're visiting these in
+    // reverse, or skipping too many, then we're going the wrong way.
     [SerializeField] public Checkpoint next;
     
-    // The index number, used by LapTracker to figure out if we're going the
-    // wrong way.
+    // The index number, used by LapTracker to figure out if we're going
+    // the wrong way.
     internal int index = 0;
     
-    // Checkpoints are invisible, so we draw a marker in the scene view to make it
-    // easier to visualise.
+    // Checkpoints are invisible, so we draw a marker in the scene view to
+    // make it easier to visualise.
     private void OnDrawGizmos()
     {
-        // Draw the markers as a blue sphere, except for the lap start, which 
-        // is yellow.
+        // Draw the markers as a blue sphere, except for the lap start,
+        // which is yellow.
         if (isLapStart)
         {
             Gizmos.color = Color.yellow;
@@ -49,7 +50,8 @@ public class Checkpoint : MonoBehaviour
 }
 
 #if UNITY_EDITOR
-// Code that adds additional controls for building a track to the Checkpoint inspector.
+// Code that adds additional controls for building a track to the
+// Checkpoint inspector.
 [CustomEditor(typeof(Checkpoint))]
 public class CheckpointEditor : Editor {
 
@@ -60,13 +62,13 @@ public class CheckpointEditor : Editor {
         // First, draw the Inspector contents that we'd normally get.
         DrawDefaultInspector();
 
-        // Get a reference to the Checkpoint component we're editing, by casting
-        // 'target' (which is just an Object) to Checkpoint.
+        // Get a reference to the Checkpoint component we're editing, by
+        // casting 'target' (which is just an Object) to Checkpoint.
         var checkpoint = this.target as Checkpoint;
 
-        // Display a button that inserts a new checkpoint between us and the 
-        // next one. GUILayout.Button both displays the button, and returns true
-        // if it was clicked.
+        // Display a button that inserts a new checkpoint between us and
+        // the next one. GUILayout.Button both displays the button, and
+        // returns true if it was clicked.
         if (GUILayout.Button("Insert Checkpoint")) {
 
             // Make a new object, and add a Checkpoint component to it
@@ -74,17 +76,21 @@ public class CheckpointEditor : Editor {
                 .AddComponent<Checkpoint>();
 
             // Make it point to our next one, and make ourself point to it
-            // (in other words, insert it between us and our next checkpoint)
+            // (in other words, insert it between us and our next
+            // checkpoint)
             newCheckpoint.next = checkpoint.next;
             checkpoint.next = newCheckpoint;
 
             // Make it one of our siblings
-            newCheckpoint.transform.SetParent(checkpoint.transform.parent, true);
+            newCheckpoint.transform
+                .SetParent(checkpoint.transform.parent, true);
 
             // Position it as our next sibling in the hierarchy.
             // Not technically needed, and doesn't affect the game at all,
             // but it looks nicer.
-            var nextSiblingIndex = checkpoint.transform.GetSiblingIndex() + 1;
+            var nextSiblingIndex = 
+                checkpoint.transform.GetSiblingIndex() + 1;
+
             newCheckpoint.transform.SetSiblingIndex(nextSiblingIndex);
 
             // Move it slightly so that it's visibly not the same one
@@ -95,8 +101,8 @@ public class CheckpointEditor : Editor {
             Selection.activeGameObject = newCheckpoint.gameObject;
         }
 
-        // Disable this button if we don't have a next checkpoint, or if the
-        // next checkpoint is the lap start
+        // Disable this button if we don't have a next checkpoint, or if
+        // the next checkpoint is the lap start
 
         var disableRemoveButton = checkpoint.next == null || 
                                             checkpoint.next.isLapStart;

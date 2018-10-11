@@ -64,7 +64,8 @@ public class LevelLoading : MonoBehaviour
 
     public void UnloadLevel() {
         // BEGIN level_unloading
-        // Unloading a scene is an async operation, much like loading can be
+        // Unloading a scene is an async operation, much like loading can
+        // be
         var unloadOperation = SceneManager.UnloadSceneAsync("Game");
 
         // If you want to run code after the unloading has completed, 

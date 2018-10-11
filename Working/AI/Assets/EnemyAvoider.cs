@@ -10,18 +10,19 @@ using UnityEngine.AI;
 [RequireComponent(typeof(NavMeshAgent))]
 public class EnemyAvoider : MonoBehaviour {
 
-    // The object that's looking for us. We'll use it to determine if it can
-    // see us, and if it can see the places we're considering hiding.
+    // The object that's looking for us. We'll use it to determine if it
+    // can see us, and if it can see the places we're considering hiding.
     [SerializeField] EnemyVisibility visibility = null;
 
     // The size of the area where we're considering hiding.
     [SerializeField] float searchAreaSize = 10f;
 
-    // The density of the search field. Larger numbers means fewer hiding places
-    // are considered, but it's more efficient.
+    // The density of the search field. Larger numbers means fewer hiding
+    // places are considered, but it's more efficient.
     [SerializeField] float searchCellSize = 1f;
 
-    // If true, lines will be drawn indicating where we're considering hiding.
+    // If true, lines will be drawn indicating where we're considering
+    // hiding.
     [SerializeField] bool visualize = true;
 
     // The navigation agent, which will navigate to the best hiding place.
@@ -45,8 +46,8 @@ public class EnemyAvoider : MonoBehaviour {
                 Vector3 hidingSpot;
 
                 if (FindHidingSpot(out hidingSpot) == false) {
-                    // We didn't find anywhere to hide! wait a second and try 
-                    // again.
+                    // We didn't find anywhere to hide! wait a second and
+                    // try again.
                     yield return new WaitForSeconds(1.0f);
                     continue;
                 }
@@ -55,17 +56,18 @@ public class EnemyAvoider : MonoBehaviour {
                 agent.destination = hidingSpot;
             }
 
-            // Wait a bit, and then check to see if the target can still see
-            // us.
+            // Wait a bit, and then check to see if the target can still
+            // see us.
             yield return new WaitForSeconds(0.1f);
         }
     }
 
-    // Attempts to find a nearby place that the target can't see us at. Returns
-    // true if one was found; if 
+    // Attempts to find a nearby place that the target can't see us at.
+    // Returns true if one was found; if 
     bool FindHidingSpot(out Vector3 hidingSpot) {
 
-        var distribution = new PoissonDiscSampler(searchAreaSize, searchAreaSize, searchCellSize);
+        var distribution = new PoissonDiscSampler(
+            searchAreaSize, searchAreaSize, searchCellSize);
 
         var candidateHidingSpots = new List<Vector3>();
 
@@ -107,7 +109,8 @@ public class EnemyAvoider : MonoBehaviour {
 
             searchPointWorldSpace = hit.position;
 
-            var canSee = visibility.CheckVisibilityToPoint(searchPointWorldSpace);
+            var canSee = 
+                visibility.CheckVisibilityToPoint(searchPointWorldSpace);
 
 
             if (canSee == false) {
@@ -119,7 +122,9 @@ public class EnemyAvoider : MonoBehaviour {
             if (visualize) {
                 Color debugColor = canSee ? Color.red : Color.green;
 
-                Debug.DrawLine(transform.position, searchPointWorldSpace, debugColor, 0.1f);
+                Debug.DrawLine(
+                    transform.position, searchPointWorldSpace, 
+                    debugColor, 0.1f);
             }
 
 
@@ -136,8 +141,8 @@ public class EnemyAvoider : MonoBehaviour {
         }
 
 
-        // For each of our candidate points, calculate the length of the path
-        // needed to reach it.
+        // For each of our candidate points, calculate the length of the
+        // path needed to reach it.
 
         // Build a list of candidate points, matched with the length of the
         // path needed to reach it.
@@ -156,8 +161,8 @@ public class EnemyAvoider : MonoBehaviour {
 
             if (path.status != NavMeshPathStatus.PathComplete)
             {
-                // If this path doesn't reach the target, consider it infinitely
-                // far away
+                // If this path doesn't reach the target, consider it
+                // infinitely far away
                 distance = Mathf.Infinity;
             }
             else
@@ -185,8 +190,8 @@ public class EnemyAvoider : MonoBehaviour {
             return new KeyValuePair<Vector3, float>(point, distance);
         });
 
-        // Sort this list based on distance, so that the shortest path is at
-        // the front of the list
+        // Sort this list based on distance, so that the shortest path is
+        // at the front of the list
         paths.Sort((a, b) =>
         {
             return a.Value.CompareTo(b.Value);

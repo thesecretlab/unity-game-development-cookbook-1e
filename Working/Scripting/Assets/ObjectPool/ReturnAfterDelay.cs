@@ -7,8 +7,8 @@ using UnityEngine;
 // for one second, and then returns itself to the pool.
 public class ReturnAfterDelay : MonoBehaviour, IObjectPoolNotifier
 {
-    // Our opportunity to do any setup we need to after we're either created
-    // or removed from the pool
+    // Our opportunity to do any setup we need to after we're either
+    // created or removed from the pool
     public void OnCreatedOrDequeuedFromPool(bool created)
     {
         Debug.Log("Dequeued from object pool!");

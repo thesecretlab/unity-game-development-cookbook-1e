@@ -18,9 +18,12 @@ public class CharacterMovement : MonoBehaviour {
     
     void Update () {
 
-        animator.SetFloat("Speed", Input.GetAxis("Vertical") * speed);
+        animator.SetFloat("Speed", 
+            Input.GetAxis("Vertical") * speed);
+            
         // BEGIN animation_movement_sidespeed
-        animator.SetFloat("SideSpeed", Input.GetAxis("Horizontal") * speed);
+        animator.SetFloat("SideSpeed", 
+            Input.GetAxis("Horizontal") * speed);
         // END animation_movement_sidespeed
     }
 }

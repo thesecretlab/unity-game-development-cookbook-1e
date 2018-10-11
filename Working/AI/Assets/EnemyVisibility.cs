@@ -7,9 +7,9 @@ using UnityEngine;
 using UnityEditor;
 #endif
 
-// Detects when a given target is visible to this object. A target is visible
-// when it's both in range and in front of the target. Both the range and the
-// angle of visibility are configurable.
+// Detects when a given target is visible to this object. A target is
+// visible when it's both in range and in front of the target. Both the
+// range and the angle of visibility are configurable.
 public class EnemyVisibility : MonoBehaviour
 {
 
@@ -26,8 +26,8 @@ public class EnemyVisibility : MonoBehaviour
     // If true, visualise changes in visilibity by changing material colour
     [SerializeField] bool visualize = true;
 
-    // A property that other classes can access to determine if we can currently
-    // see our target.
+    // A property that other classes can access to determine if we can 
+    // currently see our target.
     public bool targetIsVisible { get; private set; }
 
     // Check to see if we can see the target every frame.
@@ -36,7 +36,7 @@ public class EnemyVisibility : MonoBehaviour
         targetIsVisible = CheckVisibility();
 
         if (visualize) {
-            // Update our colour; yellow if we can see the target, white if 
+            // Update our colour; yellow if we can see the target, white if
             // we can't
             var color = targetIsVisible ? Color.yellow : Color.white;
 
@@ -55,9 +55,8 @@ public class EnemyVisibility : MonoBehaviour
         var degreesToTarget = 
             Vector3.Angle(transform.forward, directionToTarget);
 
-        // The target is within the arc if it's within half of the specified
-        // angle.
-        // If it's not within the arc, it's not visible.
+        // The target is within the arc if it's within half of the
+        // specified angle. If it's not within the arc, it's not visible.
         var withinArc = degreesToTarget < (angle / 2);
 
         if (withinArc == false)
@@ -89,14 +88,15 @@ public class EnemyVisibility : MonoBehaviour
             // target point.
             return false;
         } else {
-            // There's an unobstructed line of sight between us and the target
-            // point, so we can see it.
+            // There's an unobstructed line of sight between us and the
+            // target point, so we can see it.
             return true;
         }
     }
 
-    // Returns true if a straight line can be drawn between this object and the
-    // target. The target must be within range, and be within the visible arc.
+    // Returns true if a straight line can be drawn between this object and
+    // the target. The target must be within range, and be within the
+    // visible arc.
     public bool CheckVisibility()
     {        
         // Compute the direction to the target
@@ -106,9 +106,8 @@ public class EnemyVisibility : MonoBehaviour
         var degreesToTarget = 
             Vector3.Angle(transform.forward, directionToTarget);
 
-        // The target is within the arc if it's within half of the specified
-        // angle.
-        // If it's not within the arc, it's not visible.
+        // The target is within the arc if it's within half of the
+        // specified angle. If it's not within the arc, it's not visible.
         var withinArc = degreesToTarget < (angle / 2);
 
         if (withinArc == false) {
@@ -118,8 +117,8 @@ public class EnemyVisibility : MonoBehaviour
         // Compute the distance to the point
         var distanceToTarget = directionToTarget.magnitude;
 
-        // Our ray should go as far as the target is, or the maximum distance,
-        // whichever is shorter
+        // Our ray should go as far as the target is, or the maximum
+        // distance, whichever is shorter
         var rayDistance = Mathf.Min(maxDistance, distanceToTarget);
 
         // Create a ray that fires out from our position to the target
@@ -128,7 +127,8 @@ public class EnemyVisibility : MonoBehaviour
         // Store information about what was hit in this variable
         RaycastHit hit;
 
-        // Records info about whether the target is in range and not occluded
+        // Records info about whether the target is in range and not
+        // occluded
         var canSee = false;
 
         // Fire the raycast. Did it hit anything?
@@ -137,8 +137,8 @@ public class EnemyVisibility : MonoBehaviour
             // Did the ray hit our target?
             if (hit.collider.transform == target)
             {
-                // Then we can see it (that is, the ray didn't hit an obstacle
-                // in between us and the target)
+                // Then we can see it (that is, the ray didn't hit an
+                // obstacle in between us and the target)
                 canSee = true;
             }
 
@@ -178,9 +178,10 @@ public class EnemyVisibilityEditor : Editor {
         // Start drawing at 10% opacity
         Handles.color = new Color(1, 1, 1, 0.1f);
 
-        // Drawing an arc sweeps from the point you give it. We want to draw 
-        // the arc such that the middle of the arc is in front of the object,
-        // so we'll take the forward direction and rotate it by half the angle.
+        // Drawing an arc sweeps from the point you give it. We want to
+        // draw the arc such that the middle of the arc is in front of the
+        // object, so we'll take the forward direction and rotate it by
+        // half the angle.
 
         var forwardPointMinusHalfAngle = 
             // rotate around the Y axis by half the angle
@@ -189,25 +190,26 @@ public class EnemyVisibilityEditor : Editor {
                       * visibility.transform.forward;
 
         // Draw the arc to visualise the visibility arc
-        Vector3 arcStart = forwardPointMinusHalfAngle * visibility.maxDistance;
+        Vector3 arcStart = 
+            forwardPointMinusHalfAngle * visibility.maxDistance;
 
         Handles.DrawSolidArc(
             visibility.transform.position, // The center of the arc
             Vector3.up,                    // The up-direction of the arc
-            arcStart,                      // The point where the arc begins
+            arcStart,                      // The point where it begins
             visibility.angle,              // The angle of the arc
             visibility.maxDistance         // The radius of the arc
         );
 
 
-        // Draw a scale handle at the edge of the arc; if the user drags it,
-        // update the arc size.
+        // Draw a scale handle at the edge of the arc; if the user drags
+        // it, update the arc size.
 
         // Reset the handle colour to full opacity
         Handles.color = Color.white;
 
-        // Compute the position of the handle, based on the object's position,
-        // the direction it's facing, and the distance
+        // Compute the position of the handle, based on the object's
+        // position, the direction it's facing, and the distance
         Vector3 handlePosition = 
             visibility.transform.position + 
                   visibility.transform.forward * visibility.maxDistance;
@@ -219,8 +221,9 @@ public class EnemyVisibilityEditor : Editor {
             visibility.transform.rotation,  // orientation
             1,                              // size
             Handles.ConeHandleCap,          // cap to draw
-            0.25f);                         // snap to multiples of this if 
-                                            // the snapping key is held down
+            0.25f);                         // snap to multiples of this 
+                                            // if the snapping key is
+                                            // held down
     }
 }
 #endif

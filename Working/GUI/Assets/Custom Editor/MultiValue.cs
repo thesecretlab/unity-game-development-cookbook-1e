@@ -57,29 +57,33 @@ public class MultiValuePropertyDrawer : PropertyDrawer {
     public override void OnGUI(Rect position, SerializedProperty property,
                                GUIContent label)
     {
-        // Ensure that the controls found in the GUI class behave properly. This
-        // also tells Unity that any edit to any field in here should be recorded
-        // for the purposes of Undoing them.
+        // Ensure that the controls found in the GUI class behave properly.
+        // This also tells Unity that any edit to any field in here should
+        // be recorded for the purposes of Undoing them.
         EditorGUI.BeginProperty(position, label, property);
 
         // Get a reference to the variables that store the info we need
-        var indexProperty = property.FindPropertyRelative("_selectedIndex");
+        var indexProperty = 
+            property.FindPropertyRelative("_selectedIndex");
+
         var valuesProperty = property.FindPropertyRelative("options");
 
-        // Calculate the rectangle to draw the first line in. This will hold
-        // our Toolbar (our list of buttons).
+        // Calculate the rectangle to draw the first line in. This will
+        // hold our Toolbar (our list of buttons).
         var firstLinePosition = position;
-        firstLinePosition.height = EditorGUI.GetPropertyHeight(indexProperty);
+        firstLinePosition.height = 
+            EditorGUI.GetPropertyHeight(indexProperty);
 
-        // Use this to calculate the rectangle to draw the second property in.
-        // (This will vary, depending on whether the user has elected to expand
-        // the list in the Inspector or not.)
+        // Use this to calculate the rectangle to draw the second property
+        // in. (This will vary, depending on whether the user has elected
+        // to expand the list in the Inspector or not.)
         var secondLinePosition = firstLinePosition;
         secondLinePosition.y += 2 + firstLinePosition.height;
-        secondLinePosition.height = EditorGUI.GetPropertyHeight(valuesProperty);
+        secondLinePosition.height = 
+            EditorGUI.GetPropertyHeight(valuesProperty);
 
-        // Display the label in front of the toolbar, and get back a new rectangle
-        // to draw the toolbar in.
+        // Display the label in front of the toolbar, and get back a new
+        // rectangle to draw the toolbar in.
         firstLinePosition = EditorGUI.PrefixLabel(
             firstLinePosition, new GUIContent(property.displayName));
 
@@ -87,14 +91,16 @@ public class MultiValuePropertyDrawer : PropertyDrawer {
         string[] labels = new string[valuesProperty.arraySize];
 
         for (int i = 0; i < labels.Length; i++) {
-            labels[i] = valuesProperty.GetArrayElementAtIndex(i).stringValue;
+            labels[i] = 
+                valuesProperty.GetArrayElementAtIndex(i).stringValue;
         }
 
-        // Because Toolbar is not in the EditorGUI class, it won't automatically
-        // report to the editor that it was updated in a way that the editor
-        // can track for the purposes of the Undo system. So, we use 
-        // BeginChangeCheck before drawing the toolbar, and call EndChangeCheck.
-        // If EndChangeCheck returns true, the user made a change.
+        // Because Toolbar is not in the EditorGUI class, it won't
+        // automatically report to the editor that it was updated in a way
+        // that the editor can track for the purposes of the Undo system.
+        // So, we use BeginChangeCheck before drawing the toolbar, and call
+        // EndChangeCheck. If EndChangeCheck returns true, the user made a
+        // change.
         EditorGUI.BeginChangeCheck();
         var index = indexProperty.intValue;
         var newValue = GUI.Toolbar(firstLinePosition, index, labels);
@@ -103,9 +109,9 @@ public class MultiValuePropertyDrawer : PropertyDrawer {
             indexProperty.intValue = newValue;
         }
 
-        // Draw the 'options' list as a regular list. This will also draw things
-        // like the expand arrow, the items in the list, and the number of items
-        // in the list.
+        // Draw the 'options' list as a regular list. This will also draw
+        // things like the expand arrow, the items in the list, and the
+        // number of items in the list.
         EditorGUI.indentLevel += 1;
         EditorGUI.PropertyField(secondLinePosition, valuesProperty, true);
         EditorGUI.indentLevel -= 1;
@@ -119,20 +125,23 @@ public class MultiValuePropertyDrawer : PropertyDrawer {
                                             GUIContent label)
     {
 
-        // The height of a MultiValue property is the height of both of its two
-        // child properties, plus the spacing between them.
+        // The height of a MultiValue property is the height of both of its
+        // two child properties, plus the spacing between them.
 
         float lineSpacing = EditorGUIUtility.standardVerticalSpacing;
 
         // Get the child properties 
-        var indexProperty = property.FindPropertyRelative("_selectedIndex");
+        var indexProperty = 
+            property.FindPropertyRelative("_selectedIndex");
+
         var valuesProperty = property.FindPropertyRelative("options");
 
-        // Calculate the height of this property by getting the height of both
-        // properties (including the strings inside the options, if it's been
-        // expanded), plus the line spacing
+        // Calculate the height of this property by getting the height of
+        // both properties (including the strings inside the options, if
+        // it's been expanded), plus the line spacing
         float indexHeight = EditorGUI.GetPropertyHeight(indexProperty);
-        float optionsHeight = EditorGUI.GetPropertyHeight(valuesProperty, true);
+        float optionsHeight = 
+            EditorGUI.GetPropertyHeight(valuesProperty, true);
 
         return indexHeight + lineSpacing + optionsHeight;
     }

@@ -7,10 +7,12 @@ using System;
 public class BoxSelection : MonoBehaviour
 {
     
-    // Draggable inspector reference to the Image GameObject's RectTransform.
+    // Draggable inspector reference to the Image GameObject's
+    // RectTransform.
     public RectTransform selectionBox;
 
-    // This variable will store the location of wherever we first click before dragging.
+    // This variable will store the location of wherever we first click
+    // before dragging.
     private Vector2 initialClickPosition = Vector2.zero;
 
     // The rectangle that the box has dragged, in screen space.
@@ -27,8 +29,8 @@ public class BoxSelection : MonoBehaviour
         selectionBox.anchorMin = Vector2.zero;
         selectionBox.anchorMax = Vector2.zero;
 
-        // Setting the pivot point to zero means that the box will pivot around
-        // its lower-left corner
+        // Setting the pivot point to zero means that the box will pivot
+        // around its lower-left corner
         selectionBox.pivot = Vector2.zero;
 
         // Hide the box at the start
@@ -37,37 +39,44 @@ public class BoxSelection : MonoBehaviour
 
     void Update()
     {
-        // When we start dragging, record the position of the mouse, and start
-        // showing the box
+        // When we start dragging, record the position of the mouse, and
+        // start showing the box
         if (Input.GetMouseButtonDown(0))
         {
-            // Get the initial click position of the mouse. No need to convert to GUI space
-            // since we are using the lower left as anchor and pivot.
-            initialClickPosition = new Vector2(Input.mousePosition.x, Input.mousePosition.y);
+            // Get the initial click position of the mouse. No need to
+            // convert to GUI space since we are using the lower left as
+            // anchor and pivot.
+            initialClickPosition = 
+                new Vector2(Input.mousePosition.x, Input.mousePosition.y);
 
             // Show the box
             selectionBox.gameObject.SetActive(true);
         }
 
-        // While we are dragging, update the position and size of the box based
-        // on the mouse position
+        // While we are dragging, update the position and size of the box
+        // based on the mouse position
         if (Input.GetMouseButton(0))
         {
             // Store the current mouse position in screen space.
-            Vector2 currentMousePosition = new Vector2(Input.mousePosition.x, Input.mousePosition.y);
+            Vector2 currentMousePosition = 
+                new Vector2(Input.mousePosition.x, Input.mousePosition.y);
 
             // Figure out the lower-left corner, and the upper-right corner
-            var xMin = Mathf.Min(currentMousePosition.x, initialClickPosition.x);
-            var xMax = Mathf.Max(currentMousePosition.x, initialClickPosition.x);
-            var yMin = Mathf.Min(currentMousePosition.y, initialClickPosition.y);
-            var yMax = Mathf.Max(currentMousePosition.y, initialClickPosition.y);
+            var xMin =
+                Mathf.Min(currentMousePosition.x, initialClickPosition.x);
+            var xMax = 
+                Mathf.Max(currentMousePosition.x, initialClickPosition.x);
+            var yMin = 
+                Mathf.Min(currentMousePosition.y, initialClickPosition.y);
+            var yMax = 
+                Mathf.Max(currentMousePosition.y, initialClickPosition.y);
 
             // Build a rectangle from these corners
             var screenSpaceRect = Rect.MinMaxRect(xMin, yMin, xMax, yMax);
 
-            // The anchor of the box has been configured to be its lower-left
-            // corner, so by setting its anchoredPosition, we set its lower-left
-            // corner.
+            // The anchor of the box has been configured to be its
+            // lower-left corner, so by setting its anchoredPosition, we
+            // set its lower-left corner.
             selectionBox.anchoredPosition = screenSpaceRect.position;
 
             // The size delta is how far the box extends from its anchor.
@@ -80,8 +89,8 @@ public class BoxSelection : MonoBehaviour
 
         }
 
-        // When we release the mouse button, hide the box, and record that we're
-        // no longer selecting
+        // When we release the mouse button, hide the box, and record that
+        // we're no longer selecting
         if (Input.GetMouseButtonUp(0))
         {
             SelectionComplete();
@@ -108,9 +117,9 @@ public class BoxSelection : MonoBehaviour
         var max = mainCamera.ScreenToViewportPoint(
             new Vector3(SelectionRect.xMax, SelectionRect.yMax));
 
-        // We want to create a bounding box in viewport space. We have the X and
-        // Y coordinates of the bottom-left and top-right corners; now we'll 
-        // include the Z coordinates.
+        // We want to create a bounding box in viewport space. We have the
+        // X and Y coordinates of the bottom-left and top-right corners;
+        // now we'll include the Z coordinates.
         min.z = mainCamera.nearClipPlane;
         max.z = mainCamera.farClipPlane;
 
@@ -122,10 +131,13 @@ public class BoxSelection : MonoBehaviour
         foreach (var selectable in FindObjectsOfType<BoxSelectable>()) {
 
             // Figure out where this object is in viewport space
-            var viewportPoint = mainCamera.WorldToViewportPoint(selectable.transform.position);
+            var selectedPosition = selectable.transform.position;
 
-            // Is that point within our viewport bounding box? If it is, they're
-            // selected.
+            var viewportPoint = 
+                mainCamera.WorldToViewportPoint(selectedPosition);
+
+            // Is that point within our viewport bounding box? If it is,
+            // they're selected.
             var selected = viewportBounds.Contains(viewportPoint);
 
             if (selected) {

@@ -31,12 +31,14 @@ public class Interacting : MonoBehaviour {
         // Store information about the hit in this variable
         RaycastHit hit;
 
-        // Create a layer mask that represents every layer except the players
-        var everythingExceptPlayers = ~(1 << LayerMask.NameToLayer("Player"));
+        // Create a layer mask that represents every layer except the 
+        // players
+        var everythingExceptPlayers = 
+            ~(1 << LayerMask.NameToLayer("Player"));
 
-        // Combine this layer mask with the one that raycasts usually use; this
-        // has the effect of removing the player layer from the list of layers
-        // to raycast against
+        // Combine this layer mask with the one that raycasts usually use; 
+        // this has the effect of removing the player layer from the list 
+        // of layers to raycast against
         var layerMask = Physics.DefaultRaycastLayers
                                & everythingExceptPlayers;
 

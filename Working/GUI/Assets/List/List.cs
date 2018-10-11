@@ -35,7 +35,10 @@ public class List : MonoBehaviour {
         // Place it in the container; tell it to not keep its current
         // position or scale, so it will be laid out correctly by the UI
         // system
-        newItem.transform.SetParent(itemContainer, worldPositionStays: false);
+        newItem.transform.SetParent(
+            itemContainer, 
+            worldPositionStays: false
+        );
 
         // Give it a label
         newItem.Label = label;

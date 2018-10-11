@@ -9,17 +9,19 @@ using UnityEditor;
 
 // A Quest stores information about a quest: its name, and its objectives.
 
-// CreateAssetMenu makes the Create Asset menu contain an entry that creates
-// a new Quest asset.
+// CreateAssetMenu makes the Create Asset menu contain an entry that
+// creates a new Quest asset.
 [CreateAssetMenu(fileName = "New Quest", menuName = "Quest", order = 100)]
 public class Quest : ScriptableObject
 {
 
     // Represents the status of objectives and quests
     public enum Status {
-        NotYetComplete, // the objective or quest has not yet been completed
-        Complete, // the objective or quest has been successfully completed
-        Failed // the objective or quest has failed
+        NotYetComplete, // the objective or quest has not yet been
+                        // completed
+        Complete,       // the objective or quest has been successfully
+                        // completed
+        Failed          // the objective or quest has failed
     }
 
     // The name of the quest
@@ -39,13 +41,13 @@ public class Quest : ScriptableObject
         // the quest to be considered complete.
         public bool optional = false;
 
-        // If false, the objective will not be shown to the user if it's not
-        // yet complete. (It will be shown if it's Complete or Failed.)
+        // If false, the objective will not be shown to the user if it's
+        // not yet complete. (It will be shown if it's Complete or Failed.)
         public bool visible = true;
 
-        // The status of the objective when the quest begins. Usually this will
-        // be "not yet complete", but you might want an objective that starts
-        // as Complete, and can be Failed.
+        // The status of the objective when the quest begins. Usually this
+        // will be "not yet complete", but you might want an objective that
+        // starts as Complete, and can be Failed.
         public Status initalStatus = Status.NotYetComplete;
     }
 
@@ -60,12 +62,15 @@ public class QuestEditor : Editor {
     public override void OnInspectorGUI()
     {
 
-        // Ensure that the object we're displaying has had any pending changes 
-        // done.
+        // Ensure that the object we're displaying has had any pending
+        // changes done.
         serializedObject.Update();
 
         // Draw the name of the quest.
-        EditorGUILayout.PropertyField(serializedObject.FindProperty("questName"), new GUIContent("Name"));
+        EditorGUILayout.PropertyField(
+            serializedObject.FindProperty("questName"), 
+            new GUIContent("Name")
+        );
 
         // Draw a header for the list of objectives
         EditorGUILayout.LabelField("Objectives");
