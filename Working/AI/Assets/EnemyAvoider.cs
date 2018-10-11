@@ -63,7 +63,8 @@ public class EnemyAvoider : MonoBehaviour {
     }
 
     // Attempts to find a nearby place that the target can't see us at.
-    // Returns true if one was found; if 
+    // Returns true if one was found; if it was, put the position in the
+    // hidingSpot variable.
     bool FindHidingSpot(out Vector3 hidingSpot) {
 
         var distribution = new PoissonDiscSampler(

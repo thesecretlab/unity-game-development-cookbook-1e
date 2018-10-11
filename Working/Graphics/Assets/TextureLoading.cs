@@ -12,9 +12,6 @@ public class TextureLoading : MonoBehaviour
     // BEGIN texture_loading
     // Loads a texture file from disk
     public Texture2D LoadTexture(string fileName) {
-        // Specify the name of the file we're looking for
-        var imageName = "ImageToLoad.png";
-
         // Create the path to this file
 
         // Application.dataPath is the path to where the built application 
@@ -22,7 +19,7 @@ public class TextureLoading : MonoBehaviour
         // that contains the Assets folder)
         var imagePath = Path.Combine(
             Application.dataPath,
-            imageName
+            fileName
         );
 
         // Double-check that a file exists

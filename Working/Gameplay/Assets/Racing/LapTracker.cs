@@ -2,9 +2,10 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-// BEGIN lap_tracker
-// Used to help figure out the start of the circuit with fewer lines of
-// code.
+// BEGIN lap_tracker 
+// We use LINQ to help figure out the start of the circuit with fewer lines
+// of code. Using LINQ allocates memory, which is something we try to
+// avoid, but because we only do it once (at scene start), it's less bad.
 using System.Linq;
 
 public class LapTracker : MonoBehaviour {
@@ -158,20 +159,20 @@ public class LapTracker : MonoBehaviour {
 
         do
         {
-            // We should not reach the end of the list - that means that
-            // the circuit does not form a loop
-            if (currentCheckpoint == null)
-            {
-                Debug.LogErrorFormat("The circuit is not closed!");
-                return;
-            }
-
             // Update the index for this checkpoint
             currentCheckpoint.index = index;
             index += 1;
 
             // Move to the checkpoint it's pointing to
             currentCheckpoint = currentCheckpoint.next;
+
+            // We should not reach the end of the list - that means that
+            // the circuit does not form a loop
+            if (currentCheckpoint == null)
+            {
+                Debug.LogError("The circuit is not closed!");
+                return;
+            }
 
             // loop until we reach the start again
         } while (currentCheckpoint.isLapStart == false); 
@@ -189,6 +190,7 @@ public class LapTracker : MonoBehaviour {
     private void OnDrawGizmos()
     {
         var nearest = NearestCheckpoint();
+
         if (target != null && nearest != null) {
 
             Gizmos.color = Color.red;
