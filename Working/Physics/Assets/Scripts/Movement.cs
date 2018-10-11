@@ -91,6 +91,6 @@ public class Movement : MonoBehaviour {
         // another collider, and move away from them. We'll cover this in 
         // another recipe!)
         controller.Move(moveDirection * Time.fixedDeltaTime);
-	}
+    }
 }
 // END 3d_movement

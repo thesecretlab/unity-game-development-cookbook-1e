@@ -14,7 +14,7 @@ public class List : MonoBehaviour {
     // The object that new items should be inserted into
     [SerializeField] RectTransform itemContainer;
 
-	void Start () {
+    void Start () {
 
         // Create as many items as we need to
         for (int i = 0; i < itemCount; i++)

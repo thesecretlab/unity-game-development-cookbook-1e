@@ -8,8 +8,8 @@ public class AngleChecker : MonoBehaviour {
     // The object we want to find the angle to
     [SerializeField] Transform target;
 
-	
-	void Update () {
+    
+    void Update () {
 
         // Get the normalised direction to the target
         var directionToTarget = (target.position - transform.position).normalized;
@@ -26,6 +26,6 @@ public class AngleChecker : MonoBehaviour {
             target.name, angle * Mathf.Rad2Deg
         );
 
-	}
+    }
 }
 // END angle_checker

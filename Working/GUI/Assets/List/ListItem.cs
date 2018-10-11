@@ -12,7 +12,7 @@ public class ListItem : MonoBehaviour {
 
     // Expose a string; setting or getting this will set or get the text of
     // the label.
-	// BEGIN list_item2
+    // BEGIN list_item2
     public string Label
     {
         get

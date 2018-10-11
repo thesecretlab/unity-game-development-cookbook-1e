@@ -9,10 +9,10 @@ using UnityEngine.Events;
 public class Menu : MonoBehaviour {
  
     // Invoked when a menu appears on screen.
-	public UnityEvent menuDidAppear = new UnityEvent();
+    public UnityEvent menuDidAppear = new UnityEvent();
     
-	// Invoked when a menu is removed from the screen.
-	public UnityEvent menuWillDisappear = new UnityEvent();
+    // Invoked when a menu is removed from the screen.
+    public UnityEvent menuWillDisappear = new UnityEvent();
 
 }
 // END menu

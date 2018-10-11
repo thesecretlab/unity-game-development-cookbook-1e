@@ -17,7 +17,7 @@ public class VectorDemo : MonoBehaviour {
             // You define a Vector2 with two numbers: x and y
             // BEGIN vector2
             Vector2 direction = new Vector2(0.0f, 2.0f);
-			// END vector2
+            // END vector2
 
             // Some built-in vectors:
             // BEGIN vector2builtin
@@ -31,7 +31,7 @@ public class VectorDemo : MonoBehaviour {
         }
 
         {
-			// Vector3 is similar, but adds a third dimension
+            // Vector3 is similar, but adds a third dimension
             // BEGIN vector3
             Vector3 point = new Vector3(1.0f, 2f, 3.5f);
 
@@ -62,11 +62,11 @@ public class VectorDemo : MonoBehaviour {
             var v2 = new Vector3(0f, 1f, 6f);
 
             var v3 = v1 + v2; // (1, 3, 9)
-			// END vector_add_subtract
-			
+            // END vector_add_subtract
+            
             // Vectors can be subtracted from each other
             // BEGIN vector_subtract
-			var v4 = v2 - v1; // (-1, -1, 3)
+            var v4 = v2 - v1; // (-1, -1, 3)
             // END vector_subtract
         }
 
@@ -80,14 +80,14 @@ public class VectorDemo : MonoBehaviour {
             var forwardMagnitude = Vector3.forward.magnitude; // = 1
 
             var vectorMagnitude = new Vector3(2f, 5f, 3f).magnitude; // ~= 6.16
-			// END vector_magnitude
+            // END vector_magnitude
             // You can use this to figure out the distance between two vectors:
-			// BEGIN vector_distance
+            // BEGIN vector_distance
             var point1 = new Vector3(5f, 1f, 0f);
             var point2 = new Vector3(7f, 0f, 2f);
 
             var distance = (point2 - point1).magnitude; // = 3
-			// END vector_distance
+            // END vector_distance
             // There's also the built-in method, Distance:
             // BEGIN vector_distance2
             Vector3.Distance(point1, point2);
@@ -99,9 +99,9 @@ public class VectorDemo : MonoBehaviour {
             // the square of the magnitude. Doing this is a bit faster, and we
             // care quite a lot about fast calculations in game development. 
             // To get this, use the sqrMagnitude property.
-			// BEGIN vector_magnitude2
+            // BEGIN vector_magnitude2
             var distanceSquared = (point2 - point1).sqrMagnitude; // = 9
-			// END vector_magnitude2
+            // END vector_magnitude2
             // Lots of operations work best on vectors that have a magnitude of 1.
             // A vector with magnitude of 1 is also called a "unit" vector, because
             // its magnitude is a single unit (that is, one.)
@@ -110,10 +110,10 @@ public class VectorDemo : MonoBehaviour {
             // direction but with magnitude of 1 by dividing it by its own 
             // magnitude. 
             // This is called "normalizing" it.
-			// BEGIN vector_normalise
+            // BEGIN vector_normalise
             var bigVector = new Vector3(4, 7, 9); // magnitude = 12.08
             var unitVector = bigVector / bigVector.magnitude; // magnitude = 1
-			// END vector_normalise
+            // END vector_normalise
             // This is a common operation, so you can directly access a 
             // normalized version of a vector by using the 'normalized' property:
             // BEGIN vector_normalise2
@@ -133,7 +133,7 @@ public class VectorDemo : MonoBehaviour {
             // v1.Scale(v2) = (v1.x * v2.x, v1.y * v2.y, v1.z * v2.z)
             // Note that Scale modifies the vector in-place - it doesn't return
             // a new vector.
-			// BEGIN vector_scaling2
+            // BEGIN vector_scaling2
             v1.Scale(new Vector3(3f, 1f, 0f)); // = (12f, 4f, 0f)
             // END vector_scaling2
         }
@@ -147,8 +147,8 @@ public class VectorDemo : MonoBehaviour {
 
             // BEGIN dot_product
             var parallel = Vector3.Dot(Vector3.left, Vector3.left); // 1
-			// END dot_product
-			
+            // END dot_product
+            
             // The dot product between two vectors aiming in opposite directions
             // is -1:
             
@@ -208,7 +208,7 @@ public class VectorDemo : MonoBehaviour {
 
             // Move from (0,0,0) towards (1,1,1), but don't move any further than
             // 0.5 units
-			// BEGIN move_towards
+            // BEGIN move_towards
             var moved = Vector3.MoveTowards(Vector3.zero, Vector3.one, 0.5f);
             // = (0.3, 0.3, 0.3) (a vector that has a magnitude of 0.5)
             // END move_towards
@@ -238,7 +238,7 @@ public class VectorDemo : MonoBehaviour {
             var unclamped = Vector3.LerpUnclamped(Vector3.zero, Vector3.right, 2.0f);
             // = (2, 0, 0)
             // END vector_lerp2
-            	
+                
         }
 
 

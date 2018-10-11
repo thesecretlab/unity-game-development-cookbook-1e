@@ -5,10 +5,10 @@ using UnityEngine;
 // BEGIN tracked_object
 public class TrackedObject : MonoBehaviour {
 
-	void Start () {
+    void Start () {
         // When the object first appears, request an indicator.
         IndicatorManager.manager.AddTrackingIndicator(this);
-	}
+    }
 
     // Tell the indicator manager to remove our tracking indicator.
     // OnDestroy is called when either the object is removed from the scene,

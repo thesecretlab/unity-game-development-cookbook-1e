@@ -150,7 +150,7 @@ public class Turret : MonoBehaviour {
     StateMachine stateMachine;
 
     // Use this for initialization
-	void Start () {
+    void Start () {
 
         // Create the state machine
         stateMachine = new StateMachine();
@@ -210,11 +210,11 @@ public class Turret : MonoBehaviour {
         aiming.onExit = delegate {
             Debug.Log("Target went out of range!");
         };
-	}
-	
-	void Update () {
+    }
+    
+    void Update () {
         // Update the state machine's current state
         stateMachine.Update();
-	}
+    }
 }
 // END statemachine_demo

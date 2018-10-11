@@ -4,9 +4,9 @@ using UnityEngine;
 
 public class MatrixDemo : MonoBehaviour {
 
-	// Use this for initialization
-	void Start () {
-		
+    // Use this for initialization
+    void Start () {
+        
         {
             // A matrix is a grid of numbers, just like a vector is a column of
             // numbers.
@@ -15,11 +15,11 @@ public class MatrixDemo : MonoBehaviour {
             // END matrix_intro
 
             // You can set and get the values at the various locations in a matrix.
-			// BEGIN matrix_intro2
+            // BEGIN matrix_intro2
             var m00 = matrix[0, 0];
 
             matrix[0, 1] = 2f;
-			// END matrix_intro2
+            // END matrix_intro2
         }
 
         {
@@ -83,12 +83,12 @@ public class MatrixDemo : MonoBehaviour {
 
             // Rather than doing all of this work ourselves, Unity's Matrix4x4 type
             // has a MultiplyPoint method.
-			// BEGIN matrix_with_vector2
+            // BEGIN matrix_with_vector2
             var input = new Vector3(0, 1, 2);
 
             var result = translationMatrix.MultiplyPoint(input);
             // = (6, 1, 2)
-			// END matrix_with_vector2
+            // END matrix_with_vector2
             // You might be wondering why the matrix has the 4th row at all,
             // since it just means we need to add and remove a useless fourth
             // component to our vectors. The reason why it's there is that the
@@ -133,7 +133,7 @@ public class MatrixDemo : MonoBehaviour {
             // a matrix to rotate the vector, you can use MultiplyVector. This
             // method uses only the parts of the matrix that are necessary to
             // do a rotation. It's a bit faster.
-			// BEGIN matrix_multiply_vector
+            // BEGIN matrix_multiply_vector
             result = rotationMatrix.MultiplyVector(input);
             // = (0, -1, 0) - the same result.
             // END matrix_multiply_vector
@@ -189,13 +189,13 @@ public class MatrixDemo : MonoBehaviour {
 
             // You can create a combined translate-rotate-scale matrix using
             // the Matrix4x4.TRS method:
-			// BEGIN matrix_trs
+            // BEGIN matrix_trs
             var transformMatrix = Matrix4x4.TRS(
                 new Vector3(5, 0, 0),
                 Quaternion.Euler(90, 0, 0),
                 new Vector3(1, 5, 1)
             );
-			// END matrix_trs
+            // END matrix_trs
             // This new matrix will scale, rotate, and then translate any point you
             // apply it to.
 
@@ -211,7 +211,7 @@ public class MatrixDemo : MonoBehaviour {
 
             // You can also get the matrix that converts from world-space to
             // local space, too.
-			// BEGIN matrix_transform2
+            // BEGIN matrix_transform2
             var worldToLocal = this.transform.worldToLocalMatrix;
             // END matrix_transform2
         }
@@ -222,6 +222,6 @@ public class MatrixDemo : MonoBehaviour {
 
 
 
-	}
-	
+    }
+    
 }

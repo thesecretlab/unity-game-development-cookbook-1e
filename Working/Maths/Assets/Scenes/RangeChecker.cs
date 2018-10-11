@@ -14,7 +14,7 @@ public class RangeChecker : MonoBehaviour {
     // Remembers if 
     private bool targetInRange = false;
 
-	void Update () {
+    void Update () {
 
         // Calculate the distance between the objects
         var distance = (target.position - transform.position).magnitude;
@@ -34,6 +34,6 @@ public class RangeChecker : MonoBehaviour {
             targetInRange = false;
         }
 
-	}
+    }
 }
 // END range_checker

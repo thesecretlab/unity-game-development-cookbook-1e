@@ -57,7 +57,7 @@ public class FadeAfterDelay : MonoBehaviour {
 
         // Remove this game object from the scene
         Destroy(gameObject);
-	}
+    }
     // END fade_after_delay2
-	
+    
 }

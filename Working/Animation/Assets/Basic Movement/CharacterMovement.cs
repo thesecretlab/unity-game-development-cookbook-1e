@@ -11,17 +11,17 @@ public class CharacterMovement : MonoBehaviour {
 
     [SerializeField] float speed = 1f;
 
-	// Use this for initialization
-	void Start () {
+    // Use this for initialization
+    void Start () {
         animator = GetComponent<Animator>();
-	}
-	
-	void Update () {
+    }
+    
+    void Update () {
 
         animator.SetFloat("Speed", Input.GetAxis("Vertical") * speed);
         // BEGIN animation_movement_sidespeed
         animator.SetFloat("SideSpeed", Input.GetAxis("Horizontal") * speed);
         // END animation_movement_sidespeed
-	}
+    }
 }
 // END animation_movement

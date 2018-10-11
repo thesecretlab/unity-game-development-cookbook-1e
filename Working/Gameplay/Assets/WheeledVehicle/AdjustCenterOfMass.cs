@@ -6,16 +6,16 @@ using UnityEngine;
 [RequireComponent(typeof(Rigidbody))]
 public class AdjustCenterOfMass : MonoBehaviour {
 
-	// How far the center of mass should be moved from its default position
+    // How far the center of mass should be moved from its default position
     [SerializeField] Vector3 centerOfMass = Vector3.zero;
  
-	private void Start()
+    private void Start()
     {
         // Override the center of mass, to enhance stability
         GetComponent<Rigidbody>().centerOfMass += centerOfMass;
     }
 
-	// Called by the editor to show 'gizmos' in the Scene view. Used to help
+    // Called by the editor to show 'gizmos' in the Scene view. Used to help
     // visualise the overriden center of mass.
     private void OnDrawGizmosSelected()
     {

@@ -13,7 +13,7 @@ public class Interacting : MonoBehaviour {
     // The range at which we can interact with objects.
     [SerializeField] float interactingRange = 2;
 
-	void Update () {
+    void Update () {
 
         // Did the user just press the interaction key?
         if (Input.GetKeyDown(interactionKey)) {
@@ -21,7 +21,7 @@ public class Interacting : MonoBehaviour {
             // Then attempt to interact.
             AttemptInteraction();
         }
-	}
+    }
 
     void AttemptInteraction() {
 

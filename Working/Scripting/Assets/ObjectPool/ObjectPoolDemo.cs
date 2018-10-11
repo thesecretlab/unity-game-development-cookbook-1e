@@ -29,6 +29,6 @@ public class ObjectPoolDemo : MonoBehaviour
 
             yield return new WaitForSeconds(delay);
         }
-	}
+    }
 }
 // END object_pool_demo

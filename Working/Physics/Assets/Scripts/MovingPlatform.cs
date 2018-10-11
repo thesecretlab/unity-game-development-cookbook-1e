@@ -22,8 +22,8 @@ public class MovingPlatform : MonoBehaviour {
     // How fast this platform is currently moving, in units per second
     public Vector3 velocity { get; private set; }
 
-	// Use this for initialization
-	void Start () {
+    // Use this for initialization
+    void Start () {
         if (points == null || points.Length < 2) {
             Debug.LogError("Platform needs 2 or more points to work.");
             return;
@@ -36,7 +36,7 @@ public class MovingPlatform : MonoBehaviour {
 
         // Start our cycle at our first point
         transform.position = currentPoint;
-	}
+    }
 
     // Returns the point that we're currently moving towards.
     Vector3 currentPoint {
@@ -49,9 +49,9 @@ public class MovingPlatform : MonoBehaviour {
             return points[nextPoint] + startPosition;
         }
     }
-	
-	// Update every time physics updates
-	void FixedUpdate () {
+    
+    // Update every time physics updates
+    void FixedUpdate () {
         
         // Move towards the target, at a fixed speed
         var newPosition = Vector3.MoveTowards(
@@ -75,7 +75,7 @@ public class MovingPlatform : MonoBehaviour {
         transform.position = newPosition;
 
         
-	}
+    }
 
     // Draw the path that the platform will follow
     private void OnDrawGizmosSelected()

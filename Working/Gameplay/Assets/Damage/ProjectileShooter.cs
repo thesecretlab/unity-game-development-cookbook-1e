@@ -15,11 +15,11 @@ public class ProjectileShooter : MonoBehaviour {
     [SerializeField] float projectileSpeed = 10;
 
     // On start, begin shooting projectiles
-	void Start () {
+    void Start () {
         // Start creating projectiles
         StartCoroutine(ShootProjectiles());
-	}
-	
+    }
+    
     // Loop forever, creating a projectile every 'timeBetweenShots' seconds
     IEnumerator ShootProjectiles() {
         while (true) {
