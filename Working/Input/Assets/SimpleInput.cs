@@ -86,7 +86,7 @@ public class SimpleInput : MonoBehaviour
         Cursor.lockState = CursorLockMode.Locked;
 
         // Prevent the cursor from leaving the window.
-        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.lockState = CursorLockMode.Confined;
 
         // Don't restrict the mouse cursor at all.
         Cursor.lockState = CursorLockMode.None;
