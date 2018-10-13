@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-// BEGIN lap_tracker 
+// BEGIN lap_tracker
 // We use LINQ to help figure out the start of the circuit with fewer lines
 // of code. Using LINQ allocates memory, which is something we try to
 // avoid, but because we only do it once (at scene start), it's less bad.

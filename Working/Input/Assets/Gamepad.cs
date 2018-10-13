@@ -45,7 +45,11 @@ public class Gamepad : MonoBehaviour
         // END input_joystick_buttons
 
         // BEGIN input_joystick_axes
-        Debug.LogFormat("Primary Joystick: X: {0}; Y:{1}", Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
+        Debug.LogFormat(
+            "Primary Joystick: X: {0}; Y:{1}", 
+            Input.GetAxis("Horizontal"), 
+            Input.GetAxis("Vertical")
+        );
         // END input_joystick_axes
     }
 }

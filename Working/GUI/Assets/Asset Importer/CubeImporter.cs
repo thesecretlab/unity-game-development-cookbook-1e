@@ -6,7 +6,7 @@ using UnityEngine;
 #if UNITY_EDITOR
 using UnityEditor;
 
-// At the time of writing, asset importers are in the Experiemental module.
+// At the time of writing, asset importers are in the Experimental module.
 // By the time you're reading this, the API may have changed, so check the
 // documentation.
 using UnityEditor.Experimental.AssetImporters;

@@ -29,7 +29,8 @@ public class NormalMapTextureImporter : AssetPostprocessor
                 TextureImporter textureImporter = 
                     assetImporter as TextureImporter;
 
-                // Update its
+                // Update its type so that Unity is aware that it's a
+                // normal map
                 textureImporter.textureType = 
                     TextureImporterType.NormalMap;
 

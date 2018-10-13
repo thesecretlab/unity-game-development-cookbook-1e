@@ -9,13 +9,14 @@ using UnityEngine.EventSystems;
 // BEGIN raycast_interaction
 public class ObjectMouseInteraction : 
     MonoBehaviour,
-    IPointerEnterHandler, // Handles the mouse cursor entering the object
-    IPointerExitHandler, // Handles the mouse cursor exiting the object
-    IPointerUpHandler, // Handles the mouse button lifting up on this object
-    IPointerDownHandler, // Handles the mouse button being pressed on this object
-    IPointerClickHandler // Handles when the mouse is pressed and released on this object
-,
-IMoveHandler
+    IPointerEnterHandler,   // Handles the mouse cursor entering the object
+    IPointerExitHandler,    // Handles the mouse cursor exiting the object
+    IPointerUpHandler,      // Handles the mouse button lifting up on 
+                            // this object
+    IPointerDownHandler,    // Handles the mouse button being pressed on 
+                            // this object
+    IPointerClickHandler    // Handles when the mouse is pressed and 
+                            // released on this object
 {
 
     // BEGIN raycast_interaction_setup

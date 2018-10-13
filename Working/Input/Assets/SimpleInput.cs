@@ -4,14 +4,6 @@ using UnityEngine;
 
 public class SimpleInput : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-
-
-
-    }
-
     // Update is called once per frame
     void Update()
     {
@@ -67,15 +59,15 @@ public class SimpleInput : MonoBehaviour
         Debug.LogFormat("Mouse movement: {0},{1}", mouseX, mouseY);
         // END input_mouse_movement
 
-        // BEGIN input_mouse_position
-        // The mouse position is in screen coordinates, which means it 
-        // depends on your screen resolution; on a 1920x1080 screen, 0,0 is the top-left,
-        // and 1920,1280 is the bottom right.
+        // BEGIN input_mouse_position The mouse position is in screen
+        // coordinates, which means it depends on your screen resolution;
+        // on a 1920x1080 screen, 0,0 is the top-left, and 1920,1280 is the
+        // bottom right.
         var mousePosition = Input.mousePosition;
 
-        // It's often more convenient to convert this to viewport coordinates, in which
-        // (0,0) is the top left, and (1,1) is the bottom right, regardless of the 
-        // screen size
+        // It's often more convenient to convert this to viewport
+        // coordinates, in which (0,0) is the top left, and (1,1) is the
+        // bottom right, regardless of the screen size
         var screenSpacePosition = 
             Camera.main.ScreenToViewportPoint(mousePosition);
         // END input_mouse_position
