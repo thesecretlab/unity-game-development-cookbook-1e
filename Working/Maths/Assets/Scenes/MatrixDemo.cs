@@ -96,7 +96,7 @@ public class MatrixDemo : MonoBehaviour {
             var input = new Vector3(0, 1, 2);
 
             var result = translationMatrix.MultiplyPoint(input);
-            // = (6, 1, 2)
+            // = (5, 1, 2)
             // END matrix_with_vector2
 
             // You might be wondering why the matrix has the 4th row at

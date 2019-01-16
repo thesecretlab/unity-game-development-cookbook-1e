@@ -145,7 +145,7 @@ public class PlatformRiding : MonoBehaviour {
                 // If it did, update our position based on the platform's
                 // current velocity.
                 transform.position += 
-                    platform.velocity * Time.fixedDeltaTime;
+                    platform.velocity * Time.deltaTime;
             }
         }
     }

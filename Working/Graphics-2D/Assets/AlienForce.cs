@@ -21,8 +21,6 @@ public class AlienForce : MonoBehaviour {
     // FixedUpdate, because it's called a fixed number of times per second,
     // with a fixed simulation timestep, which means more stable simulation
     void FixedUpdate () {
-    
-    
         // Get user input, and scale it by the amount of force we want to
         // apply
         var vertical = Input.GetAxis("Vertical") * verticalForce;
@@ -30,7 +28,7 @@ public class AlienForce : MonoBehaviour {
 
         // Generate a force vector from these inputs, scaled by time
         var force = 
-            new Vector2(horizontal, vertical) * Time.fixedDeltaTime;
+            new Vector2(horizontal, vertical) * Time.deltaTime;
 
         // Add the force to the sprite
         body.AddForce(force);

@@ -27,7 +27,7 @@ public class TextureLoading : MonoBehaviour
             // Warn that there's no file there and give up
             Debug.LogWarningFormat("No file exists at path {0}", 
                                    imagePath);
-            return;
+            return null;
         }
 
         // Load the file data.

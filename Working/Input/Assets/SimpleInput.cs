@@ -36,7 +36,7 @@ public class SimpleInput : MonoBehaviour
         // Mouse button 2 is the middle mouse button (the scroll wheel)
 
         // BEGIN input_mouse
-        if (Input.GetMouseButtonUp(0))
+        if (Input.GetMouseButtonDown(0))
         {
             Debug.Log("Left mouse button was pressed!");
         }

@@ -76,7 +76,7 @@ public class Coroutines : MonoBehaviour
     // Coroutines can receive parameters
     // BEGIN coroutines_parameters
     IEnumerator Countdown(int times) {
-        for (int i = times; i > 0; i++) {
+        for (int i = times; i > 0; i--) {
             Debug.LogFormat("{0}...", i);
             yield return new WaitForSeconds(1);
         }

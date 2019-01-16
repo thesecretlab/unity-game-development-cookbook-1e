@@ -55,19 +55,18 @@ public class MouseLook : MonoBehaviour
     // Every time physics updates, update our movement. (We do this in
     // FixedUpdate in order to keep pace with physically simulated objects.
     // If you won't be interacting with physics objects, you can do this in
-    // Update instead (don't forget to use Time.deltaTime instead of
-    // Time.fixedDeltaTime)
+    // Update instead.
     void FixedUpdate()
     {
 
         // Read the current horizontal movement, and scale it based on the
         // amount of time that's elapsed and the movement speed.
         var horizontal = Input.GetAxis("Mouse X")
-                              * Time.fixedDeltaTime * turnSpeed;
+                              * Time.deltaTime * turnSpeed;
 
         // Same for vertical.
         var vertical = Input.GetAxis("Mouse Y")
-                            * Time.fixedDeltaTime * turnSpeed;
+                            * Time.deltaTime * turnSpeed;
 
         // Update our yaw and pitch values.
         yaw += horizontal;
@@ -86,7 +85,7 @@ public class MouseLook : MonoBehaviour
         // Create new rotations for the body and head by combining them
         // with their start rotations.
         transform.localRotation = bodyRotation * bodyStartOrientation;
-        head.localRotation = headRotation * headStartOrientation; ;
+        head.localRotation = headRotation * headStartOrientation;
     }
 }
 // END mouse_look

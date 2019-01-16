@@ -10,10 +10,10 @@ public class TopDownCameraMovement : MonoBehaviour {
     [SerializeField] float movementSpeed = 20;
 
     // The lower-left position of the camera, on its current X-Z plane.
-    [SerializeField] Vector2 minimumLimit = -Vector3.one;
+    [SerializeField] Vector2 minimumLimit = -Vector2.one;
 
     // The upper-right position of the camera, on its current X-Z plane.
-    [SerializeField] Vector2 maximumLimit = Vector3.one;
+    [SerializeField] Vector2 maximumLimit = Vector2.one;
 
     // Every frame, update the camera's position
     void Update()

@@ -84,11 +84,11 @@ public class Movement : MonoBehaviour {
             // jump is preserved)
             input.y = moveDirection.y;
             moveDirection = Vector3.Lerp(moveDirection, input, 
-                                         airControl * Time.fixedDeltaTime);
+                                         airControl * Time.deltaTime);
         }
 
         // Bring our movement down by applying gravity over time
-        moveDirection.y -= gravity * Time.fixedDeltaTime;
+        moveDirection.y -= gravity * Time.deltaTime;
 
         // Move the controller. The controller will refuse to move into
         // other colliders, which means that we won't clip through the
@@ -96,7 +96,7 @@ public class Movement : MonoBehaviour {
         // colliders from moving into us. For that, we'd need to detect
         // when we're overlapping another collider, and move away from
         // them. We'll cover this in another recipe!)
-        controller.Move(moveDirection * Time.fixedDeltaTime);
+        controller.Move(moveDirection * Time.deltaTime);
     }
 }
 // END 3d_movement

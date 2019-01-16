@@ -56,7 +56,7 @@ public class MovingPlatform : MonoBehaviour {
         
         // Move towards the target, at a fixed speed
         var newPosition = Vector3.MoveTowards(
-            transform.position, currentPoint, speed * Time.fixedDeltaTime);
+            transform.position, currentPoint, speed * Time.deltaTime);
 
         // Have we reached the target?
         if (Vector3.Distance(newPosition, currentPoint) < 0.001) {
@@ -71,7 +71,7 @@ public class MovingPlatform : MonoBehaviour {
 
         // Calculate our current velocity in units-per-second
         velocity = 
-            (newPosition - transform.position) / Time.fixedDeltaTime;
+            (newPosition - transform.position) / Time.deltaTime;
 
         // Update to our new location
         transform.position = newPosition;
