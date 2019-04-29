@@ -18,9 +18,8 @@ public class LevelLoading : MonoBehaviour
         // END level_loading_sync
     }
 
+    // BEGIN level_loading_async
     public void LoadLevelAsync() {
-        
-        // BEGIN level_loading_async
         // Start loading the scene; we'll get back an object
         // that represents the scene loading operation
         var operation = SceneManager.LoadSceneAsync("Game");
@@ -33,8 +32,9 @@ public class LevelLoading : MonoBehaviour
         // Start a coroutine that will run while scene loads, and
         // will run some code after loading finishes
         StartCoroutine(WaitForLoading(operation));
-        // END level_loading_async
+        
     }
+    // END level_loading_async
 
     // BEGIN level_loading_async_coroutine
     IEnumerator WaitForLoading(AsyncOperation operation)
@@ -54,25 +54,25 @@ public class LevelLoading : MonoBehaviour
         operation.allowSceneActivation = true;
     }
     // END level_loading_async_coroutine
-
+    
+    // BEGIN level_loading_additive
     public void LoadLevelAdditive() {
-        // BEGIN level_loading_additive
         // Load the scene in addition to the current one
-        SceneManager.LoadScene("Game", LoadSceneMode.Additive);
-        // END level_loading_additive
+        SceneManager.LoadScene("Game", LoadSceneMode.Additive);        
     }
+    // END level_loading_additive
 
+    // BEGIN level_unloading        
     public void UnloadLevel() {
-        // BEGIN level_unloading
         // Unloading a scene is an async operation, much like loading can
         // be
         var unloadOperation = SceneManager.UnloadSceneAsync("Game");
 
         // If you want to run code after the unloading has completed, 
         // start a coroutine (again, just like loading)
-        StartCoroutine(WaitForUnloading(unloadOperation));
-        // END level_unloading
+        StartCoroutine(WaitForUnloading(unloadOperation));        
     }
+    // END level_unloading
 
     // BEGIN level_unloading_coroutine
     IEnumerator WaitForUnloading(AsyncOperation operation) {
