@@ -1,0 +1,17 @@
+fileFormatVersion: 2
+guid: 8537fc17fa64f41a684c1811c17d6c12
+ScriptedImporter:
+  fileIDToRecycleName:
+    100002: Test/Cube
+    400002: Test/Cube/Transform
+    2100002: Test Material
+    2300002: Test/Cube/MeshRenderer
+    3300002: Test/Cube/MeshFilter
+    4300000: Test Mesh
+    6500002: Test/Cube/BoxCollider
+    100100002: Test
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+  script: {fileID: 11500000, guid: 4056008a58d354c24a1e9079d459116d, type: 3}
