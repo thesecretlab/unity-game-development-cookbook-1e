@@ -1,6 +1,6 @@
 # Unity Game Develoment Cookbook, First Edition
 
-Work-in-progress code from [Secret Lab](http://www.secretlab.com.au)'s book, [Unity Game Development Cookbook, First Edition](LINK TBD).
+Work-in-progress code from [Secret Lab](http://www.secretlab.com.au)'s book, [Unity Game Development Cookbook, First Edition](http://shop.oreilly.com/product/0636920107361.do).
 
 You can email us at [lab@secretlab.com.au](mailto:lab@secretlab.com.au)
 
